@@ -73,31 +73,31 @@
 		  
 		  <li>
 			<a href="/archives" title="All the articles.">
-			  <i class=""></i>Archives
+			  <i class="fa fa-archive"></i>Archives
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/categories" title="All the categories.">
-			  <i class=""></i>Categories
+			  <i class="fa fa-folder"></i>Categories
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/tags" title="All the tags.">
-			  <i class=""></i>Tags
+			  <i class="fa fa-tags"></i>Tags
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/about" title="About me.">
-			  <i class=""></i>About
+			  <i class="fa fa-user"></i>About
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/atom.xml" title="Subscribe me.">
-			  <i class=""></i>RSS
+			  <i class="fa fa-user"></i>RSS
 			</a>
 		  </li>
 		  
@@ -124,7 +124,7 @@
 
 		<i class="fa fa-heart blink-slow"></i>
 
-		好好学习.
+		好好学习,天天向上.
 
 </div>    
 
@@ -253,13 +253,12 @@
   <div class="row">
 	
 	
-		<h1 id="BlueKeep漏洞的发现与利用"><a href="#BlueKeep漏洞的发现与利用" class="headerlink" title="BlueKeep漏洞的发现与利用"></a>BlueKeep漏洞的发现与利用</h1><p><strong>—20203106716 胡礼</strong></p>
-<h2 id="漏洞的概述"><a href="#漏洞的概述" class="headerlink" title="漏洞的概述"></a>漏洞的概述</h2><p>2019年5月14日，微软发布了针对远程桌面服务的关键远程执行代码漏洞CVE-2019-0708的补丁，该漏洞影响某些旧版本的windows。修复了 Windows 远程桌面服务的远程代码执行漏洞，该漏洞影响了某些旧版本的 Windows 系统。此漏洞是预身份验证，无需用户交互，这就意味着这个漏洞可以通过网络蠕虫的方式被利用，与2017年 WannaCry 勒索病毒的传播方式类似。攻击者一旦成功触发该漏洞，便可以在目标系统上执行任意代码，该漏洞的触发无需任何用户交互操作。这意味着，存在漏洞的计算机只要联网，无需任何操作，就可能遭遇黑客远程攻击，运行恶意代码。成功利用此漏洞的攻击者可以在目标系统完成安装应用程序，查看、更改或删除数据，创建完全访问权限的新账户等操作。</p>
+		<h1 id="BlueKeep漏洞的发现与利用"><a href="#BlueKeep漏洞的发现与利用" class="headerlink" title="BlueKeep漏洞的发现与利用"></a>BlueKeep漏洞的发现与利用</h1><h2 id="漏洞的概述"><a href="#漏洞的概述" class="headerlink" title="漏洞的概述"></a>漏洞的概述</h2><p>2019年5月14日，微软发布了针对远程桌面服务的关键远程执行代码漏洞CVE-2019-0708的补丁，该漏洞影响某些旧版本的windows。修复了 Windows 远程桌面服务的远程代码执行漏洞，该漏洞影响了某些旧版本的 Windows 系统。此漏洞是预身份验证，无需用户交互，这就意味着这个漏洞可以通过网络蠕虫的方式被利用，与2017年 WannaCry 勒索病毒的传播方式类似。攻击者一旦成功触发该漏洞，便可以在目标系统上执行任意代码，该漏洞的触发无需任何用户交互操作。这意味着，存在漏洞的计算机只要联网，无需任何操作，就可能遭遇黑客远程攻击，运行恶意代码。成功利用此漏洞的攻击者可以在目标系统完成安装应用程序，查看、更改或删除数据，创建完全访问权限的新账户等操作。</p>
 <h2 id="漏洞的原理"><a href="#漏洞的原理" class="headerlink" title="漏洞的原理"></a>漏洞的原理</h2><p>存在漏洞的远程桌面服务器，在接收到特殊数据包时会释放一个内部信道 MS_T120 的控制结构体，但并未将指向该结构体的指针删除，而且在远程桌面连接结束之后还会调用 MS_T120 结构体内的一个函数指针，若攻击者可通过远程发送数据重新占据被释放的 MS_T120，并为结构体内的函数指针赋恰当的值，即可实现远程命令执行。</p>
 <p>事实上这个漏洞的本质就是一个<strong>UAF漏洞</strong>，那么对于UAF漏洞其实是堆溢出里面的一个知识点，下面简单介绍一下UAF：</p>
 <p>uaf的全称为use after free，即在free之后进行使用。<br>内存块被释放后，其对应的指针被设置为 NULL ， 然后再次使用，自然程序会崩溃。<br>内存块被释放后，其对应的指针没有被设置为 NULL ，然后在它下一次被使用之前，没有代码对这块内存块进行修改，那么程序很有可能可以正常运转。<br>内存块被释放后，其对应的指针没有被设置为 NULL，但是在它下一次使用之前，有代码对这块内存进行了修改，那么当程序再次使用这块内存时，就很有可能会出现奇怪的问题。<br>我们也称没有被free的指针称为悬挂指针、野指针。</p>
 <p><strong>知识点</strong>：<br>在计算机编程领域中，迷途指针，或称悬空指针、野指针，指的是不指向任何合法的对象的指针<br>当所指向的对象被释放或者收回，但是对该指针没有作任何的修改，以至于该指针仍旧指向已经回收的内存地址，此情况下该指针便称迷途指针。若操作系统将这部分已经释放的内存重新分配给另外一个进程，而原来的程序重新引用现在的迷途指针，则将产生无法预料的后果。因为此时迷途指针所指向的内存现在包含的已经完全是不同的数据。通常来说，若原来的程序继续往迷途指针所指向的内存地址写入数据，这些和原来程序不相关的数据将被损坏，进而导致不可预料的程序错误。这种类型的程序错误，不容易找到问题的原因，通常会导致存储器区块错误（Linux系统中）和一般保护错误（Windows系统中）。如果操作系统的内存分配器将已经被覆盖的数据区域再分配，就可能会影响系统的稳定性。</p>
-<h2 id="漏洞的复现"><a href="#漏洞的复现" class="headerlink" title="漏洞的复现"></a>漏洞的复现</h2>
+<h2 id="漏洞的复现"><a href="#漏洞的复现" class="headerlink" title="漏洞的复现"></a>漏洞的复现</h2><h3 id="攻击流程："><a href="#攻击流程：" class="headerlink" title="攻击流程："></a>攻击流程：</h3>
 	
 	</div>
   <a type="button" href="/uncategorized/第一次作业/#more" class="btn btn-default more">阅读此文</a>
@@ -272,7 +271,7 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
-			<a href="/uncategorized/第二次作业/" >《面向Linux系统下二进制漏洞防御技术的设计与实现》</a>
+			<a href="/uncategorized/第二次作业/" >面向Linux系统下二进制漏洞防御技术的设计与实现</a>
 		</h3>
 		</div>
 	<div class="col-md-4">
@@ -534,29 +533,33 @@
 		<h4>标签云</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/栈迁移/">栈迁移<span>1</span></a></li>
+			<li><a href="/tags/字符串漏洞/">字符串漏洞<span>1</span></a></li>
+		
+			<li><a href="/tags/Java/">Java<span>1</span></a></li>
+		
+			<li><a href="/tags/系统调用/">系统调用<span>2</span></a></li>
+		
+			<li><a href="/tags/BlueKeep漏洞/">BlueKeep漏洞<span>1</span></a></li>
 		
 			<li><a href="/tags/ret2dl-resolve/">ret2dl_resolve<span>1</span></a></li>
 		
-			<li><a href="/tags/栈溢出/">栈溢出<span>1</span></a></li>
+			<li><a href="/tags/栈与堆/">栈与堆<span>1</span></a></li>
 		
 			<li><a href="/tags/ret2shellcode/">ret2shellcode<span>2</span></a></li>
 		
-			<li><a href="/tags/字符串漏洞/">字符串漏洞<span>1</span></a></li>
-		
-			<li><a href="/tags/ret2VDSO/">ret2VDSO<span>1</span></a></li>
-		
-			<li><a href="/tags/数组/">-数组<span>1</span></a></li>
+			<li><a href="/tags/栈溢出/">栈溢出<span>1</span></a></li>
 		
 			<li><a href="/tags/UAF/">UAF<span>1</span></a></li>
 		
-			<li><a href="/tags/系统调用/">系统调用<span>1</span></a></li>
-		
-			<li><a href="/tags/ret2libc/">ret2libc<span>3</span></a></li>
-		
 			<li><a href="/tags/格式化字符串溢出/">格式化字符串溢出<span>1</span></a></li>
 		
-			<li><a href="/tags/Java/">Java<span>1</span></a></li>
+			<li><a href="/tags/ret2VDSO/">ret2VDSO<span>1</span></a></li>
+		
+			<li><a href="/tags/栈迁移/">栈迁移<span>1</span></a></li>
+		
+			<li><a href="/tags/ret2libc/">ret2libc<span>4</span></a></li>
+		
+			<li><a href="/tags/C-C/">C/C++<span>1</span></a></li>
 		
 		 
 		</ul>
@@ -586,7 +589,7 @@
       </li>
     
       <li>
-        <a href="/uncategorized/第二次作业/" ><i class="fa fa-file-o"></i>《面向Linux系统下二进制漏洞防御技术的设计与实现》</a>
+        <a href="/uncategorized/第二次作业/" ><i class="fa fa-file-o"></i>面向Linux系统下二进制漏洞防御技术的设计与实现</a>
       </li>
     
   </ul>

@@ -18,7 +18,7 @@
   <meta property="og:site_name" content="Pdxbshx"/>
 
   
-    <meta property="og:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6.png" />
+    <meta property="og:image" content=""/>
   
 
   
@@ -73,31 +73,31 @@
 		  
 		  <li>
 			<a href="/archives" title="All the articles.">
-			  <i class=""></i>Archives
+			  <i class="fa fa-archive"></i>Archives
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/categories" title="All the categories.">
-			  <i class=""></i>Categories
+			  <i class="fa fa-folder"></i>Categories
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/tags" title="All the tags.">
-			  <i class=""></i>Tags
+			  <i class="fa fa-tags"></i>Tags
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/about" title="About me.">
-			  <i class=""></i>About
+			  <i class="fa fa-user"></i>About
 			</a>
 		  </li>
 		  
 		  <li>
 			<a href="/atom.xml" title="Subscribe me.">
-			  <i class=""></i>RSS
+			  <i class="fa fa-user"></i>RSS
 			</a>
 		  </li>
 		  
@@ -131,8 +131,7 @@
 	<div class="mypage">		
 	  		
 
-	  <h1 id="BlueKeep漏洞的发现与利用"><a href="#BlueKeep漏洞的发现与利用" class="headerlink" title="BlueKeep漏洞的发现与利用"></a>BlueKeep漏洞的发现与利用</h1><p><strong>—20203106716 胡礼</strong></p>
-<h2 id="漏洞的概述"><a href="#漏洞的概述" class="headerlink" title="漏洞的概述"></a>漏洞的概述</h2><p>2019年5月14日，微软发布了针对远程桌面服务的关键远程执行代码漏洞CVE-2019-0708的补丁，该漏洞影响某些旧版本的windows。修复了 Windows 远程桌面服务的远程代码执行漏洞，该漏洞影响了某些旧版本的 Windows 系统。此漏洞是预身份验证，无需用户交互，这就意味着这个漏洞可以通过网络蠕虫的方式被利用，与2017年 WannaCry 勒索病毒的传播方式类似。攻击者一旦成功触发该漏洞，便可以在目标系统上执行任意代码，该漏洞的触发无需任何用户交互操作。这意味着，存在漏洞的计算机只要联网，无需任何操作，就可能遭遇黑客远程攻击，运行恶意代码。成功利用此漏洞的攻击者可以在目标系统完成安装应用程序，查看、更改或删除数据，创建完全访问权限的新账户等操作。</p>
+	  <h1 id="BlueKeep漏洞的发现与利用"><a href="#BlueKeep漏洞的发现与利用" class="headerlink" title="BlueKeep漏洞的发现与利用"></a>BlueKeep漏洞的发现与利用</h1><h2 id="漏洞的概述"><a href="#漏洞的概述" class="headerlink" title="漏洞的概述"></a>漏洞的概述</h2><p>2019年5月14日，微软发布了针对远程桌面服务的关键远程执行代码漏洞CVE-2019-0708的补丁，该漏洞影响某些旧版本的windows。修复了 Windows 远程桌面服务的远程代码执行漏洞，该漏洞影响了某些旧版本的 Windows 系统。此漏洞是预身份验证，无需用户交互，这就意味着这个漏洞可以通过网络蠕虫的方式被利用，与2017年 WannaCry 勒索病毒的传播方式类似。攻击者一旦成功触发该漏洞，便可以在目标系统上执行任意代码，该漏洞的触发无需任何用户交互操作。这意味着，存在漏洞的计算机只要联网，无需任何操作，就可能遭遇黑客远程攻击，运行恶意代码。成功利用此漏洞的攻击者可以在目标系统完成安装应用程序，查看、更改或删除数据，创建完全访问权限的新账户等操作。</p>
 <h2 id="漏洞的原理"><a href="#漏洞的原理" class="headerlink" title="漏洞的原理"></a>漏洞的原理</h2><p>存在漏洞的远程桌面服务器，在接收到特殊数据包时会释放一个内部信道 MS_T120 的控制结构体，但并未将指向该结构体的指针删除，而且在远程桌面连接结束之后还会调用 MS_T120 结构体内的一个函数指针，若攻击者可通过远程发送数据重新占据被释放的 MS_T120，并为结构体内的函数指针赋恰当的值，即可实现远程命令执行。</p>
 <p>事实上这个漏洞的本质就是一个<strong>UAF漏洞</strong>，那么对于UAF漏洞其实是堆溢出里面的一个知识点，下面简单介绍一下UAF：</p>
 <p>uaf的全称为use after free，即在free之后进行使用。<br>内存块被释放后，其对应的指针被设置为 NULL ， 然后再次使用，自然程序会崩溃。<br>内存块被释放后，其对应的指针没有被设置为 NULL ，然后在它下一次被使用之前，没有代码对这块内存块进行修改，那么程序很有可能可以正常运转。<br>内存块被释放后，其对应的指针没有被设置为 NULL，但是在它下一次使用之前，有代码对这块内存进行了修改，那么当程序再次使用这块内存时，就很有可能会出现奇怪的问题。<br>我们也称没有被free的指针称为悬挂指针、野指针。</p>
@@ -263,6 +262,14 @@
     
 
 	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/BlueKeep漏洞/">BlueKeep漏洞<span>1</span></a></li>
+    </ul>
+	</div>
 		
 
 	<!-- toc -->
