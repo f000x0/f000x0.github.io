@@ -1,148 +1,137 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>第五周笔记 | Pdxbshx</title><meta name="author" content="pdxbshx"><meta name="copyright" content="pdxbshx"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1、not_the_same_3dsctf_2016(BUUCTF)首先对程序进行检查： 开启了NX保护，然后将程序放入到ida中进行反编译：   发现整个程序比较简单，有明显的gets危险函数，首先我想到的是先让gets函数的返回到get_secret函数，然后在调用printf函数去将这个flag.txt给打印出来，构造的exp如下： 123456789from pwn import *r &#x3D;">
-<meta property="og:type" content="article">
-<meta property="og:title" content="第五周笔记">
-<meta property="og:url" content="http://pdxbshx.top/uncategorized/%E7%AC%AC%E4%BA%94%E5%91%A8%E7%AC%94%E8%AE%B0/index.html">
-<meta property="og:site_name" content="Pdxbshx">
-<meta property="og:description" content="1、not_the_same_3dsctf_2016(BUUCTF)首先对程序进行检查： 开启了NX保护，然后将程序放入到ida中进行反编译：   发现整个程序比较简单，有明显的gets危险函数，首先我想到的是先让gets函数的返回到get_secret函数，然后在调用printf函数去将这个flag.txt给打印出来，构造的exp如下： 123456789from pwn import *r &#x3D;">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2.png">
-<meta property="article:published_time" content="2022-11-07T15:01:14.821Z">
-<meta property="article:modified_time" content="2023-04-18T16:04:50.133Z">
-<meta property="article:author" content="pdxbshx">
-<meta property="article:tag" content="ret2shellcode">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://pdxbshx.top/uncategorized/%E7%AC%AC%E4%BA%94%E5%91%A8%E7%AC%94%E8%AE%B0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
-  copy: {
-    success: '复制成功',
-    error: '复制错误',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  date_suffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'fancybox',
-  Snackbar: undefined,
-  source: {
-    justifiedGallery: {
-      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
-    }
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isAnchor: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '第五周笔记',
-  isPost: true,
-  isHome: false,
-  isHighlightShrink: false,
-  isToc: true,
-  postUpdate: '2023-04-19 00:04:50'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
-
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(win=>{
-    win.saveToLocal = {
-      set: function setWithExpiry(key, value, ttl) {
-        if (ttl === 0) return
-        const now = new Date()
-        const expiryDay = ttl * 86400000
-        const item = {
-          value: value,
-          expiry: now.getTime() + expiryDay,
-        }
-        localStorage.setItem(key, JSON.stringify(item))
-      },
-
-      get: function getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key)
-
-        if (!itemStr) {
-          return undefined
-        }
-        const item = JSON.parse(itemStr)
-        const now = new Date()
-
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return item.value
-      }
-    }
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
   
-    win.getScript = url => new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = url
-      script.async = true
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    })
+  <title>第五周笔记 | Pdxbshx</title>
+  <meta name="author" content="pdxbshx">
   
-      win.activateDarkMode = function () {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = function () {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
-    
-          if (t === 'dark') activateDarkMode()
-          else if (t === 'light') activateLightMode()
-        
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
-    
-    const detectApple = () => {
-      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-    })(window)</script><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Pdxbshx</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">第五周笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-07T15:01:14.821Z" title="发表于 2022-11-07 23:01:14">2022-11-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-04-18T16:04:50.133Z" title="更新于 2023-04-19 00:04:50">2023-04-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="第五周笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1、not-the-same-3dsctf-2016-BUUCTF"><a href="#1、not-the-same-3dsctf-2016-BUUCTF" class="headerlink" title="1、not_the_same_3dsctf_2016(BUUCTF)"></a>1、not_the_same_3dsctf_2016(BUUCTF)</h1><p>首先对程序进行检查：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-1.png"></p>
+  <meta name="description" content="不需要去抱怨什么|">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="第五周笔记"/>
+  <meta property="og:site_name" content="Pdxbshx"/>
+
+  
+    <meta property="og:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2.png" />
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Pdxbshx" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Pdxbshx</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class=""></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class=""></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class=""></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class=""></i>About
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class=""></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> 第五周笔记</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h1 id="1、not-the-same-3dsctf-2016-BUUCTF"><a href="#1、not-the-same-3dsctf-2016-BUUCTF" class="headerlink" title="1、not_the_same_3dsctf_2016(BUUCTF)"></a>1、not_the_same_3dsctf_2016(BUUCTF)</h1><p>首先对程序进行检查：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-1.png"></p>
 <p>开启了NX保护，然后将程序放入到ida中进行反编译：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-2.png"></p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-3.png"></p>
@@ -189,4 +178,147 @@
 <p>打通的结果如下所示：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-18.png"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-19.png"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/5-20.png"></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://pdxbshx.top">pdxbshx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://pdxbshx.top/uncategorized/%E7%AC%AC%E4%BA%94%E5%91%A8%E7%AC%94%E8%AE%B0/">http://pdxbshx.top/uncategorized/%E7%AC%AC%E4%BA%94%E5%91%A8%E7%AC%94%E8%AE%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://pdxbshx.top" target="_blank">Pdxbshx</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ret2shellcode/">ret2shellcode</a></div><div class="post_share"><div class="social-share" data-image="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/uncategorized/%E7%AC%AC%E5%85%AD%E5%91%A8%E7%AC%94%E8%AE%B0/"><img class="prev-cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">第六周笔记</div></div></a></div><div class="next-post pull-right"><a href="/uncategorized/%E7%AC%AC%E5%9B%9B%E5%91%A8%E7%AC%94%E8%AE%B0/"><img class="next-cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/4.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">第四周笔记</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/uncategorized/%E7%AC%AC%E4%BA%8C%E5%91%A8%E7%AC%94%E8%AE%B0/" title="第二周笔记"><img class="cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/4.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-07</div><div class="title">第二周笔记</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pdxbshx</div><div class="author-info__description">不需要去抱怨什么|</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2459745740&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是记录自己学习pwn的博客，欢迎各位大佬指教！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81not-the-same-3dsctf-2016-BUUCTF"><span class="toc-number">1.</span> <span class="toc-text">1、not_the_same_3dsctf_2016(BUUCTF)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81ciscn-2019-n-5%EF%BC%88BUUCTF%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">2、ciscn_2019_n_5（BUUCTF）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81ciscn-2019-ne-5%EF%BC%88BUUCTF%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">3、ciscn_2019_ne_5（BUUCTF）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%5BOGeek2019%5Dbabyrop/" title="(OGeek2019)babyrop"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="(OGeek2019)babyrop"/></a><div class="content"><a class="title" href="/uncategorized/%5BOGeek2019%5Dbabyrop/" title="(OGeek2019)babyrop">(OGeek2019)babyrop</a><time datetime="2023-08-08T16:47:56.982Z" title="发表于 2023-08-09 00:47:56">2023-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/C%E3%80%81C++/" title="C/C++"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C/C++"/></a><div class="content"><a class="title" href="/uncategorized/C%E3%80%81C++/" title="C/C++">C/C++</a><time datetime="2023-05-02T08:25:45.919Z" title="发表于 2023-05-02 16:25:45">2023-05-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="Java学习"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java学习"/></a><div class="content"><a class="title" href="/uncategorized/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="Java学习">Java学习</a><time datetime="2023-04-18T16:12:14.171Z" title="发表于 2023-04-19 00:12:14">2023-04-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A/" title="BlueKeep漏洞的发现与利用"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BlueKeep漏洞的发现与利用"/></a><div class="content"><a class="title" href="/uncategorized/%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A/" title="BlueKeep漏洞的发现与利用">BlueKeep漏洞的发现与利用</a><time datetime="2023-01-05T17:40:03.353Z" title="发表于 2023-01-06 01:40:03">2023-01-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/uncategorized/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%BD%9C%E4%B8%9A/" title="《面向Linux系统下二进制漏洞防御技术的设计与实现》"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《面向Linux系统下二进制漏洞防御技术的设计与实现》"/></a><div class="content"><a class="title" href="/uncategorized/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%BD%9C%E4%B8%9A/" title="《面向Linux系统下二进制漏洞防御技术的设计与实现》">《面向Linux系统下二进制漏洞防御技术的设计与实现》</a><time datetime="2023-01-05T17:40:03.349Z" title="发表于 2023-01-06 01:40:03">2023-01-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By pdxbshx</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,文明,和谐,自由,平等,公正,法治,爱国,诚信,敬业,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+
+	  <div class="article-footer-copyright">
+
+    本博客采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议(CC BY-NC-SA 4.0) 发布.</a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a href="/uncategorized/第六周笔记/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> 上一页</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/uncategorized/第四周笔记/" type="button" class="btn btn-default ">下一页<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">留言</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2022-11-07 
+	</div>
+	
+
+	<!-- categories -->
+    
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ret2shellcode/">ret2shellcode<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2023 pdxbshx's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>
