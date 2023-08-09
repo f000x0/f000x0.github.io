@@ -7,9 +7,15 @@
   <meta http-equiv="expires" content="0">
   
   <title>简单的栈溢出 | Pdxbshx</title>
-  <meta name="author" content="pdxbshx">
+  <meta name="author" content="John Doe">
   
-  <meta name="description" content="不需要去抱怨什么|">
+  <meta name="description" content="简单的栈溢出栈溢出的前提：1.程序必须向栈上写入数据2.写入的数据大小没有被良好的控制
+stack-example gcc -m32 -fno-stack-protector stack_example.c -o stack_example -no-pie-m32 表示生成32位程序-fno-stack-protector 表示不开启堆栈保护（不生成canary）-no-pie 关闭PIE（避免加载基址被打乱）gcc -v查看默认的开关情况,若存在–enable-default-pie代表PIE默认开启
+使用checksec检查编译出的文件➜  stack-example checksec stack_exampleArch:   i386-32-littleRELRO:   Partial RELROStack:   No canary foundNX:    NX enabledPIE:    No PIE (0x8048000)注意：提到编译时的PIE保护，linux还存在地址空间分布随机化（ASLR），只有可执行文件开启了PIE保护，还需系统开启ASLR才会打乱基址，否则程序运行时依旧会加载一个固定的基址（和NO PIE基址不同），可以通过：&amp;#x2F;proc&amp;#x2F;sys&amp;#x2F;kernel&amp;#x2F;randomize_va_space来控制 ASLR 启动与否，具体的选项有0，关闭 ASLR，没有随机化。栈、堆、.so 的基地址每次都相同。1，普通的 ASLR。栈基地址、mmap 基地址、.so 加载基地址都将被随机化，但是堆基地址没有随机化。2，增强的 ASLR，在 1 的基础上，增加了堆基地址随机化。
+IDA反编译工具
+栈溢出的重要步骤1、寻找危险函数输入：gets(直接读取一行，忽略’\x00’)、scanf、vscanf输出：sprintf字符串：strcpy(字符串复制，遇到’\x00’停止)、strcat(字符串拼接，遇到’\x00’停止)、bcopy2、确定填充长度计算我们所要操作的地址与我们所要覆盖的地址的距离，操作方法就是打开IDA，根据给定的地址计算偏移，一般变量会有以下几种索引模式：相对于栈基地址的的索引，可以直接通过查看 EBP 相对偏移获得相对应栈顶指针的索引，一般需要进行调试，之后还是会转换到第一种类型。直接地址索引，就相当于直接给定了地址。一般来说，我们会有如下的覆盖需求：覆盖函数返回地址，这时候就是直接看 EBP 即可。覆盖栈上某个变量的内容，这时候就需要更加精细的计算了。覆盖 bss 段某个变量的内容。根据现实执行情况，覆盖特定的变量或地址的内容。之所以我们想要覆盖某个地址，是因为我们想通过覆盖地址的方法来直接或者间接地控制程序执行流程。
+自主学习部分1、Linux中的保护机制①canary（栈保护）原理：栈溢出保护是一种缓冲区溢出攻击缓解手段，当函数存在缓冲区溢出攻击漏洞时，攻击者可以覆盖栈上的返回地址来让shellcode能够得到执行。当启用栈保护后，函数开始执行的时候会先往栈里插入cookie信息，当函数真正返回的时候会验证cookie信息是否合法，如果不合法就停止程序运行。攻击者在覆盖返回地址的时候往往也会将cookie信息给覆盖掉，导致栈保护检查失败而阻止shellcode的执行。编译参数：-fno-stack-protector &amp;#x2F;-fstack-protector &amp;#x2F; -fstack-protector-all (关闭 &amp;#x2F; 开启 &amp;#x2F; 全开启)②NX（no execute不可执行）原理：将数据所在内存页标识为不可执行，当程序溢出成功转入shellcode时，程序会尝试在数据页面上执行指令，此时CPU就会抛出异常，而不是去执行恶意指令。编译参数：-z execstack &amp;#x2F; -z noexecstack (关闭 &amp;#x2F; 开启)③PIE（position-independent executables，地址无关可执行文件）原理：一个针对代码段.text, 数据段.*data，.bss等固定地址的一个防御技术。同ASLR同样，应用了PIE的程序会在每次加载时都变换加载基址，从而使位于程序自己的gadget也失效。编译参数：-no-pie &amp;#x2F; -pie (关闭 &amp;#x2F; 开启)④RELRO(read only relocation)原理及介绍：在Linux系统安全领域，数据可以写的存储区就会是攻击的目标，尤其是存储函数指针的区域。 所以在安全防护的角度来说尽量减少可写的存储区域对安全会有极大的好处。GCC, GNU linker以及Glibc-dynamic linker一起配合实现了一种叫做relro的技术:。大概实现就是由linker指定binary的一块经过dynamic linker处理过 relocation之后的区域为只读.设置符号重定向表格为只读或在程序启动时就解析并绑定所有动态符号，从而减少对GOT（Global Offset Table）攻击。RELRO为” Partial RELRO”，说明我们对GOT表具有写权限。编译参数：-z norelro &amp;#x2F; -z lazy &amp;#x2F; -z now (关闭 &amp;#x2F; 部分开启 &amp;#x2F; 完全开启)
+2、ESP寄存器存储的是在调用函数fun()之后，栈的栈顶，并且始终指向栈顶。EBP寄存器存储的是栈的栈底指针，通常叫栈基址，这个是一开始进行fun()函数调用之前，由ESP传递给EBP的。（在函数调用前你可以这么理解：ESP存储的是栈顶地址，也是栈底地址。）EIP寄存器存储的是CPU下次要执行的指令的地址。ECX一般用来当作计数器,EDX是数据寄存器,EAX是累加器,EBX是基址寄存器,  ESI是源变址寄存器,EDI是目的变址寄存器,ESP是堆栈指针寄存器,EBP是基址指针寄存器,其中ESP和EBP一般是针对堆栈而言。push指的是入栈，在程序中常用来暂存某些数据pop指的是出栈，可对数据进行恢复call指的是将返回地址（也就是call指令要执行时EIP的值）压入栈顶，然后是将程序跳转到当前调用的方法的起始地址。jz是ZF汇编语言中的PSW标志寄存器中的一位，JZ则是根据ZF决定是否跳转。若ZF&amp;#x3D;1（表示本次运算结果为0，不为0则ZF&amp;#x3D;0），则跳转，否则不跳转。"> 
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -92,12 +98,6 @@
 		  <li>
 			<a href="/about" title="About me.">
 			  <i class="fa fa-user"></i>About
-			</a>
-		  </li>
-		  
-		  <li>
-			<a href="/atom.xml" title="Subscribe me.">
-			  <i class="fa fa-user"></i>RSS
 			</a>
 		  </li>
 		  
@@ -253,12 +253,12 @@
     
     
     <a href="/uncategorized/第二周笔记/" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> 上一页</a>
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a type="button" class="btn btn-default disabled">下一页<i class="fa fa-arrow-circle-o-right"></i></a>
+    <a type="button" class="btn btn-default disabled">Next<i class="fa fa-arrow-circle-o-right"></i></a>
     
 
     
@@ -271,7 +271,7 @@
 	<!-- comment -->
 	<!--
 <section id="comment">
-    <h2 class="title">留言</h2>
+    <h2 class="title">Comments</h2>
 
     
 </section>
@@ -336,7 +336,7 @@
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2023 pdxbshx's Blog
+  &copy; 2023 John Doe's Blog
   
       powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
 </p>

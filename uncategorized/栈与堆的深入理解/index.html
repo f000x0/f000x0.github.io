@@ -7,9 +7,27 @@
   <meta http-equiv="expires" content="0">
   
   <title>栈与堆的深入理解 | Pdxbshx</title>
-  <meta name="author" content="pdxbshx">
+  <meta name="author" content="John Doe">
   
-  <meta name="description" content="不需要去抱怨什么|">
+  <meta name="description" content="前面四周通过学习栈溢出的一些基本知识，学会了解决一些题目，对于pwn这个方向来说，我觉得要想解决难题，就得对栈与堆的理解的更加深刻，所以我选择写这篇文章来对栈与堆的知识点做一个系统的总结（ps：如果有写的不好的地方，欢迎指出修改）
+栈栈由操作系统自动分配释放 ，用于存放函数的参数值、局部变量等，其操作方式类似于数据结构中的栈。其中函数中定义的局部变量按照先后定义的顺序依次压入栈中，也就是说相邻变量的地址之间不会存在其它变量。栈的内存地址生长方向与堆相反，由高到底，所以后定义的变量地址低于先定义的变量。当然，离开了栈，函数调用也就无法实现，栈总是向下增长的，栈顶是由esp寄存器进行定位，压栈的操作使栈顶的地址减小，弹出的操作使得栈顶的地址增大，栈保存了一个函数所需要维护的信息（堆栈帧或活动记录），堆栈帧一般包括：函数的返回地址和参数，临时变量，保存的上下文（包括在函数调用前后需要保持不变的寄存器），如下图所示：
+
+一个函数的活动记录主要是通过ebp和esp这两个寄存器划定范围，esp寄存器始终指向栈的顶部，ebp寄存器指向函数活动记录的一个固定位置，我们又可以叫ebp寄存器为帧指针
+函数调用时栈的操作如下：
+
+把所有的或者一部分参数压入栈中，如果没有其他参数入栈，那么使用某些特定的寄存器传递
+把当前指令的下一条指令的地址压入栈中
+跳转到函数体执行
+push ebp：把ebp压入栈中，为了在函数返回的时候便于恢复以前的ebp值
+mov ebp,esp： ebp &amp;#x3D; esp （这时ebp指向栈顶，而此时的栈顶就是old ebp）
+
+函数调用结束时：
+
+mov esp,ebp：恢复esp同时回收局部变量空间
+pop ebp：从栈中恢复保存的ebp的值
+ret：从栈中取得返回地址，并跳转到该位置
+
+栈溢出"> 
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -92,12 +110,6 @@
 		  <li>
 			<a href="/about" title="About me.">
 			  <i class="fa fa-user"></i>About
-			</a>
-		  </li>
-		  
-		  <li>
-			<a href="/atom.xml" title="Subscribe me.">
-			  <i class="fa fa-user"></i>RSS
 			</a>
 		  </li>
 		  
@@ -264,13 +276,13 @@
 
     
     
-    <a href="/uncategorized/linux下的系统调用/" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> 上一页</a>
+    <a href="/系统调用/linux下的系统调用/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/uncategorized/第七周笔记/" type="button" class="btn btn-default ">下一页<i
+    <a href="/uncategorized/第七周笔记/" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -284,7 +296,7 @@
 	<!-- comment -->
 	<!--
 <section id="comment">
-    <h2 class="title">留言</h2>
+    <h2 class="title">Comments</h2>
 
     
 </section>
@@ -325,6 +337,12 @@
 	<!-- toc -->
 	<div class="meta-widget">
 	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E6%A0%88"><span class="toc-article-text">栈</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E6%A0%88%E6%BA%A2%E5%87%BA"><span class="toc-article-text">栈溢出</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E5%A0%86"><span class="toc-article-text">堆</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E5%A0%86%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-article-text">堆的概念</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#brk-%E5%92%8Csbrk-%E3%80%81mmap-%E5%92%8Cunmmap"><span class="toc-article-text">brk()和sbrk()、mmap()和unmmap()</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#arena"><span class="toc-article-text">arena</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#chunk"><span class="toc-article-text">chunk</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#%E7%A9%BA%E9%97%B4%E5%A4%8D%E7%94%A8"><span class="toc-article-text">空间复用</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#bins"><span class="toc-article-text">bins</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-article-text">结尾</span></a></li></ol>
+		</div>
+	
 	</div>
 	
     <hr>
@@ -349,7 +367,7 @@
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2023 pdxbshx's Blog
+  &copy; 2023 John Doe's Blog
   
       powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
 </p>

