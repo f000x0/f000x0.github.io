@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Java学习 | Pdxbshx</title><meta name="author" content="pdxbshx"><meta name="copyright" content="pdxbshx"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="JRE、JDK、JVM1、编写代码的过程中，需要使用JRE中Java已经写好的代码。 2、编译代码的过程中，需要使用JDK中的翻译工具。 3、运行代码的过程中，需要使用JDK中的运行工具。 4、代码需要运行在JVM中。  java类的组织形式 java API文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java学习">
+<meta property="og:url" content="http://pdxbshx.top/Java/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Pdxbshx">
+<meta property="og:description" content="JRE、JDK、JVM1、编写代码的过程中，需要使用JRE中Java已经写好的代码。 2、编译代码的过程中，需要使用JDK中的翻译工具。 3、运行代码的过程中，需要使用JDK中的运行工具。 4、代码需要运行在JVM中。  java类的组织形式 java API文档">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg">
+<meta property="article:published_time" content="2023-04-18T16:12:14.171Z">
+<meta property="article:modified_time" content="2023-08-09T10:31:56.368Z">
+<meta property="article:author" content="pdxbshx">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg"><link rel="shortcut icon" href="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png"><link rel="canonical" href="http://pdxbshx.top/Java/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-09 18:31:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Pdxbshx</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Java学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-18T16:12:14.171Z" title="发表于 2023-04-19 00:12:14">2023-04-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-09T10:31:56.368Z" title="更新于 2023-08-09 18:31:56">2023-08-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">749</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Java学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="JRE、JDK、JVM"><a href="#JRE、JDK、JVM" class="headerlink" title="JRE、JDK、JVM"></a>JRE、JDK、JVM</h1><p>1、编写代码的过程中，需要使用JRE中Java已经写好的代码。</p>
+<p>2、编译代码的过程中，需要使用JDK中的翻译工具。</p>
+<p>3、运行代码的过程中，需要使用JDK中的运行工具。</p>
+<p>4、代码需要运行在JVM中。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230806121544787.png" alt="image-20230806121544787"></p>
+<h1 id="java类的组织形式"><a href="#java类的组织形式" class="headerlink" title="java类的组织形式"></a>java类的组织形式</h1><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/20230419002700.png"></p>
+<h1 id="java-API文档"><a href="#java-API文档" class="headerlink" title="java API文档"></a>java API文档</h1><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419003818106.png" alt="image-20230419003818106"></p>
+<h1 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h1><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419003900247.png" alt="image-20230419003900247"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419003933206.png" alt="image-20230419003933206"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419003946241.png" alt="image-20230419003946241"></p>
+<h1 id="基本数据类型转换"><a href="#基本数据类型转换" class="headerlink" title="基本数据类型转换"></a>基本数据类型转换</h1><p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419004009289.png" alt="image-20230419004009289"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419004028665.png" alt="image-20230419004028665"></p>
+<h1 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h1><p>&amp; 逻辑与，| 逻辑或，       &amp;&amp; 短路与      || 短路或<br>逻辑与，两边的表达式都执行，短路与遇到false之后就不会进行执行了</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419004102355.png" alt="image-20230419004102355"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419004125667.png" alt="image-20230419004125667"></p>
+<p>逻辑或，两边表达式都执行，短路或遇到TRUE之后就不会执行了</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419004149268.png" alt="image-20230419004149268"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230419004204285.png" alt="image-20230419004204285"></p>
+<h1 id="Java中的内存分配"><a href="#Java中的内存分配" class="headerlink" title="Java中的内存分配"></a>Java中的内存分配</h1><p>栈内存：方法运行时，进入的内存，局部变量都存放在这块内存中<br>堆内存：new出来的内容都会进入堆内存，并且会存在地址值<br>方法区：字节码文件（.class文件）加载时进入的内存<br>本地方法栈：调用操作系统相关资源<br>寄存器：交给CPU去使用</p>
+<h1 id="面向对象的三个特征（封装、继承、多态）"><a href="#面向对象的三个特征（封装、继承、多态）" class="headerlink" title="面向对象的三个特征（封装、继承、多态）"></a>面向对象的三个特征（封装、继承、多态）</h1><h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><p>1、私有成员变量，提供setXxx和getXxx方法。</p>
+<p>2、将代码抽取到方法中，这是对代码的一种封装。</p>
+<p>3、将属性抽取到类当中，这是对数据的一种封装。</p>
+<p>好处：提高代码的安全性；提高代码的复用性。</p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><h1 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h1><p>定义：构建、创造对象的时候，所调用的方法<br>格式：1、方法名和类名相同，大小写也要一致<br>​            2、没有返回值类型，连void都没有<br>​            3、没有具体的返回值（不能由return带回结果数据）<br>作用：用于给对象的数据（属性）进行初始化<br>注意事项：<br>1、构造方法的创建<br>①如果没有定义构造方法，系统将给出一个默认的无参数构造方法<br>②如果定义了构造方法，系统将不再提供默认的构造方法<br>2、构造方法的重载<br>如果自定义了带参构造方法，还要使用无参数构造方法，就必须再写一个无参数构造方法</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807160518954.png" alt="image-20230807160518954"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807160542427.png" alt="image-20230807160542427"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807160551246.png" alt="image-20230807160551246"></p>
+<h1 id="String和StringBuilder"><a href="#String和StringBuilder" class="headerlink" title="String和StringBuilder"></a>String和StringBuilder</h1><p><strong>根本区别：</strong>String不可改变；StringBuilder可以改变</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807231552043.png" alt="image-20230807231552043"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807231612486.png" alt="image-20230807231612486"> </p>
+<p><strong>StringBuilder概述</strong><br>StringBuilder是一个可变的字符串类，可以将其看做是一个容器<br>作用：提高字符串的操作效率</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807233215936.png" alt="image-20230807233215936"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807233918842.png" alt="image-20230807233918842"><br><strong>注意：方法区不存在堆区中</strong><br><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807234213861.png" alt="image-20230807234213861"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807235244205.png" alt="image-20230807235244205"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230807235445539.png" alt="image-20230807235445539"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230808000451017.png" alt="image-20230808000451017"></p>
+<h1 id="集合与数组的区别对比"><a href="#集合与数组的区别对比" class="headerlink" title="集合与数组的区别对比"></a>集合与数组的区别对比</h1><p>集合类的特点：提供一种存储空间可变的存储模型，存储的数据容量可以发生改变<br>集合和数组的区别：</p>
+<ul>
+<li>共同点： 都是存储数据的容器</li>
+<li>不同点：数组的容量是固定的我，集合的容量是可变的</li>
+</ul>
+<p>如果存储的数据，长度经常发生改变，推荐使用集合<br>ArrayList<String> list &#x3D; new ArrayList&lt;&gt;()；其中&lt;&gt;是对集合的类型进行限制</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230808004345067.png" alt="image-20230808004345067"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230808004616889.png" alt="image-20230808004616889"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230808004235952.png" alt="image-20230808004235952"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20230808004246098.png" alt="image-20230808004246098"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://pdxbshx.top">pdxbshx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://pdxbshx.top/Java/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/">http://pdxbshx.top/Java/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://pdxbshx.top" target="_blank">Pdxbshx</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><div class="post_share"><div class="social-share" data-image="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/C-C/C%E3%80%81C++/"><img class="prev-cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">C/C++</div></div></a></div><div class="next-post pull-right"><a href="/uncategorized/%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A/"><img class="next-cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BlueKeep漏洞的发现与利用</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pdxbshx</div><div class="author-info__description">不需要去抱怨什么|</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2459745740&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是记录自己学习pwn的博客，欢迎各位大佬指教！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JRE%E3%80%81JDK%E3%80%81JVM"><span class="toc-number">1.</span> <span class="toc-text">JRE、JDK、JVM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java%E7%B1%BB%E7%9A%84%E7%BB%84%E7%BB%87%E5%BD%A2%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">java类的组织形式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#java-API%E6%96%87%E6%A1%A3"><span class="toc-number">3.</span> <span class="toc-text">java API文档</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">字符编码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">5.</span> <span class="toc-text">基本数据类型转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">6.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">7.</span> <span class="toc-text">Java中的内存分配</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%B8%89%E4%B8%AA%E7%89%B9%E5%BE%81%EF%BC%88%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%E3%80%81%E5%A4%9A%E6%80%81%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">面向对象的三个特征（封装、继承、多态）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%81%E8%A3%85"><span class="toc-number">8.1.</span> <span class="toc-text">封装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">8.2.</span> <span class="toc-text">继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%80%81"><span class="toc-number">8.3.</span> <span class="toc-text">多态</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95"><span class="toc-number">9.</span> <span class="toc-text">构造方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#String%E5%92%8CStringBuilder"><span class="toc-number">10.</span> <span class="toc-text">String和StringBuilder</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E7%BB%84%E7%9A%84%E5%8C%BA%E5%88%AB%E5%AF%B9%E6%AF%94"><span class="toc-number">11.</span> <span class="toc-text">集合与数组的区别对比</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/ret2shellcode/ez_pz_hackover_2016/" title="ez_pz_hackover_2016"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ez_pz_hackover_2016"/></a><div class="content"><a class="title" href="/ret2shellcode/ez_pz_hackover_2016/" title="ez_pz_hackover_2016">ez_pz_hackover_2016</a><time datetime="2023-10-08T11:31:31.470Z" title="发表于 2023-10-08 19:31:31">2023-10-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="机器学习"/></a><div class="content"><a class="title" href="/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习">机器学习</a><time datetime="2023-08-09T18:24:12.742Z" title="发表于 2023-08-10 02:24:12">2023-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/ret2libc/%5BOGeek2019%5Dbabyrop/" title="(OGeek2019)babyrop"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="(OGeek2019)babyrop"/></a><div class="content"><a class="title" href="/ret2libc/%5BOGeek2019%5Dbabyrop/" title="(OGeek2019)babyrop">(OGeek2019)babyrop</a><time datetime="2023-08-08T16:47:56.982Z" title="发表于 2023-08-09 00:47:56">2023-08-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/C-C/C%E3%80%81C++/" title="C/C++"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C/C++"/></a><div class="content"><a class="title" href="/C-C/C%E3%80%81C++/" title="C/C++">C/C++</a><time datetime="2023-05-02T08:25:45.919Z" title="发表于 2023-05-02 16:25:45">2023-05-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Java/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="Java学习"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java学习"/></a><div class="content"><a class="title" href="/Java/Java%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/" title="Java学习">Java学习</a><time datetime="2023-04-18T16:12:14.171Z" title="发表于 2023-04-19 00:12:14">2023-04-19</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/saber1.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By pdxbshx</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,文明,和谐,自由,平等,公正,法治,爱国,诚信,敬业,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
