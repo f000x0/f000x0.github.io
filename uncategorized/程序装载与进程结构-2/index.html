@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>程序装载与进程结构-2 | Pdxbshx</title><meta name="author" content="pdxbshx"><meta name="copyright" content="pdxbshx"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="本文主要介绍在linux系统上，可执行文件如何变为内存中进程的整个流程。 0x00 程序装载首先，一个终端始终处于等待执行的状态，它其实就是一个进程，当我们输入ls、mv和cp等命令时，它会解析命令并执行相应的命令，这些命令都是可执行文件，它们被存储在不同的文件目录中，一般这些文件都具有全局变量的属性，这是因为我们设置好了它们的环境变量，如下所示： echo $PATH   查看全局环境变量时，输">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序装载与进程结构-2">
+<meta property="og:url" content="http://pdxbshx.github.io/uncategorized/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84-2/index.html">
+<meta property="og:site_name" content="Pdxbshx">
+<meta property="og:description" content="本文主要介绍在linux系统上，可执行文件如何变为内存中进程的整个流程。 0x00 程序装载首先，一个终端始终处于等待执行的状态，它其实就是一个进程，当我们输入ls、mv和cp等命令时，它会解析命令并执行相应的命令，这些命令都是可执行文件，它们被存储在不同的文件目录中，一般这些文件都具有全局变量的属性，这是因为我们设置好了它们的环境变量，如下所示： echo $PATH   查看全局环境变量时，输">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg">
+<meta property="article:published_time" content="2024-04-14T08:30:57.217Z">
+<meta property="article:modified_time" content="2024-04-15T13:54:36.955Z">
+<meta property="article:author" content="pdxbshx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg"><link rel="shortcut icon" href="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png"><link rel="canonical" href="http://pdxbshx.github.io/uncategorized/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84-2/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '程序装载与进程结构-2',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-15 21:54:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Pdxbshx</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">程序装载与进程结构-2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-14T08:30:57.217Z" title="发表于 2024-04-14 16:30:57">2024-04-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-15T13:54:36.955Z" title="更新于 2024-04-15 21:54:36">2024-04-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="程序装载与进程结构-2"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文主要介绍在linux系统上，可执行文件如何变为内存中进程的整个流程。</p>
+<h3 id="0x00-程序装载"><a href="#0x00-程序装载" class="headerlink" title="0x00 程序装载"></a>0x00 程序装载</h3><p>首先，一个终端始终处于等待执行的状态，它其实就是一个进程，当我们输入ls、mv和cp等命令时，它会解析命令并执行相应的命令，这些命令都是可执行文件，它们被存储在不同的文件目录中，一般这些文件都具有全局变量的属性，这是因为我们设置好了它们的环境变量，如下所示：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token environment constant">$PATH</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414214040335.png" alt="image-20240414214040335"></p>
+<p>查看全局环境变量时，输入env命令即可。接下来证明一下ls、cp和mv等命令都属于可执行文件，当我们使用这些命令时，操作系统会优先从上面的环境变量中去找，我们可以查看ls命令对应的可执行文件在哪个位置：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">which</span> <span class="token function">ls</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414221754512.png" alt="image-20240414221754512"></p>
+<p>&#x2F;usr&#x2F;bin&#x2F;这个目录是存在于上面的环境变量里面的，接下来我们就进入&#x2F;usr&#x2F;bin&#x2F;目录下查看ls文件</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414222059484.png" alt="image-20240414222059484"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414222135566.png" alt="image-20240414222135566"></p>
+<p>同样的mv和cp命令对应的可执行文件也可以在这个目录下面查找到</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414222303201.png" alt="image-20240414222303201"></p>
+<p>ok，既然我们可以将环境变量中的可执行文件作为bash终端的一个命令，那么我们同样也可以将我们自己编写的程序作为终端的命令，刚开始我的想法是将我desktop上的一个可执行文件移入到&#x2F;usr&#x2F;bin&#x2F;目录中，但是得到了下面的结果：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414223759560.png" alt="image-20240414223759560"></p>
+<p>具体的原因我也不是很清楚，可能是与mv这个程序本身设置有关吧。后面我又换了一种想法，那就是将我的桌面环境添加到环境变量”$PATH”中去，试试这样可不可行，如下所示：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414233423697.png" alt="image-20240414233423697"></p>
+<p>环境变量已经添加完毕，接下来我创建了一个test.c文件，并将其编译成名为”aaaa”的可执行文件，代码如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">int</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span><span class="token keyword">int</span> y<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token keyword">return</span> <span class="token punctuation">(</span>x<span class="token operator">+</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+	<span class="token keyword">int</span> a<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>b<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span><span class="token function">add</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将其编译并运行：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414234517201.png" alt="image-20240414234517201"></p>
+<p>ok，理论上来说，我们可以在任意的目录下输入”aaaa”这个命令，最后终端会输出”3”，测试如下：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240414234722041.png" alt="image-20240414234722041"></p>
+<p>测试成功，解释完毕。既然这样的话，那么是否会有这么一个问题：为什么我们需要在当前目录下的可执行文件前面加上”.&#x2F;“符号才能运行？其实在前面加”.&#x2F;“表示的意思是当前目录，我们在终端输入命令其实是给execve函数传递参数（可以在终端输入可执行文件的完整路径，同样可以运行）。execve函数是什么？它是一个系统调用函数，在linux系统中，一个进程通过fork函数来创建另外一个进程，创建的子进程完全复制父进程的资源，在子进程中通过使用execve系统调用函数来创建一个自己的进程，即将指定的文件名或者路径名找到可执行文件，并用来取代从父进程fork过来的数据段、代码段和堆栈段，在执行完之后，原调用的进程内容除了进程号之外，其他全部被替换了，最终可执行文件也就变为了进程。</p>
+<p>上面介绍了可执行文件变为进程的整体过程，接下来介绍可执行文件装载的过程。<br>装载可执行文件一般采用覆盖装入（overlay）和页映射（paging）两种方法，目前主要使用页映射。最开始我们创建一个进程，然后装载相应的可执行文件并执行，最开始只需要做三件事情：<br>①创建一个独立的虚拟地址空间，主要是分配一个页目录；<br>②读取可执行文件的头，并且建立虚拟地址空间和可执行文件的映射关系。将可执行文件映射到虚拟地址空间，即磁盘中文件的物理页和进程虚拟地址空间的映射，这样当我们将cpu执行虚拟页中的地址时，会从磁盘中找到并copy至内存中；<br>③将cpu的指令寄存器设置为可执行文件的入口地址，启动运行。从elf文件中的入口地址开始执行程序。<br>bash进程调用fork之后创建一个新的进程，然后新的进程调用execve系统调用函数执行指定的elf文件，bash进程继续返回等待新进程执行结束，然后重新等待用户输入命令，execve系统调用函数定义在unistd.h文件中，其原型如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">execve</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> filename<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token keyword">const</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token keyword">const</span> envp<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>其中这三个参数分别为可执行文件名，执行参数，环境变量，glibc对execve系统调用进行了包装，提供了execl(),execlp(),execle(),execv().execvp()等五个不同形式的exec系列API，它们只是在调用的参数形式上有所区别，但最终都会调用到execve()这个系统调用函数上。</p>
+<p>调用execve系统调用之后，再调用内核的入口sys_execve，sys_execve进行一些参数的检查复制之后，调用do_execve()，因为可执行文件不止elf一种，还有java程序和以”#!”开始的脚本程序等，所以do_execve()会首先检查被执行文件，读取前128个字节，特别是开头4个字节的魔数（Magic），用来判断可执行文件的格式，如果是解释型语言的脚本，前两个字节”#!”就构成了魔数，系统一旦判断到这两个字节，就对后面的字符串进行解析，以确定程序解释器的路径。当do_execve()读取了这128个字节的文件头部之后，然后调用search_binary_handle()去搜索和匹配合适的可执行文件装载处理的过程。Linux中所有被支持的可执行文件格式都有相应的装载处理过程，search_binary_handle()会通过判断文件头部的魔数确定文件的格式，并调用相应的装载处理过程。如ELF用load_elf_binary()、a.out用load_aout_binary()，脚本用load_script()。其中ELF装载过程的主要步骤是：<br>①检查ELF可执行文件格式的有效性，比如魔数、程序头表中段(Segment)的数量；<br>②寻找动态链接的”.interp”段（该段保存可执行文件所需要的动态链接器的路径），设置动态链接器的路径；<br>③根据ELF可执行文件的程序头表的描述，对ELF文件进行映射，比如代码、数据、只读数据；<br>④初始化ELF进程环境，比如进程启动时edx寄存器的地址应该是DT_FINI的地址（结束代码地址）；<br>⑤将系统调用的返回地址修改成ELF可执行文件的入口点，这个入口点取决于程序的链接方式，对于静态链接的ELF可执行文件，这个程序入口就是ELF文件的文件头中e_enEry所指的地址，对于动态链接的可执行文件，程序入口点是动态链接器。</p>
+<p>当load_elf_binary()执行完毕，返回至do_execve()再返回到sys_execve()，上面的第⑤步中已经把系统调用的返回地址改为了被装载的ELF程序的入口地址。所以当sys_execve()系统调用从内核态返回到用户态时，eip寄存器直接跳转到了ELF程序的入口地址，于是新的程序开始执行，ELF可执行文件装载完成。</p>
+<h3 id="0x01-进程结构"><a href="#0x01-进程结构" class="headerlink" title="0x01 进程结构"></a>0x01 进程结构</h3><p>前面讲的内容全部都是有关可执行文件装载的过程，我们经常听到可执行文件在内存中以进程的形式存在，进程都有自己的虚拟地址空间。虚拟地址空间其实只是个抽象的概念，实际上虚拟地址空间是一个结构体(由多个vm_area_struct组成)，这里我再仔细介绍一下。<br>Linux进程结构主要涉及三个结构体task_struct、mm_struct、vm_area_struct。<br>先放几张进程结构的图：</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240415205844966.png" alt="image-20240415205844966"></p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240415211640615.png" alt="image-20240415211640615"></p>
+<p><strong>(1) task_struct</strong><br>task_struct是Linux系统中的进程控制块（PCB），内部包含了一个进程所需的各项信息。其中mm_struct *mm则表示进程所拥有的内存空间描述。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">task_struct</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//表示进程当前运行状态</span>
+    <span class="token comment">//volatile避免了读取缓存在寄存器中的脏数据，而是直接从内存中取</span>
+    <span class="token comment">//-1 不可运行  0 可运行的  >0 暂停状态</span>
+	<span class="token keyword">volatile</span> <span class="token keyword">long</span> state<span class="token punctuation">;</span>	<span class="token comment">/* -1 unrunnable, 0 runnable, >0 stopped */</span>
+
+	<span class="token keyword">struct</span> <span class="token class-name">thread_info</span> <span class="token operator">*</span>thread_info<span class="token punctuation">;</span>
+	<span class="token class-name">atomic_t</span> usage<span class="token punctuation">;</span>
+	<span class="token comment">//进程标记符 flags反映进程的状态信息，用于内核标识当前进程的状态</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> flags<span class="token punctuation">;</span>	<span class="token comment">/* per process flags, defined below */</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> ptrace<span class="token punctuation">;</span>
+
+	<span class="token keyword">int</span> lock_depth<span class="token punctuation">;</span>		<span class="token comment">/* Lock depth */</span>
+
+	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+	<span class="token comment">//mm进程所拥有的内存空间描述符，对于内核线程的mm为NULL</span>
+	<span class="token comment">//activi_mm进程运行时所使用的进程描述符</span>
+	<span class="token keyword">struct</span> <span class="token class-name">mm_struct</span> <span class="token operator">*</span>mm<span class="token punctuation">,</span> <span class="token operator">*</span>active_mm<span class="token punctuation">;</span>
+
+<span class="token comment">/* task state */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">linux_binfmt</span> <span class="token operator">*</span>binfmt<span class="token punctuation">;</span>
+	<span class="token keyword">int</span> exit_code<span class="token punctuation">,</span> exit_signal<span class="token punctuation">;</span>
+	<span class="token keyword">int</span> pdeath_signal<span class="token punctuation">;</span>  <span class="token comment">/*  The signal sent when the parent dies  */</span>
+	<span class="token comment">/* ??? */</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> personality<span class="token punctuation">;</span>
+	<span class="token keyword">int</span> did_exec<span class="token operator">:</span><span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token comment">//进程的唯一标识</span>
+	<span class="token class-name">pid_t</span> pid<span class="token punctuation">;</span>
+	<span class="token class-name">pid_t</span> __pgrp<span class="token punctuation">;</span>		<span class="token comment">/* Accessed via process_group() */</span>
+	<span class="token class-name">pid_t</span> tty_old_pgrp<span class="token punctuation">;</span>
+	<span class="token class-name">pid_t</span> session<span class="token punctuation">;</span>
+	<span class="token comment">//线程组标识符</span>
+	<span class="token class-name">pid_t</span> tgid<span class="token punctuation">;</span>
+	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>(2) mm_struct</strong></p>
+<p>mm_struct是进程的内存描述，其中说明了代码段、数据段的起始和结束位置，堆的起始结束位置，栈的起始位置，特别注意这里，pgd指针其指向进程的页目录，虚拟地址到物理地址的转换（包括虚拟地址到磁盘中文件的地址、虚拟地址到内存中物理地址）<br>valid为1，表示page在主存中，对应项为物理地址；<br>valid为0，表示page不在主存而在闪存或者磁盘中，对应项为辅存中地址。</p>
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240415214305651.png" alt="image-20240415214305651"></p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">mm_struct</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//vm_area_struct的链表</span>
+	<span class="token keyword">struct</span> <span class="token class-name">vm_area_struct</span> <span class="token operator">*</span> mmap<span class="token punctuation">;</span>		<span class="token comment">/* list of VMAs */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">rb_root</span> mm_rb<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">vm_area_struct</span> <span class="token operator">*</span> mmap_cache<span class="token punctuation">;</span>	<span class="token comment">/* last find_vma result */</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> free_area_cache<span class="token punctuation">;</span>		<span class="token comment">/* first hole */</span>
+	<span class="token comment">//指向进程的页目录，虚拟地址到物理地址的转换</span>
+	<span class="token comment">//Linux中每个进程有它自己的PGD(Page Global Directory)，它是一个物理页，并包含一个pdg_t数组</span>
+	<span class="token class-name">pgd_t</span> <span class="token operator">*</span> pgd<span class="token punctuation">;</span>
+	<span class="token class-name">atomic_t</span> mm_users<span class="token punctuation">;</span>			<span class="token comment">/* How many users with user space? */</span>
+	<span class="token class-name">atomic_t</span> mm_count<span class="token punctuation">;</span>			<span class="token comment">/* How many references to "struct mm_struct" (users count as 1) */</span>
+	<span class="token comment">//vm_area_struct的数量</span>
+	<span class="token keyword">int</span> map_count<span class="token punctuation">;</span>				<span class="token comment">/* number of VMAs */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">rw_semaphore</span> mmap_sem<span class="token punctuation">;</span>
+	<span class="token class-name">spinlock_t</span> page_table_lock<span class="token punctuation">;</span>		<span class="token comment">/* Protects task page tables and mm->rss */</span>
+
+	<span class="token keyword">struct</span> <span class="token class-name">list_head</span> mmlist<span class="token punctuation">;</span>		<span class="token comment">/* List of all active mm's.  These are globally strung
+						 * together off init_mm.mmlist, and are protected
+						 * by mmlist_lock
+						 */</span>
+    <span class="token comment">//代码段起始、结束位置，数据段起始、结束位置</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> start_code<span class="token punctuation">,</span> end_code<span class="token punctuation">,</span> start_data<span class="token punctuation">,</span> end_data<span class="token punctuation">;</span>
+	<span class="token comment">//堆的起始、结束位置，栈的起始位置，栈因为其性质，只有起始位置</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> start_brk<span class="token punctuation">,</span> brk<span class="token punctuation">,</span> start_stack<span class="token punctuation">;</span>
+	<span class="token comment">//参数段、环境段的起始结束位置</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> arg_start<span class="token punctuation">,</span> arg_end<span class="token punctuation">,</span> env_start<span class="token punctuation">,</span> env_end<span class="token punctuation">;</span>
+	<span class="token comment">//total_vm映射的page数量</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> rss<span class="token punctuation">,</span> total_vm<span class="token punctuation">,</span> locked_vm<span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> def_flags<span class="token punctuation">;</span>
+	<span class="token class-name">cpumask_t</span> cpu_vm_mask<span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> swap_address<span class="token punctuation">;</span>
+
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> saved_auxv<span class="token punctuation">[</span><span class="token number">40</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">/* for /proc/PID/auxv */</span>
+
+	<span class="token keyword">unsigned</span> dumpable<span class="token operator">:</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">ifdef</span> <span class="token expression">CONFIG_HUGETLB_PAGE</span></span>
+	<span class="token keyword">int</span> used_hugetlb<span class="token punctuation">;</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">endif</span></span>
+	<span class="token comment">/* Architecture-specific MM context */</span>
+	<span class="token class-name">mm_context_t</span> context<span class="token punctuation">;</span>
+
+	<span class="token comment">/* coredumping support */</span>
+	<span class="token keyword">int</span> core_waiters<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">completion</span> <span class="token operator">*</span>core_startup_done<span class="token punctuation">,</span> core_done<span class="token punctuation">;</span>
+
+	<span class="token comment">/* aio bits */</span>
+	<span class="token class-name">rwlock_t</span>		ioctx_list_lock<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">kioctx</span>		<span class="token operator">*</span>ioctx_list<span class="token punctuation">;</span>
+
+	<span class="token keyword">struct</span> <span class="token class-name">kioctx</span>		default_kioctx<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>(3) vm_area_struct</strong></p>
+<p>在Linux中，每个segment用一个vm_area_struct结构体表示。每一个vm_area_struct的大小为4K的整数倍，即一页的整数倍。vm_area_struct使用链表和红黑树来组织。在进程地址空间中查找vm_area_struct是非常频繁的操作，比如发生page fault时，使用链表找到与特定地址关联的vm_area_struct时，其时间复杂度是O(N)，使用红黑树的时间复杂度是O(log2N)，尤其在vm_area_struct数量很多的时候，可以显著减少查找所需的时间，同时红黑树是一种非平衡二叉树，可以简化重新平衡树的过程。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">vm_area_struct</span> <span class="token punctuation">&#123;</span>
+	<span class="token comment">//vm_area_struct所属的mm_struct</span>
+	<span class="token keyword">struct</span> <span class="token class-name">mm_struct</span> <span class="token operator">*</span> vm_mm<span class="token punctuation">;</span>	<span class="token comment">/* The address space we belong to. */</span>
+	<span class="token comment">//该虚拟内存空间的首地址</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> vm_start<span class="token punctuation">;</span>		<span class="token comment">/* Our start address within vm_mm. */</span>
+	<span class="token comment">//该虚拟内存空间的尾地址</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> vm_end<span class="token punctuation">;</span>		<span class="token comment">/* The first byte after our end address
+					   within vm_mm. */</span>
+    <span class="token comment">//vm_area_struct链的下一个成员</span>
+	<span class="token comment">/* linked list of VM areas per task, sorted by address */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">vm_area_struct</span> <span class="token operator">*</span>vm_next<span class="token punctuation">;</span>
+
+	<span class="token class-name">pgprot_t</span> vm_page_prot<span class="token punctuation">;</span>		<span class="token comment">/* Access permissions of this VMA. */</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> vm_flags<span class="token punctuation">;</span>		<span class="token comment">/* Flags, listed below. */</span>
+
+    <span class="token comment">//将本vm_area_struct作为一个节点加入到红黑树中</span>
+	<span class="token keyword">struct</span> <span class="token class-name">rb_node</span> vm_rb<span class="token punctuation">;</span>
+
+	<span class="token comment">/*
+	 * For areas with an address space and backing store,
+	 * one of the address_space->i_mmap&#123;,shared&#125; lists,
+	 * for shm areas, the list of attaches, otherwise unused.
+	 */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">list_head</span> shared<span class="token punctuation">;</span>
+
+	<span class="token comment">/* Function pointers to deal with this struct. */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">vm_operations_struct</span> <span class="token operator">*</span> vm_ops<span class="token punctuation">;</span>
+
+	<span class="token comment">/* Information about our backing store: */</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> vm_pgoff<span class="token punctuation">;</span>		<span class="token comment">/* Offset (within vm_file) in PAGE_SIZE
+					   units, *not* PAGE_CACHE_SIZE */</span>
+	<span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span> vm_file<span class="token punctuation">;</span>		<span class="token comment">/* File we map to (can be NULL). */</span>
+	<span class="token keyword">void</span> <span class="token operator">*</span> vm_private_data<span class="token punctuation">;</span>		<span class="token comment">/* was vm_pte (shared mem) */</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<p><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/image-20240415205905158.png" alt="image-20240415205905158"></p>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/622827945?utm_id=0">存储器层次结构（五）虚拟机与虚拟存储–页表、TLB(详细图解) - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41285455/article/details/119276177">Linux进程结构_进程几个重要的结构体-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxMTg2MjA2OA==&mid=2649878147&idx=2&sn=4d19bbcf976818ff609cea2fdedd8d31&chksm=83bfe7d8b4c86eceb8c41e18deec7c0c932417989d1149a984eda9b3f8ce37556a24cd5f24bc&scene=27">是时候了解下 mmap 了 (qq.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wenxuanguan/archive/2013/05/29/3105705.html">进程的创建与可执行程序的加载 - Firewalls - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/CJ_Kano/article/details/42374993">【UNIX】从一个可执行文件的生成到进程在内存中分布 （中）&#x2F;文件到进程的转变_一个可执行文件怎么变成进程-CSDN博客</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://pdxbshx.github.io">pdxbshx</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://pdxbshx.github.io/uncategorized/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84-2/">http://pdxbshx.github.io/uncategorized/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84-2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://pdxbshx.github.io" target="_blank">Pdxbshx</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/uncategorized/off_by_one/"><img class="next-cover" src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">off_by_one</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/a.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pdxbshx</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2459745740&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">这是记录自己学习pwn的博客，欢迎各位大佬指教！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x00-%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">0x00 程序装载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">0x01 进程结构</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84-2/" title="程序装载与进程结构-2">程序装载与进程结构-2</a><time datetime="2024-04-14T08:30:57.217Z" title="发表于 2024-04-14 16:30:57">2024-04-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/off_by_one/" title="off_by_one">off_by_one</a><time datetime="2024-04-11T13:14:58.510Z" title="发表于 2024-04-11 21:14:58">2024-04-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/%E7%A8%8B%E5%BA%8F%E8%A3%85%E8%BD%BD%E4%B8%8E%E8%BF%9B%E7%A8%8B%E7%BB%93%E6%9E%84-1/" title="程序装载与进程结构-1">程序装载与进程结构-1</a><time datetime="2024-04-03T08:35:59.907Z" title="发表于 2024-04-03 16:35:59">2024-04-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/Unlink/" title="Unlink">Unlink</a><time datetime="2024-01-18T14:14:06.656Z" title="发表于 2024-01-18 22:14:06">2024-01-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/ret2shellcode/ez_pz_hackover_2016/" title="ez_pz_hackover_2016">ez_pz_hackover_2016</a><time datetime="2023-10-08T11:31:31.470Z" title="发表于 2023-10-08 19:31:31">2023-10-08</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://pdxbshx-1314875511.cos.ap-beijing.myqcloud.com/Kimi-no-Na-Wa-night-night-sky.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By pdxbshx</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="富强,民主,文明,和谐,自由,平等,公正,法治,爱国,诚信,敬业,友善" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
