@@ -32,19 +32,20 @@ python3 serve.py
 | --- | --- |
 | `name` / `email` / `slogan` | 姓名、邮箱、主页标语 |
 | `photo` / `photo_alt` | 个人照片路径和替代文本；路径留空可隐藏照片 |
+| `study_year` / `phd_statement` | 硕士年级与博士求学意向 |
 | `research_statement` / `research_interests` | 研究简介与方向 |
 | `advisors` | 导师及其主页 |
 | `links` | CV、Google Scholar、GitHub、ORCID；留空的链接不会显示 |
 | `publications` | 所有论文及其作者、年份、状态、链接 |
 | `education` / `services` / `awards` | 教育、审稿服务与荣誉 |
-| `vulnerabilities` / `other_vulnerabilities` | 代表性漏洞与其他编号 |
+| `vulnerabilities` | CVE/CNVD 编号；每项包含 `id` 和可选的 `url` |
 | `updated` | 页脚更新月份 |
 
 论文条目中：
 
-- `selected: true` 表示进入默认的精选列表。
+- `first_author: true` 标记独立一作或共同一作论文。默认展示全部论文，一作论文排在前面，各组按年份倒序排列；点击 First author 可只看一作论文。
 - `status: "published"` 表示已发表或已录用；`"under_review"` 表示在审；`"major_revision"` 表示大修。
-- 在审或大修稿件独立列入 Manuscripts，不以投稿会议或年份显示为已录用论文。
+- 在审或大修稿件参与同一列表的排序，并明确标记 Under review 或 Major revision，不以投稿会议或年份显示为已录用论文。
 - `paper` 和 `code` 填入真实链接；留空就不显示按钮。
 - 作者姓名末尾 `*` 和 `†` 分别标记共同一作和通讯作者；姓名 `Li Hu` 自动加粗。
 - `summary` 可选，用一句话介绍代表作。
@@ -88,7 +89,7 @@ li-hu-homepage/
 
 个人经历、论文作者及稿件状态依据提供的 `Li_Hu_CV_USTC.pdf` 整理；研究简介、标语和代表作的一句话描述为根据研究方向撰写的主页文案。完整 CV 保留原文件。
 
-主页保留 8 篇已发表或录用论文和 9 篇在审或大修稿件。默认精选 4 篇，完整论文和所有稿件都可在页面查看。论文链接仅填写能匹配标题和作者的公开记录；没有确认的链接保留空值。GitHub 个人链接已填写；Scholar 和 ORCID 链接可以在 `links` 中补上。
+主页保留 8 篇已发表或录用论文和 9 篇在审或大修稿件，默认全部展示。5 篇独立一作或共同一作论文（含在审、大修稿件）优先排列，也可通过 First author 单独筛选。Security Research 仅展示 CVE/CNVD 编号。论文链接仅填写能匹配标题和作者的公开记录；没有确认的链接保留空值。GitHub 个人链接已填写；Scholar 和 ORCID 链接可以在 `links` 中补上。
 
 BibTeX 依据现有 CV 元数据生成，DOI 在有已确认记录时填写。后续可将它们替换为出版方提供的完整引用。稿件年份和目标 venue 保留在 JSON 中供维护，不显示为正式发表信息。
 

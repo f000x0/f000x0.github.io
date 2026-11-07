@@ -3,13 +3,13 @@
 // Content is rendered into index.html. JavaScript only adds optional interactions.
 const filterBar = document.querySelector(".publication-filters");
 const filterButtons = [...document.querySelectorAll("[data-filter]")];
-const papers = [...document.querySelectorAll("#published-list .publication")];
+const papers = [...document.querySelectorAll("#publication-list .publication")];
 const filterStatus = document.querySelector("#filter-status");
 
 function filterPapers(mode, announce = true) {
   let count = 0;
   papers.forEach((paper) => {
-    const show = mode === "all" || paper.dataset.selected === "true";
+    const show = mode === "all" || paper.dataset.firstAuthor === "true";
     paper.hidden = !show;
     if (show) {
       count += 1;
@@ -19,13 +19,13 @@ function filterPapers(mode, announce = true) {
   filterButtons.forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.filter === mode));
   });
-  if (announce) filterStatus.textContent = `Showing ${count} ${mode === "all" ? "published or accepted" : "selected"} papers.`;
+  if (announce) filterStatus.textContent = `Showing ${count} ${mode === "all" ? "papers" : "first-author papers, including equal contributions"}.`;
 }
 
 if (filterBar) {
   filterBar.hidden = false;
   filterButtons.forEach((button) => button.addEventListener("click", () => filterPapers(button.dataset.filter)));
-  filterPapers("selected", false);
+  filterPapers("all", false);
 }
 
 const dialog = document.querySelector("#citation-dialog");
@@ -65,14 +65,12 @@ if (dialog && typeof dialog.showModal === "function") {
   });
 }
 
-// Reveal an individual paper even if it is outside the selected-paper view.
+// Reveal an individual paper even if it is outside the first-author view.
 function revealLinkedPaper() {
   if (!location.hash.startsWith("#paper-")) return;
   const paper = document.getElementById(location.hash.slice(1));
   if (!paper) return;
-  const manuscripts = paper.closest("details");
-  if (manuscripts) manuscripts.open = true;
-  else filterPapers("all", false);
+  filterPapers("all", false);
   paper.scrollIntoView({ block: "start" });
 }
 window.addEventListener("hashchange", revealLinkedPaper);

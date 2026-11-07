@@ -65,7 +65,7 @@ def publication(p, name, index):
         actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>BibTeX</a>')
     summary = f'<p class="paper-summary">{esc(p["summary"])}</p>' if p.get("summary") else ""
     action_html = '<div class="paper-actions">' + '<span aria-hidden="true" class="action-separator">/</span>'.join(actions) + '</div>' if actions else ""
-    return f'''<li class="publication" id="paper-{esc(p['id'])}" data-selected="{str(bool(p.get('selected'))).lower()}">
+    return f'''<li class="publication" id="paper-{esc(p['id'])}" data-first-author="{str(bool(p.get('first_author'))).lower()}">
       <span class="paper-index" aria-hidden="true">{index:02d}</span>
       <div class="paper-content">
         <h3 class="paper-title">{title}</h3>
@@ -78,7 +78,7 @@ def publication(p, name, index):
 
 def build():
     data = json.loads(PROFILE.read_text(encoding="utf-8"))
-    papers = data["publications"]
+    papers = sorted(data["publications"], key=lambda p: (not p.get("first_author", False), -p["year"]))
     ids = [p["id"] for p in papers]
     if len(set(ids)) != len(ids) or any(not re.fullmatch(r"[a-z0-9-]+", i) for i in ids):
         raise ValueError("Publication IDs must be unique and use lowercase letters, numbers, and hyphens.")
@@ -87,7 +87,7 @@ def build():
         raise ValueError("Use published, under_review, or major_revision for publication status.")
     published = [p for p in papers if p["status"] == "published"]
     manuscripts = [p for p in papers if p["status"] != "published"]
-    selected = sum(bool(p.get("selected")) for p in published)
+    first_author_count = sum(bool(p.get("first_author")) for p in papers)
     bib_dir = ROOT / "assets" / "bibtex"
     bib_dir.mkdir(parents=True, exist_ok=True)
     for stale in bib_dir.glob("*.bib"):
@@ -105,13 +105,11 @@ def build():
         if data["links"].get(key):
             contact_links.append(link(data["links"][key], esc(label) + ' <span aria-hidden="true">↗</span>'))
     interests = '<span class="interest-divider" aria-hidden="true">/</span>'.join(f'<span>{esc(i)}</span>' for i in data["research_interests"])
-    publication_html = "\n".join(publication(p, data["name"], i + 1) for i, p in enumerate(published))
-    manuscript_html = "\n".join(publication(p, data["name"], i + 1) for i, p in enumerate(manuscripts))
-    vulnerabilities = "\n".join(f'''<li class="vulnerability">
-      <div class="vulnerability-heading">{link(v['url'], esc(v['id']))}<span class="severity">CVSS {esc(v['score'])} · Critical</span></div>
-      <p>{esc(v['product'])} — {esc(v['description'])}</p>
-    </li>''' for v in data["vulnerabilities"])
-    other_cves = ", ".join(esc(v) for v in data["other_vulnerabilities"])
+    publication_html = "\n".join(publication(p, data["name"], i + 1) for i, p in enumerate(papers))
+    vulnerabilities = "\n".join(
+        '<li>' + (link(v["url"], esc(v["id"])) if v.get("url") else esc(v["id"])) + '</li>'
+        for v in data["vulnerabilities"]
+    )
     education = "\n".join(f'''<li class="timeline-item"><div><h3>{esc(e['institution'])}</h3><p>{esc(e['degree'])}</p><p class="muted education-detail">{esc(e['detail'])}</p></div><span class="timeline-date">{esc(e['dates'])}</span></li>''' for e in data["education"])
     services = "\n".join(f'<li><span>{esc(s["name"])} <span class="muted">({esc(s["short"])})</span></span><time>{esc(s["year"])}</time></li>' for s in data["services"])
     awards = "\n".join(f'<li><div><strong>{esc(a["name"])}</strong><p class="muted">{esc(a["detail"])}</p></div><span class="timeline-date">{esc(a["year"])}</span></li>' for a in data["awards"])
@@ -165,27 +163,21 @@ def build():
     <section class="section publications-section" id="publications" aria-labelledby="publications-title">
       <div class="section-heading">
         <h2 id="publications-title">Publications</h2>
-        <div class="publication-filters" aria-label="Filter published papers" hidden>
-          <button type="button" data-filter="selected" aria-pressed="false">Selected <span>{selected}</span></button>
-          <button type="button" data-filter="all" aria-pressed="true">All <span>{len(published)}</span></button>
+        <div class="publication-filters" aria-label="Filter papers" hidden>
+          <button type="button" data-filter="first-author" aria-pressed="false">First author <span>{first_author_count}</span></button>
+          <button type="button" data-filter="all" aria-pressed="true">All <span>{len(papers)}</span></button>
         </div>
       </div>
       <p class="section-note">* Equal contribution <span aria-hidden="true">·</span> † Corresponding author</p>
       <p class="sr-only" id="filter-status" role="status" aria-live="polite"></p>
-      <ol class="publication-list" id="published-list">
+      <ol class="publication-list" id="publication-list">
         {publication_html}
       </ol>
-      <details class="manuscripts">
-        <summary><span>Manuscripts</span><span class="manuscript-count">{len(manuscripts)}</span><span class="details-label">Under review &amp; major revision</span><span class="details-plus" aria-hidden="true">+</span></summary>
-        <ol class="publication-list manuscript-list">{manuscript_html}</ol>
-      </details>
     </section>
 
     <section class="section" id="security" aria-labelledby="security-title">
-      <div class="section-heading"><h2 id="security-title">Security Research</h2><span class="section-aside">Selected disclosures</span></div>
-      <p class="section-intro">Alongside my academic research, I discover and report vulnerabilities in real-world software and embedded devices.</p>
+      <div class="section-heading"><h2 id="security-title">Security Research</h2></div>
       <ul class="vulnerability-list">{vulnerabilities}</ul>
-      <details class="other-disclosures"><summary>More confirmed vulnerabilities <span aria-hidden="true">↗</span></summary><p>{other_cves}</p></details>
     </section>
 
     <section class="section" id="background" aria-labelledby="education-title">
