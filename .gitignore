@@ -1,0 +1,6 @@
+.DS_Store
+.local/
+__pycache__/
+*.pyc
+_site/
+.index.html.tmp
