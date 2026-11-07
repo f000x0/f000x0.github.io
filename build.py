@@ -152,8 +152,9 @@ def build():
       <h1 id="name">{esc(data['name'])}</h1>
       <p class="slogan">{esc(data['slogan'])}</p>
       <div class="biography">
-        <p>I am a master’s student at the <a href="https://en.ustc.edu.cn/" target="_blank" rel="noopener noreferrer">{esc(data['institution'])}</a>, in the {esc(data['school'])}, advised by {advisors}.</p>
+        <p>I am a {esc(data['study_year'])} master’s student in the {esc(data['school'])} at the <a href="https://en.ustc.edu.cn/" target="_blank" rel="noopener noreferrer">{esc(data['institution'])}</a> ({esc(data['institution_short'])}), advised by {advisors}.</p>
         <p>{esc(data['research_statement'])}</p>
+        <p><strong>{esc(data['phd_statement'])}</strong> Please feel free to {link('mailto:' + data['email'], 'contact me')}.</p>
       </div>
       <div class="interest-line" aria-label="Research interests">{interests}</div>
       <div class="contact-links">{''.join(contact_links)}</div>

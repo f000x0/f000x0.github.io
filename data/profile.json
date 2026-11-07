@@ -1,6 +1,7 @@
 {
   "name": "Li Hu",
-  "role": "Master’s Student in Cybersecurity",
+  "role": "Third-Year Master’s Student",
+  "study_year": "third-year",
   "institution": "University of Science and Technology of China",
   "institution_short": "USTC",
   "school": "School of Cyber Science and Technology",
@@ -10,6 +11,7 @@
   "photo": "assets/profile.jpg",
   "photo_alt": "Li Hu’s GitHub avatar",
   "research_statement": "My research focuses on large language models for binary analysis and reverse engineering, as well as AI agents for software engineering. I am interested in building systems that understand low-level code, reason about software, and solve practical engineering tasks.",
+  "phd_statement": "I am currently seeking Ph.D. opportunities in AI for software engineering and binary analysis.",
   "research_interests": ["Binary Analysis", "Reverse Engineering", "LLM Agents"],
   "advisors": [
     {"name": "Weiming Zhang", "title": "Prof.", "url": "http://staff.ustc.edu.cn/~zhangwm/index.html"},
