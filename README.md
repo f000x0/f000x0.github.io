@@ -37,20 +37,21 @@ python3 serve.py
 | `advisors` | 导师及其主页 |
 | `links` | CV、Google Scholar、GitHub、ORCID；留空的链接不会显示 |
 | `publications` | 所有论文及其作者、年份、状态、链接 |
-| `education` / `services` / `awards` | 教育、审稿服务与荣誉 |
+| `services` / `awards` | 审稿服务与荣誉 |
+| `security_statement` | 漏洞发现的简短说明 |
 | `vulnerabilities` | CVE/CNVD 编号；每项包含 `id` 和可选的 `url` |
 | `updated` | 页脚更新月份 |
 
 论文条目中：
 
-- `first_author: true` 标记独立一作或共同一作论文。默认展示全部论文，一作论文排在前面，各组按年份倒序排列；点击 First author 可只看一作论文。
+- 全部论文直接展示，显示顺序与 `publications` 数组完全一致。调整顺序时，移动整个论文对象即可；页面不做自动排序或筛选。
 - `status: "published"` 表示已发表或已录用；`"under_review"` 表示在审；`"major_revision"` 表示大修。
-- 在审或大修稿件参与同一列表的排序，并明确标记 Under review 或 Major revision，不以投稿会议或年份显示为已录用论文。
-- `paper` 和 `code` 填入真实链接；留空就不显示按钮。
+- 在审或大修稿件展示完整投稿会议或期刊名称，并明确标记 Submitted to 和 Under review 或 Major revision。
+- 每篇均显示 `[paper] [code]`。填入真实链接后即可点击；空值显示为灰色的不可点击文字，悬停可查看暂无链接的提示。
 - 作者姓名末尾 `*` 和 `†` 分别标记共同一作和通讯作者；姓名 `Li Hu` 自动加粗。
 - `summary` 可选，用一句话介绍代表作。
 - `type` 取 `inproceedings` 或 `article`，用于生成已发表论文的 BibTeX。
-- `venue_full` 填写完整会议或期刊名称；`doi` 可选。
+- `venue_full` 填写完整会议或期刊名称，`venue` 填写缩写。页面显示全称及括号内的缩写；已发表论文显示年份。在审或大修稿件也必须填写全称。`doi` 可选。
 
 替换 CV 时，覆盖 `assets/Li_Hu_CV.pdf` 即可。
 
@@ -74,7 +75,7 @@ li-hu-homepage/
 ├── data/profile.json         # 日常维护的个人资料和论文
 ├── assets/
 │   ├── styles.css            # 样式和移动端适配
-│   ├── site.js               # 论文筛选与 BibTeX 对话框
+│   ├── site.js               # BibTeX 对话框
 │   ├── favicon.svg           # 文字站点图标
 │   ├── profile.jpg           # 个人照片，当前是临时 GitHub 头像
 │   ├── Li_Hu_CV.pdf          # 下载版 CV
@@ -89,9 +90,9 @@ li-hu-homepage/
 
 个人经历、论文作者及稿件状态依据提供的 `Li_Hu_CV_USTC.pdf` 整理；研究简介、标语和代表作的一句话描述为根据研究方向撰写的主页文案。完整 CV 保留原文件。
 
-主页保留 8 篇已发表或录用论文和 9 篇在审或大修稿件，默认全部展示。5 篇独立一作或共同一作论文（含在审、大修稿件）优先排列，也可通过 First author 单独筛选。Security Research 仅展示 CVE/CNVD 编号。论文链接仅填写能匹配标题和作者的公开记录；没有确认的链接保留空值。GitHub 个人链接已填写；Scholar 和 ORCID 链接可以在 `links` 中补上。
+主页保留 8 篇已发表或录用论文和 9 篇在审或大修稿件，直接全部展示，并严格遵循资料文件中的顺序。当前资料沿用此前的一作优先顺序，可自行调整。Vulnerability Disclosures 以一句话说明漏洞发现总量，按 CVE、CNVD 分组展示 CV 中明确列出的 8 个编号。CV 注明有 10+ 项发现，但没有列出其余编号；补充编号时直接添加到 `vulnerabilities` 即可。Education 不再展示，背景为纯白色。论文链接仅填写能匹配标题和作者的公开记录；没有确认的链接保留空值。GitHub 个人链接已填写；Scholar 和 ORCID 链接可以在 `links` 中补上。
 
-BibTeX 依据现有 CV 元数据生成，DOI 在有已确认记录时填写。后续可将它们替换为出版方提供的完整引用。稿件年份和目标 venue 保留在 JSON 中供维护，不显示为正式发表信息。
+BibTeX 依据现有 CV 元数据生成，DOI 在有已确认记录时填写。后续可将它们替换为出版方提供的完整引用。在审稿件展示目标 venue 和明确的稿件状态，不显示为正式发表信息。
 
 ## 同步到私有仓库
 

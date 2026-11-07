@@ -53,19 +53,27 @@ def bibtex(paper):
 def publication(p, name, index):
     published = p["status"] == "published"
     title = link(p["paper"], esc(p["title"])) if p.get("paper") else esc(p["title"])
-    meta = f'<span class="venue">{esc(p["venue"])} {p["year"]}</span>' if published else '<span class="manuscript-status">' + ("Major revision" if p["status"] == "major_revision" else "Under review") + "</span>"
+    venue_name = p["venue_full"].removeprefix("Proceedings of the ")
+    abbreviation = f'{p["venue"]} {p["year"]}' if published else p["venue"]
+    meta = ("" if published else '<span class="venue-note">Submitted to </span>')
+    meta += f'<span class="venue">{esc(venue_name)}</span> <span class="venue-abbreviation">({esc(abbreviation)})</span>'
+    if not published:
+        status = "Major revision" if p["status"] == "major_revision" else "Under review"
+        meta += f'<span class="manuscript-status"> · {status}</span>'
     if published and p.get("venue_note"):
         meta += f'<span class="venue-note"> · {esc(p["venue_note"])}</span>'
     actions = []
-    if p.get("paper"):
-        actions.append(link(p["paper"], 'Paper <span aria-hidden="true">↗</span>'))
-    if p.get("code"):
-        actions.append(link(p["code"], 'Code <span aria-hidden="true">↗</span>'))
+    for key in ("paper", "code"):
+        label = f'[{key}]'
+        if p.get(key):
+            actions.append(link(p[key], label, f' aria-label="{esc(key.capitalize() + ": " + p["title"])}"'))
+        else:
+            actions.append(f'<span class="unavailable-link" aria-disabled="true" title="{key.capitalize()} link not yet available">{label}</span>')
     if published:
-        actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>BibTeX</a>')
+        actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>[bibtex]</a>')
     summary = f'<p class="paper-summary">{esc(p["summary"])}</p>' if p.get("summary") else ""
-    action_html = '<div class="paper-actions">' + '<span aria-hidden="true" class="action-separator">/</span>'.join(actions) + '</div>' if actions else ""
-    return f'''<li class="publication" id="paper-{esc(p['id'])}" data-first-author="{str(bool(p.get('first_author'))).lower()}">
+    action_html = '<div class="paper-actions">' + ''.join(actions) + '</div>'
+    return f'''<li class="publication" id="paper-{esc(p['id'])}">
       <span class="paper-index" aria-hidden="true">{index:02d}</span>
       <div class="paper-content">
         <h3 class="paper-title">{title}</h3>
@@ -78,7 +86,7 @@ def publication(p, name, index):
 
 def build():
     data = json.loads(PROFILE.read_text(encoding="utf-8"))
-    papers = sorted(data["publications"], key=lambda p: (not p.get("first_author", False), -p["year"]))
+    papers = data["publications"]
     ids = [p["id"] for p in papers]
     if len(set(ids)) != len(ids) or any(not re.fullmatch(r"[a-z0-9-]+", i) for i in ids):
         raise ValueError("Publication IDs must be unique and use lowercase letters, numbers, and hyphens.")
@@ -87,7 +95,6 @@ def build():
         raise ValueError("Use published, under_review, or major_revision for publication status.")
     published = [p for p in papers if p["status"] == "published"]
     manuscripts = [p for p in papers if p["status"] != "published"]
-    first_author_count = sum(bool(p.get("first_author")) for p in papers)
     bib_dir = ROOT / "assets" / "bibtex"
     bib_dir.mkdir(parents=True, exist_ok=True)
     for stale in bib_dir.glob("*.bib"):
@@ -106,11 +113,15 @@ def build():
             contact_links.append(link(data["links"][key], esc(label) + ' <span aria-hidden="true">↗</span>'))
     interests = '<span class="interest-divider" aria-hidden="true">/</span>'.join(f'<span>{esc(i)}</span>' for i in data["research_interests"])
     publication_html = "\n".join(publication(p, data["name"], i + 1) for i, p in enumerate(papers))
-    vulnerabilities = "\n".join(
-        '<li>' + (link(v["url"], esc(v["id"])) if v.get("url") else esc(v["id"])) + '</li>'
-        for v in data["vulnerabilities"]
-    )
-    education = "\n".join(f'''<li class="timeline-item"><div><h3>{esc(e['institution'])}</h3><p>{esc(e['degree'])}</p><p class="muted education-detail">{esc(e['detail'])}</p></div><span class="timeline-date">{esc(e['dates'])}</span></li>''' for e in data["education"])
+    disclosure_groups = []
+    for category in ("CVE", "CNVD"):
+        records = [v for v in data["vulnerabilities"] if v["id"].startswith(category + "-")]
+        identifiers = "".join(
+            '<li>' + (link(v["url"], esc(v["id"])) if v.get("url") else esc(v["id"])) + '</li>'
+            for v in records
+        )
+        disclosure_groups.append(f'<div class="disclosure-group"><dt>{category}</dt><dd><ul class="vulnerability-list">{identifiers}</ul></dd></div>')
+    vulnerabilities = "\n".join(disclosure_groups)
     services = "\n".join(f'<li><span>{esc(s["name"])} <span class="muted">({esc(s["short"])})</span></span><time>{esc(s["year"])}</time></li>' for s in data["services"])
     awards = "\n".join(f'<li><div><strong>{esc(a["name"])}</strong><p class="muted">{esc(a["detail"])}</p></div><span class="timeline-date">{esc(a["year"])}</span></li>' for a in data["awards"])
     description = f"{data['name']} — {data['role']} at {data['institution_short']}. Binary analysis, reverse engineering, and LLM agents for software engineering."
@@ -126,7 +137,7 @@ def build():
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{esc(description)}">
-  <meta name="theme-color" content="#fbfaf7">
+  <meta name="theme-color" content="#ffffff">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{esc(data['name'])} | Academic Homepage">
   <meta property="og:description" content="{esc(description)}">
@@ -140,7 +151,7 @@ def build():
   <header class="site-header">
     <a class="wordmark" href="#about" aria-label="{esc(data['name'])}, back to introduction">{esc(data['name'])}<span class="wordmark-dot">.</span></a>
     <nav aria-label="Main navigation">
-      <a href="#about">About</a><a href="#publications">Publications</a><a href="#security">Security</a><a href="#background">Background</a>
+      <a href="#about">About</a><a href="#publications">Publications</a><a href="#security">Disclosures</a><a href="#service">Service</a>
     </nav>
   </header>
   <main id="main">
@@ -163,26 +174,17 @@ def build():
     <section class="section publications-section" id="publications" aria-labelledby="publications-title">
       <div class="section-heading">
         <h2 id="publications-title">Publications</h2>
-        <div class="publication-filters" aria-label="Filter papers" hidden>
-          <button type="button" data-filter="first-author" aria-pressed="false">First author <span>{first_author_count}</span></button>
-          <button type="button" data-filter="all" aria-pressed="true">All <span>{len(papers)}</span></button>
-        </div>
       </div>
       <p class="section-note">* Equal contribution <span aria-hidden="true">·</span> † Corresponding author</p>
-      <p class="sr-only" id="filter-status" role="status" aria-live="polite"></p>
       <ol class="publication-list" id="publication-list">
         {publication_html}
       </ol>
     </section>
 
     <section class="section" id="security" aria-labelledby="security-title">
-      <div class="section-heading"><h2 id="security-title">Security Research</h2></div>
-      <ul class="vulnerability-list">{vulnerabilities}</ul>
-    </section>
-
-    <section class="section" id="background" aria-labelledby="education-title">
-      <div class="section-heading"><h2 id="education-title">Education</h2></div>
-      <ul class="timeline">{education}</ul>
+      <div class="section-heading"><h2 id="security-title">Vulnerability Disclosures</h2></div>
+      <p class="section-intro">{esc(data['security_statement'])}</p>
+      <dl class="disclosure-groups">{vulnerabilities}</dl>
     </section>
 
     <section class="section" id="service" aria-labelledby="service-title">

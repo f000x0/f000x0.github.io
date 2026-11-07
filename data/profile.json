@@ -23,119 +23,116 @@
     "github": "https://github.com/f000x0",
     "orcid": ""
   },
-  "education": [
-    {"institution": "University of Science and Technology of China", "degree": "M.S. in Cybersecurity", "dates": "2024 – 2027 (expected)", "detail": "School of Cyber Science and Technology"},
-    {"institution": "Hainan University", "degree": "B.S. in Information Security", "dates": "2020 – 2024", "detail": "Rank: 2 / 114 · GPA: 3.82 / 4.00"}
-  ],
   "publications": [
+    {
+      "id": "lifting-the-veil", "year": 2027, "venue": "ICSE", "venue_full": "IEEE/ACM International Conference on Software Engineering",
+      "title": "Lifting the Veil: Reasoning-Enhanced LLMs for Binary Deobfuscation via Reinforcement Learning",
+      "authors": ["Li Hu", "Xiuwei Shang", "Gangyang Li", "Xu Zhu", "Shaoyin Cheng", "Junqi Zhang", "Guoqiang Chen", "Weiming Zhang", "Nenghai Yu"],
+      "status": "under_review", "paper": "", "code": ""
+    },
     {
       "id": "regomender", "year": 2026, "venue": "ASE", "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
       "title": "RegoMender: A Multi-Agent Framework for Automated Rego Policy Repair",
       "authors": ["Ruijie Zhang*", "Huaxiao Yin*", "Li Hu*†", "Fanqi Kong", "Haozhe Liang", "Shaoyin Cheng", "Kun Zhang", "Bibo Tu"],
-      "status": "published", "first_author": true, "type": "inproceedings",
+      "status": "published", "type": "inproceedings",
       "doi": "10.1145/3832783.3837490", "paper": "https://doi.org/10.1145/3832783.3837490", "code": "",
       "summary": "Multi-agent collaboration for automated Rego policy repair."
     },
     {
-      "id": "beyond-text", "year": 2026, "venue": "ASE", "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
-      "title": "Beyond Text Matching: Towards Reference-Free Evaluation for Human-Oriented Binary Reverse Engineering",
-      "authors": ["Xiuwei Shang", "Li Hu", "Xiao Jiang", "Jieke Shi", "Junda He", "Zhou Yang", "Shaoyin Cheng", "Guoqiang Chen", "Weiming Zhang", "David Lo"],
-      "status": "published", "first_author": false, "type": "inproceedings", "doi": "10.1145/3832783.3834339", "paper": "https://doi.org/10.1145/3832783.3834339", "code": ""
+      "id": "deobfuscators", "year": 2026, "venue": "TSE", "venue_full": "IEEE Transactions on Software Engineering",
+      "title": "What Makes LLMs Good Binary Deobfuscators?",
+      "authors": ["Li Hu", "Xiuwei Shang", "Jieke Shi", "Shaoyin Cheng", "Junqi Zhang", "Gangyang Li", "Zhou Yang", "Weiming Zhang", "David Lo"],
+      "status": "major_revision", "paper": "", "code": ""
     },
     {
-      "id": "type-recovery", "year": 2026, "venue": "TOSEM", "venue_full": "ACM Transactions on Software Engineering and Methodology",
-      "title": "Beyond the Edge of Function: Unraveling the Patterns of Type Recovery in Binary Code",
-      "authors": ["Gangyang Li", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "first_author": false, "type": "article", "doi": "10.1145/3787853", "paper": "https://doi.org/10.1145/3787853", "code": ""
+      "id": "covert-communication", "year": 2026, "venue": "TDSC", "venue_full": "IEEE Transactions on Dependable and Secure Computing",
+      "title": "Digging in the Shadows: Detecting Covert-Communication Functions in Software Binaries via Decoder-Only LLMs",
+      "authors": ["Li Hu*", "Yanming Zhang*", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Guoqiang Chen", "Weiming Zhang", "Nenghai Yu"],
+      "status": "under_review", "paper": "", "code": ""
     },
     {
       "id": "compileagent", "year": 2025, "venue": "ACL", "venue_note": "Main Track", "venue_full": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics",
       "title": "CompileAgent: Automated Real-World Repo-Level Compilation with Tool-Integrated LLM-based Agent System",
       "authors": ["Li Hu*", "Guoqiang Chen*", "Xiuwei Shang", "Shaoyin Cheng", "Benlong Wu", "Gangyang Li", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "first_author": true, "type": "inproceedings", "doi": "10.18653/v1/2025.acl-long.103", "paper": "https://aclanthology.org/2025.acl-long.103/", "code": "https://github.com/Ch3nYe/AutoCompiler",
+      "status": "published", "type": "inproceedings", "doi": "10.18653/v1/2025.acl-long.103", "paper": "https://aclanthology.org/2025.acl-long.103/", "code": "https://github.com/Ch3nYe/AutoCompiler",
       "summary": "Tool-integrated LLM agents for real-world, repository-level compilation."
+    },
+    {
+      "id": "multi-intent", "year": 2027, "venue": "TSE", "venue_full": "IEEE Transactions on Software Engineering",
+      "title": "Knowledge-Enhanced In-Context Learning for Multi-Intent Binary Code Summarization",
+      "authors": ["Zhenkan Fu", "Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Gangyang Li", "Zhengdao Li", "Shikai Guo", "Weiming Zhang", "Nenghai Yu"],
+      "status": "under_review", "paper": "", "code": ""
+    },
+    {
+      "id": "ekf", "year": 2027, "venue": "TIFS", "venue_full": "IEEE Transactions on Information Forensics and Security",
+      "title": "Danger Around the Corner: Unveiling Cross-Coupling Vulnerabilities in EKF Localization During Turns",
+      "authors": ["Xu Zhu", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Gangyang Li", "Weiming Zhang", "Nenghai Yu"],
+      "status": "under_review", "paper": "", "code": ""
+    },
+    {
+      "id": "beyond-text", "year": 2026, "venue": "ASE", "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
+      "title": "Beyond Text Matching: Towards Reference-Free Evaluation for Human-Oriented Binary Reverse Engineering",
+      "authors": ["Xiuwei Shang", "Li Hu", "Xiao Jiang", "Jieke Shi", "Junda He", "Zhou Yang", "Shaoyin Cheng", "Guoqiang Chen", "Weiming Zhang", "David Lo"],
+      "status": "published", "type": "inproceedings", "doi": "10.1145/3832783.3834339", "paper": "https://doi.org/10.1145/3832783.3834339", "code": ""
+    },
+    {
+      "id": "type-recovery", "year": 2026, "venue": "TOSEM", "venue_full": "ACM Transactions on Software Engineering and Methodology",
+      "title": "Beyond the Edge of Function: Unraveling the Patterns of Type Recovery in Binary Code",
+      "authors": ["Gangyang Li", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
+      "status": "published", "type": "article", "doi": "10.1145/3787853", "paper": "https://doi.org/10.1145/3787853", "code": ""
+    },
+    {
+      "id": "binary-similarity", "year": 2026, "venue": "EMSE", "venue_full": "Empirical Software Engineering",
+      "title": "Binary Code Similarity Detection via Graph Contrastive Learning on Intermediate Representations",
+      "authors": ["Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Shikai Guo", "Guoqiang Chen", "Benlong Wu", "Weiming Zhang", "Nenghai Yu"],
+      "status": "major_revision", "paper": "", "code": ""
+    },
+    {
+      "id": "kv-eviction", "year": 2026, "venue": "NeurIPS", "venue_full": "Conference on Neural Information Processing Systems",
+      "title": "When Does Value-Aware KV Eviction Help? A Fixed-Contract Diagnostic for Non-Monotone Cache Compression",
+      "authors": ["Ruijie Zhang", "Haozhe Liang", "Da Chang", "Li Hu", "Fanqi Kong", "Huaxiao Yin", "Yu Li"],
+      "status": "under_review", "paper": "", "code": ""
+    },
+    {
+      "id": "restruct", "year": 2026, "venue": "CCS", "venue_full": "ACM SIGSAC Conference on Computer and Communications Security",
+      "title": "ReStruct: Three-Stage Binary Data Structure Recovery via Inter-procedural Analysis and RL-Enhanced LLMs",
+      "authors": ["Gangyang Li", "Xiuwei Shang", "Xu Zhu", "Li Hu", "Shaoyin Cheng", "Junqi Zhang", "Weiming Zhang", "Nenghai Yu"],
+      "status": "under_review", "paper": "", "code": ""
+    },
+    {
+      "id": "cross-modal", "year": 2026, "venue": "NeurIPS", "venue_full": "Conference on Neural Information Processing Systems",
+      "title": "Cross-modal Retrieval Models for Stripped Binary Analysis",
+      "authors": ["Guoqiang Chen", "Lingyun Ying", "Ziyang Song", "Daguang Liu", "Qiang Wang", "Li Hu", "Shaoyin Cheng", "Weiming Zhang", "Nenghai Yu"],
+      "status": "under_review", "paper": "", "code": ""
     },
     {
       "id": "binmetric", "year": 2025, "venue": "IJCAI", "venue_full": "Proceedings of the 34th International Joint Conference on Artificial Intelligence",
       "title": "BinMetric: A Comprehensive Binary Code Analysis Benchmark for Large Language Models",
       "authors": ["Xiuwei Shang", "Guoqiang Chen", "Shaoyin Cheng", "Benlong Wu", "Li Hu", "Gangyang Li", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "first_author": false, "type": "inproceedings", "doi": "10.24963/ijcai.2025/858", "paper": "https://doi.org/10.24963/ijcai.2025/858", "code": "",
+      "status": "published", "type": "inproceedings", "doi": "10.24963/ijcai.2025/858", "paper": "https://doi.org/10.24963/ijcai.2025/858", "code": "",
       "summary": "A comprehensive benchmark for evaluating LLMs on binary code analysis."
     },
     {
       "id": "pseudofix", "year": 2025, "venue": "ASE", "venue_full": "Proceedings of the 40th IEEE/ACM International Conference on Automated Software Engineering",
       "title": "PseudoFix: Refactoring Distorted Structures in Decompiled C Pseudocode",
       "authors": ["Gangyang Li", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "first_author": false, "type": "inproceedings", "doi": "10.1109/ase63991.2025.00075", "paper": "https://doi.org/10.1109/ase63991.2025.00075", "code": ""
+      "status": "published", "type": "inproceedings", "doi": "10.1109/ase63991.2025.00075", "paper": "https://doi.org/10.1109/ase63991.2025.00075", "code": ""
     },
     {
       "id": "empirical-study", "year": 2025, "venue": "EMSE", "venue_full": "Empirical Software Engineering",
       "title": "An Empirical Study on the Effectiveness of Large Language Models for Binary Code Understanding",
       "authors": ["Xiuwei Shang", "Zhankan Fu", "Shaoyin Cheng", "Guoqiang Chen", "Gangyang Li", "Li Hu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "first_author": false, "type": "article", "doi": "10.1007/s10664-025-10748-5", "paper": "https://doi.org/10.1007/s10664-025-10748-5", "code": "",
+      "status": "published", "type": "article", "doi": "10.1007/s10664-025-10748-5", "paper": "https://doi.org/10.1007/s10664-025-10748-5", "code": "",
       "summary": "An empirical investigation of LLM capabilities in binary code understanding."
     },
     {
       "id": "how-far", "year": 2024, "venue": "ICSME", "venue_full": "Proceedings of the 40th IEEE International Conference on Software Maintenance and Evolution",
       "title": "How Far Have We Gone in Binary Code Understanding Using Large Language Models",
       "authors": ["Xiuwei Shang", "Shaoyin Cheng", "Guoqiang Chen", "Yanming Zhang", "Li Hu", "Xiao Yu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "first_author": false, "type": "inproceedings", "doi": "10.1109/icsme58944.2024.00012", "paper": "https://doi.org/10.1109/icsme58944.2024.00012", "code": ""
-    },
-    {
-      "id": "deobfuscators", "year": 2026, "venue": "TSE",
-      "title": "What Makes LLMs Good Binary Deobfuscators?",
-      "authors": ["Li Hu", "Xiuwei Shang", "Jieke Shi", "Shaoyin Cheng", "Junqi Zhang", "Gangyang Li", "Zhou Yang", "Weiming Zhang", "David Lo"],
-      "status": "major_revision", "first_author": true, "paper": "", "code": ""
-    },
-    {
-      "id": "covert-communication", "year": 2026, "venue": "TDSC",
-      "title": "Digging in the Shadows: Detecting Covert-Communication Functions in Software Binaries via Decoder-Only LLMs",
-      "authors": ["Li Hu*", "Yanming Zhang*", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Guoqiang Chen", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "first_author": true, "paper": "", "code": ""
-    },
-    {
-      "id": "lifting-the-veil", "year": 2027, "venue": "ICSE",
-      "title": "Lifting the Veil: Reasoning-Enhanced LLMs for Binary Deobfuscation via Reinforcement Learning",
-      "authors": ["Li Hu", "Xiuwei Shang", "Gangyang Li", "Xu Zhu", "Shaoyin Cheng", "Junqi Zhang", "Guoqiang Chen", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "first_author": true, "paper": "", "code": ""
-    },
-    {
-      "id": "binary-similarity", "year": 2026, "venue": "EMSE",
-      "title": "Binary Code Similarity Detection via Graph Contrastive Learning on Intermediate Representations",
-      "authors": ["Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Shikai Guo", "Guoqiang Chen", "Benlong Wu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "major_revision", "first_author": false, "paper": "", "code": ""
-    },
-    {
-      "id": "multi-intent", "year": 2027, "venue": "TSE",
-      "title": "Knowledge-Enhanced In-Context Learning for Multi-Intent Binary Code Summarization",
-      "authors": ["Zhenkan Fu", "Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Gangyang Li", "Zhengdao Li", "Shikai Guo", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "first_author": false, "paper": "", "code": ""
-    },
-    {
-      "id": "ekf", "year": 2027, "venue": "TIFS",
-      "title": "Danger Around the Corner: Unveiling Cross-Coupling Vulnerabilities in EKF Localization During Turns",
-      "authors": ["Xu Zhu", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Gangyang Li", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "first_author": false, "paper": "", "code": ""
-    },
-    {
-      "id": "kv-eviction", "year": 2026, "venue": "NeurIPS",
-      "title": "When Does Value-Aware KV Eviction Help? A Fixed-Contract Diagnostic for Non-Monotone Cache Compression",
-      "authors": ["Ruijie Zhang", "Haozhe Liang", "Da Chang", "Li Hu", "Fanqi Kong", "Huaxiao Yin", "Yu Li"],
-      "status": "under_review", "first_author": false, "paper": "", "code": ""
-    },
-    {
-      "id": "restruct", "year": 2026, "venue": "CCS",
-      "title": "ReStruct: Three-Stage Binary Data Structure Recovery via Inter-procedural Analysis and RL-Enhanced LLMs",
-      "authors": ["Gangyang Li", "Xiuwei Shang", "Xu Zhu", "Li Hu", "Shaoyin Cheng", "Junqi Zhang", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "first_author": false, "paper": "", "code": ""
-    },
-    {
-      "id": "cross-modal", "year": 2026, "venue": "NeurIPS",
-      "title": "Cross-modal Retrieval Models for Stripped Binary Analysis",
-      "authors": ["Guoqiang Chen", "Lingyun Ying", "Ziyang Song", "Daguang Liu", "Qiang Wang", "Li Hu", "Shaoyin Cheng", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "first_author": false, "paper": "", "code": ""
+      "status": "published", "type": "inproceedings", "doi": "10.1109/icsme58944.2024.00012", "paper": "https://doi.org/10.1109/icsme58944.2024.00012", "code": ""
     }
   ],
+  "security_statement": "I have discovered 10+ confirmed vulnerabilities, including the following CVE and CNVD records.",
   "vulnerabilities": [
     {"id": "CVE-2025-13400", "url": "https://vuldb.com/cve/CVE-2025-13400"},
     {"id": "CVE-2025-11423", "url": "https://vuldb.com/cve/CVE-2025-11423"},
