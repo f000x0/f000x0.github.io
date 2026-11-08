@@ -28,7 +28,6 @@ def inline_text(value):
 def icon(name):
     shapes = {
         "email": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>',
-        "cv": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
         "scholar": '<path d="m2 9 10-6 10 6-10 6-10-6Zm4 3v5c4 3 8 3 12 0v-5m4-3v8"/>',
         "github": '<path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 6v-3.9a3.4 3.4 0 0 0-.9-2.7c3-.3 6.2-1.5 6.2-6.7A5.3 5.3 0 0 0 19 5a5 5 0 0 0-.1-3.5s-1.2-.4-3.9 1.5a13.4 13.4 0 0 0-7 0C5.3 1.1 4.1 1.5 4.1 1.5A5 5 0 0 0 4 5a5.3 5.3 0 0 0-1.3 3.7c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.7V22"/>',
         "orcid": '<circle cx="12" cy="12" r="10"/><path d="M7 10v7m0-10h.01M11 8h3a4.5 4.5 0 0 1 0 9h-3V8Z"/>',
@@ -92,7 +91,7 @@ def build():
     published = [p for p in papers if p["status"] == "published"]
     manuscripts = [p for p in papers if p["status"] != "published"]
     advisors = " and ".join(esc(a["title"]) + " " + link(a["url"], esc(a["name"])) for a in data["advisors"])
-    contact_links = [link("mailto:" + data["email"], icon("email") + '<span>Email</span>'), link(data["links"]["cv"], icon("cv") + '<span>CV</span>', ' target="_blank"')]
+    contact_links = [link("mailto:" + data["email"], icon("email") + '<span>Email</span>')]
     for key, label in [("scholar", "Google Scholar"), ("github", "GitHub"), ("orcid", "ORCID")]:
         if data["links"].get(key):
             contact_links.append(link(data["links"][key], icon(key) + f'<span>{esc(label)}</span>'))

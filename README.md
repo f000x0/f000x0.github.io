@@ -36,7 +36,7 @@ python3 serve.py
 | `research_statement` / `engineering_statement` | 从 CTF pwn 学习经历引出的逆向工程与软件工程研究问题；支持 `**加粗**` |
 | `research_interests` | 研究方向资料字段，目前不在页面中单独展示 |
 | `advisors` | 导师及其主页 |
-| `links` | CV、Google Scholar、GitHub、ORCID；留空的链接不会显示 |
+| `links` | Google Scholar、GitHub、ORCID；留空的链接不会显示；`cv` 字段不在主页中展示 |
 | `publications` | 所有论文及其作者、年份、状态、链接 |
 | `services` / `awards` | 审稿服务与荣誉 |
 | `security_statement` | 漏洞发现的简短说明 |
@@ -53,7 +53,7 @@ python3 serve.py
 - 论文只展示标题、作者、会议或期刊及 `[paper] / [code]`；不展示 summary 和 BibTeX。旧的 `summary`、`type`、`doi` 字段可保留作资料，不影响页面。
 - `venue_full` 填写完整会议或期刊名称，`venue` 填写缩写。页面显示全称及括号内的缩写；已发表论文显示年份。在审或大修稿件也必须填写全称。`doi` 可选。
 
-替换 CV 时，覆盖 `assets/Li_Hu_CV.pdf` 即可。
+主页不展示 CV 链接。原 CV 文件保留在 `assets/Li_Hu_CV.pdf`。
 
 替换照片时，覆盖 `assets/profile.jpg`，并将 `photo_alt` 改为 `Portrait of Li Hu`。目前照片使用账号 `f000x0` 的 GitHub 头像作为临时图片（来源：GitHub 账号 API 返回的 avatar_url）。也可以把新照片放进 `assets/` 后修改 `photo` 字段。建议使用方形照片，页面会自动裁剪。
 
@@ -61,7 +61,7 @@ python3 serve.py
 
 页面统一使用本地托管的 Lato 字体（常规、粗体和斜体），保存在 `assets/fonts/`，附带 SIL Open Font License。无需访问 Google Fonts，也可离线显示。页面宽度上限为 800px；论文部分参考 Jon Barron 的 14px 文字排版：黑色加粗标题、作者（本人加粗）、斜体会议全称与缩写、年份、链接。论文没有图片、编号、summary 和 BibTeX，顺序由资料文件控制。照片置于简介右上方，后续文字使用整行宽度。
 
-Publications、漏洞编号、Academic Service 与 Selected Honors 使用圆点无序列表。标语使用 Lato 斜体，与正文区分。
+Publications、漏洞编号、Academic Service 与 Selected Honors 使用黑色实心方块无序列表。标语使用 Lato 斜体，与正文区分。
 
 联系方式使用内嵌 SVG 图标，无需图标字体或外部 CDN。图标与文字标签一起显示，辅助技术忽略装饰性图标；`build.py` 中的 `icon()` 可调整图形。论文链接使用 `[paper] / [code]` 纯文字形式。
 
@@ -83,7 +83,7 @@ li-hu-homepage/
 │   ├── styles.css            # 样式和移动端适配
 │   ├── favicon.svg           # 文字站点图标
 │   ├── profile.jpg           # 个人照片，当前是临时 GitHub 头像
-│   └── Li_Hu_CV.pdf          # 下载版 CV
+│   └── Li_Hu_CV.pdf          # 保留的原 CV 文件，主页不展示链接
 ├── build.py                  # 静态页面生成器，仅用 Python 标准库
 ├── serve.py                  # 本地预览服务，仅用 Python 标准库
 ├── 启动主页.command           # macOS 双击启动入口
