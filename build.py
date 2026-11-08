@@ -162,6 +162,7 @@ def build():
   <meta property="og:description" content="{esc(description)}">
   <title>{esc(data['name'])} | Binary Analysis &amp; LLM Agents</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preload" href="assets/fonts/lato-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/styles.css">
   <script src="assets/site.js" defer></script>
 </head>
@@ -175,9 +176,10 @@ def build():
   </header>
   <main id="main">
     <section class="hero{' hero-with-photo' if portrait else ''}" id="about" aria-labelledby="name">
+      {portrait}
       <div class="hero-copy">
-      <p class="eyebrow">{esc(data['role'])}<span aria-hidden="true"> · </span>{esc(data['institution_short'])}</p>
       <h1 id="name">{esc(data['name'])}</h1>
+      <p class="eyebrow">{esc(data['role'])}<span aria-hidden="true"> · </span>{esc(data['institution_short'])}</p>
       <p class="slogan">{esc(data['slogan'])}</p>
       <div class="biography">
         <p>I am a {esc(data['study_year'])} master’s student in the {esc(data['school'])} at the <a href="https://en.ustc.edu.cn/" target="_blank" rel="noopener noreferrer">{esc(data['institution'])}</a> ({esc(data['institution_short'])}), advised by {advisors}.</p>
@@ -188,7 +190,6 @@ def build():
       <div class="interest-line" aria-label="Research interests">{interests}</div>
       <div class="contact-links">{''.join(contact_links)}</div>
       </div>
-      {portrait}
     </section>
 
     <section class="section publications-section" id="publications" aria-labelledby="publications-title">
