@@ -45,9 +45,9 @@ python3 serve.py
 
 论文条目中：
 
-- 全部论文直接展示，显示顺序与 `publications` 数组完全一致。调整顺序时，移动整个论文对象即可；页面不做自动排序或筛选。
-- `status: "published"` 表示已发表或已录用；`"under_review"` 表示在审；`"major_revision"` 表示大修。
-- 在审或大修稿件展示完整投稿会议或期刊名称，并明确标记 Submitted to 和 Under review 或 Major revision。
+- 仅展示已发表／已录用和大修中的论文，显示顺序遵循 `publications` 数组。调整顺序时，移动整个论文对象即可；页面不做自动排序。
+- `status: "published"` 表示已发表或已录用；`"major_revision"` 表示大修；`"under_review"` 表示在审，该状态的条目不会展示。后续更新状态并重新生成后，页面会自动调整展示。
+- 大修稿件展示完整投稿会议或期刊名称，并明确标记 Submitted to 和 Major revision。
 - 每篇均显示 `[paper] [code]`。填入真实链接后即可点击；空值显示为灰色的不可点击文字，悬停可查看暂无链接的提示。
 - 作者姓名末尾 `*` 和 `†` 分别标记共同一作和通讯作者；姓名 `Li Hu` 自动加粗。
 - 论文只展示标题、作者、会议或期刊及 `[paper] / [code]`；不展示 summary 和 BibTeX。旧的 `summary`、`type`、`doi` 字段可保留作资料，不影响页面。
@@ -94,9 +94,9 @@ li-hu-homepage/
 
 个人经历、论文作者及稿件状态依据提供的 `Li_Hu_CV_USTC.pdf` 整理；研究简介和标语为根据研究方向撰写的主页文案。完整 CV 保留原文件。
 
-主页保留 8 篇已发表或录用论文和 9 篇在审或大修稿件，直接全部展示，并严格遵循资料文件中的顺序。当前资料沿用此前的一作优先顺序，可自行调整。Vulnerability Disclosures 以一句话说明漏洞发现总量，按 CVE、CNVD 分组展示 CV 中明确列出的 8 个编号。CV 注明有 10+ 项发现，但没有列出其余编号；补充编号时直接添加到 `vulnerabilities` 即可。Education 不再展示，背景为纯白色。论文链接仅填写能匹配标题和作者的公开记录；没有确认的链接保留空值。GitHub 个人链接已填写；Scholar 和 ORCID 链接可以在 `links` 中补上。
+主页展示 8 篇已发表或录用论文和 2 篇大修稿件，隐藏 Under review 稿件，并严格遵循资料文件中的顺序。当前资料沿用此前的一作优先顺序，可自行调整。Vulnerability Disclosures 以一句话说明漏洞发现总量，按 CVE、CNVD 分组展示 CV 中明确列出的 8 个编号。CV 注明有 10+ 项发现，但没有列出其余编号；补充编号时直接添加到 `vulnerabilities` 即可。Education 不再展示，背景为纯白色。论文链接仅填写能匹配标题和作者的公开记录；没有确认的链接保留空值。GitHub 个人链接已填写；Scholar 和 ORCID 链接可以在 `links` 中补上。
 
-在审稿件展示目标 venue 和明确的稿件状态，不显示为正式发表信息。
+大修稿件展示目标 venue 和明确的稿件状态，不显示为正式发表信息。
 
 ## 同步到私有仓库
 

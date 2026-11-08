@@ -88,8 +88,9 @@ def build():
     valid_statuses = {"published", "under_review", "major_revision"}
     if any(p["status"] not in valid_statuses for p in papers):
         raise ValueError("Use published, under_review, or major_revision for publication status.")
+    papers = [p for p in papers if p["status"] in {"published", "major_revision"}]
     published = [p for p in papers if p["status"] == "published"]
-    manuscripts = [p for p in papers if p["status"] != "published"]
+    revisions = [p for p in papers if p["status"] == "major_revision"]
     advisors = " and ".join(esc(a["title"]) + " " + link(a["url"], esc(a["name"])) for a in data["advisors"])
     contact_links = [link("mailto:" + data["email"], icon("email") + '<span>Email</span>')]
     for key, label in [("scholar", "Google Scholar"), ("github", "GitHub"), ("orcid", "ORCID")]:
@@ -191,7 +192,7 @@ def build():
     temporary = ROOT / ".index.html.tmp"
     temporary.write_text(content, encoding="utf-8")
     temporary.replace(target)
-    print(f"Built index.html: {len(published)} published/accepted papers, {len(manuscripts)} manuscripts.")
+    print(f"Built index.html: {len(published)} published/accepted papers, {len(revisions)} major-revision manuscripts.")
     return target
 
 
