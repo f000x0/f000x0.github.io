@@ -55,7 +55,7 @@ python3 serve.py
 
 主页不展示 CV 链接。原 CV 文件保留在 `assets/Li_Hu_CV.pdf`。
 
-替换照片时，覆盖 `assets/profile.jpg`，并将 `photo_alt` 改为 `Portrait of Li Hu`。目前照片使用账号 `f000x0` 的 GitHub 头像作为临时图片（来源：GitHub 账号 API 返回的 avatar_url）。也可以把新照片放进 `assets/` 后修改 `photo` 字段。建议使用方形照片，页面会自动裁剪。
+替换照片时，覆盖 `assets/profile.jpg`，并设置合适的 `photo_alt`。目前照片来自 Li Hu 的 Google Scholar 主页，已下载为本地图片，无需访问外部服务即可显示。也可以把新照片放进 `assets/` 后修改 `photo` 字段。建议使用方形照片，页面会自动裁剪。
 
 修改视觉样式：编辑 `assets/styles.css`。文件顶部提供纸张色、文字色和强调色变量。
 
@@ -82,7 +82,7 @@ li-hu-homepage/
 ├── assets/
 │   ├── styles.css            # 样式和移动端适配
 │   ├── favicon.svg           # 无文字的蓝色几何立方体站点图标
-│   ├── profile.jpg           # 个人照片，当前是临时 GitHub 头像
+│   ├── profile.jpg           # 个人照片，来自 Google Scholar 主页
 │   └── Li_Hu_CV.pdf          # 保留的原 CV 文件，主页不展示链接
 ├── build.py                  # 静态页面生成器，仅用 Python 标准库
 ├── serve.py                  # 本地预览服务，仅用 Python 标准库
