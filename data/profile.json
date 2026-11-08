@@ -7,7 +7,7 @@
   "school": "School of Cyber Science and Technology",
   "location": "Hefei, China",
   "email": "pdxbshx@mail.ustc.edu.cn",
-  "slogan": "Advancing Binary Understanding and Software Engineering with AI.",
+  "slogan": "“Advancing Binary Understanding and Software Engineering with AI.”",
   "photo": "assets/profile.jpg",
   "photo_alt": "Portrait of Li Hu",
   "research_statement": "Learning pwn through CTF challenges sparked my interest in understanding low-level program behavior. It also led me to a question: **How can we make reverse engineering easier and binary code more readable?** I explore **AI-assisted binary analysis and reverse engineering**, using large language models and program analysis to recover program structure and intent and reduce manual effort.",
@@ -15,42 +15,30 @@
   "phd_statement": "I am currently seeking Ph.D. opportunities in AI for software engineering and binary analysis.",
   "research_interests": ["Binary Analysis", "Reverse Engineering", "LLM Agents"],
   "advisors": [
+    {"name": "Nenghai Yu", "title": "Prof.", "url": "https://faculty.ustc.edu.cn/yunenghai/zh_CN/index.htm"},
     {"name": "Weiming Zhang", "title": "Prof.", "url": "http://staff.ustc.edu.cn/~zhangwm/index.html"},
-    {"name": "Shaoyin Cheng", "title": "Assoc. Prof.", "url": "http://staff.ustc.edu.cn/~sycheng/"},
-    {"name": "Nenghai Yu", "title": "Prof.", "url": "https://faculty.ustc.edu.cn/yunenghai/zh_CN/index.htm"}
+    {"name": "Shaoyin Cheng", "title": "Assoc. Prof.", "url": "http://staff.ustc.edu.cn/~sycheng/"}
   ],
   "links": {
     "cv": "assets/Li_Hu_CV.pdf",
-    "scholar": "",
+    "scholar": "https://scholar.google.com.hk/citations?user=Xjn-2V8AAAAJ&hl=zh-CN",
     "github": "https://github.com/f000x0",
     "orcid": ""
   },
   "publications": [
     {
-      "id": "lifting-the-veil", "year": 2027, "venue": "ICSE", "venue_full": "IEEE/ACM International Conference on Software Engineering",
-      "title": "Lifting the Veil: Reasoning-Enhanced LLMs for Binary Deobfuscation via Reinforcement Learning",
-      "authors": ["Li Hu", "Xiuwei Shang", "Gangyang Li", "Xu Zhu", "Shaoyin Cheng", "Junqi Zhang", "Guoqiang Chen", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "paper": "", "code": ""
-    },
-    {
       "id": "regomender", "year": 2026, "venue": "ASE", "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
       "title": "RegoMender: A Multi-Agent Framework for Automated Rego Policy Repair",
       "authors": ["Ruijie Zhang*", "Huaxiao Yin*", "Li Hu*†", "Fanqi Kong", "Haozhe Liang", "Shaoyin Cheng", "Kun Zhang", "Bibo Tu"],
       "status": "published", "type": "inproceedings",
-      "doi": "10.1145/3832783.3837490", "paper": "https://doi.org/10.1145/3832783.3837490", "code": "",
+      "doi": "10.1145/3832783.3837490", "paper": "https://doi.org/10.1145/3832783.3837490", "code": "https://zenodo.org/records/19230997",
       "summary": "Multi-agent collaboration for automated Rego policy repair."
     },
     {
       "id": "deobfuscators", "year": 2026, "venue": "TSE", "venue_full": "IEEE Transactions on Software Engineering",
       "title": "What Makes LLMs Good Binary Deobfuscators?",
       "authors": ["Li Hu", "Xiuwei Shang", "Jieke Shi", "Shaoyin Cheng", "Junqi Zhang", "Gangyang Li", "Zhou Yang", "Weiming Zhang", "David Lo"],
-      "status": "major_revision", "paper": "", "code": ""
-    },
-    {
-      "id": "covert-communication", "year": 2026, "venue": "TDSC", "venue_full": "IEEE Transactions on Dependable and Secure Computing",
-      "title": "Digging in the Shadows: Detecting Covert-Communication Functions in Software Binaries via Decoder-Only LLMs",
-      "authors": ["Li Hu*", "Yanming Zhang*", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Guoqiang Chen", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "paper": "", "code": ""
+      "status": "major_revision", "paper": "https://arxiv.org/pdf/2604.08083", "code": "https://github.com/f000x0/BinDeObfBench"
     },
     {
       "id": "compileagent", "year": 2025, "venue": "ACL", "venue_note": "Main Track", "venue_full": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics",
@@ -58,12 +46,6 @@
       "authors": ["Li Hu*", "Guoqiang Chen*", "Xiuwei Shang", "Shaoyin Cheng", "Benlong Wu", "Gangyang Li", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
       "status": "published", "type": "inproceedings", "doi": "10.18653/v1/2025.acl-long.103", "paper": "https://aclanthology.org/2025.acl-long.103/", "code": "https://github.com/Ch3nYe/AutoCompiler",
       "summary": "Tool-integrated LLM agents for real-world, repository-level compilation."
-    },
-    {
-      "id": "multi-intent", "year": 2027, "venue": "TSE", "venue_full": "IEEE Transactions on Software Engineering",
-      "title": "Knowledge-Enhanced In-Context Learning for Multi-Intent Binary Code Summarization",
-      "authors": ["Zhenkan Fu", "Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Gangyang Li", "Zhengdao Li", "Shikai Guo", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "paper": "", "code": ""
     },
     {
       "id": "ekf", "year": 2027, "venue": "TIFS", "venue_full": "IEEE Transactions on Information Forensics and Security",
@@ -87,7 +69,7 @@
       "id": "binary-similarity", "year": 2026, "venue": "EMSE", "venue_full": "Empirical Software Engineering",
       "title": "Binary Code Similarity Detection via Graph Contrastive Learning on Intermediate Representations",
       "authors": ["Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Shikai Guo", "Guoqiang Chen", "Benlong Wu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "major_revision", "paper": "", "code": ""
+      "status": "major_revision", "paper": "https://arxiv.org/pdf/2410.18561", "code": ""
     },
     {
       "id": "kv-eviction", "year": 2026, "venue": "NeurIPS", "venue_full": "Conference on Neural Information Processing Systems",
