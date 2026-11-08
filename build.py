@@ -126,7 +126,7 @@ def build():
   <meta property="og:title" content="{esc(data['name'])} | Academic Homepage">
   <meta property="og:description" content="{esc(description)}">
   <title>{esc(data['name'])} | Binary Analysis &amp; LLM Agents</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
   <link rel="preload" href="assets/fonts/lato-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/styles.css">
 </head>

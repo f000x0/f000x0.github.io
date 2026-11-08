@@ -81,7 +81,7 @@ li-hu-homepage/
 ├── data/profile.json         # 日常维护的个人资料和论文
 ├── assets/
 │   ├── styles.css            # 样式和移动端适配
-│   ├── favicon.svg           # 文字站点图标
+│   ├── favicon.svg           # 无文字的蓝色几何立方体站点图标
 │   ├── profile.jpg           # 个人照片，当前是临时 GitHub 头像
 │   └── Li_Hu_CV.pdf          # 保留的原 CV 文件，主页不展示链接
 ├── build.py                  # 静态页面生成器，仅用 Python 标准库
