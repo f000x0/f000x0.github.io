@@ -10,7 +10,8 @@
   "slogan": "Advancing Binary Understanding and Software Engineering with AI.",
   "photo": "assets/profile.jpg",
   "photo_alt": "Li Hu’s GitHub avatar",
-  "research_statement": "My research focuses on large language models for binary analysis and reverse engineering, as well as AI agents for software engineering. I am interested in building systems that understand low-level code, reason about software, and solve practical engineering tasks.",
+  "research_statement": "Learning pwn through CTF challenges sparked my interest in understanding low-level program behavior. It also led me to a question: **How can we make reverse engineering easier and binary code more readable?** I explore **AI-assisted binary analysis and reverse engineering**, using large language models and program analysis to recover program structure and intent and reduce manual effort.",
+  "engineering_statement": "A related question drives my work on **AI agents for software engineering**: **How can we automate practical engineering tasks reliably?** I am interested in agents that reason about code, use tools, and automate tasks such as repository-level compilation and program repair.",
   "phd_statement": "I am currently seeking Ph.D. opportunities in AI for software engineering and binary analysis.",
   "research_interests": ["Binary Analysis", "Reverse Engineering", "LLM Agents"],
   "advisors": [

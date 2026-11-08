@@ -40,12 +40,15 @@ h1 { font: 400 66px/1.08 var(--serif); letter-spacing: -2.6px; margin: 0 0 21px;
 .slogan { max-width: 680px; margin: 0 0 28px; color: var(--accent); font: 400 28px/1.35 var(--serif); letter-spacing: -.5px; text-wrap: balance; }
 .biography { max-width: 795px; }
 .biography p { margin: 0 0 14px; }
+.biography strong { font-weight: 600; }
 .biography a { border-bottom: 1px solid #c4d2c6; }
 .biography a:hover { text-decoration: none; border-bottom-color: var(--accent); }
 .interest-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 12px; color: #5c665c; margin-top: 23px; }
 .interest-divider { color: #c2c6bc; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 25px; margin-top: 23px; font-size: 13px; font-weight: 550; }
-.contact-links a span { margin-left: 4px; font-size: 13px; }
+.icon { display: inline-block; width: 1em; height: 1em; flex: 0 0 auto; vertical-align: -.15em; }
+.contact-links a, .contact-footer > a { display: inline-flex; align-items: center; gap: 7px; }
+.contact-links .icon { width: 17px; height: 17px; }
 .section { border-top: 1px solid var(--line); padding-top: 29px; margin-top: 0; padding-bottom: 34px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 h2 { font: 400 27px/1.35 var(--serif); letter-spacing: -.6px; margin: 0; }
@@ -68,6 +71,8 @@ h2 { font: 400 27px/1.35 var(--serif); letter-spacing: -.6px; margin: 0; }
 .venue-note { color: var(--muted); }
 .paper-summary { margin: 5px 0 0; color: #6c746a; font-size: 12px; line-height: 1.6; }
 .paper-actions { display: flex; flex-wrap: wrap; gap: 11px; font-size: 12px; margin-top: 7px; }
+.paper-actions > a, .paper-actions > .unavailable-link { display: inline-flex; align-items: center; gap: 4px; }
+.paper-actions .icon { width: 13px; height: 13px; }
 .unavailable-link { color: #929893; cursor: default; }
 .manuscript-status { color: #8a7959; font-size: 11px; }
 .section-intro { margin: 13px 0 0; color: #6a706c; font-size: 13px; }

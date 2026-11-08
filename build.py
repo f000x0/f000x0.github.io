@@ -20,6 +20,25 @@ def link(url, label, extra=""):
     return f'<a href="{esc(url)}"{external}{extra}>{label}</a>'
 
 
+def inline_text(value):
+    """Allow bold emphasis in profile prose while escaping all HTML."""
+    return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", esc(value))
+
+
+def icon(name):
+    shapes = {
+        "email": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/>',
+        "cv": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+        "paper": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',
+        "code": '<path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 4l-4 16"/>',
+        "citation": '<path d="M9 5H4v7h5v-7Zm11 0h-5v7h5v-7ZM9 12c0 4-2 7-5 7m16-7c0 4-2 7-5 7"/>',
+        "scholar": '<path d="m2 9 10-6 10 6-10 6-10-6Zm4 3v5c4 3 8 3 12 0v-5m4-3v8"/>',
+        "github": '<path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 6v-3.9a3.4 3.4 0 0 0-.9-2.7c3-.3 6.2-1.5 6.2-6.7A5.3 5.3 0 0 0 19 5a5 5 0 0 0-.1-3.5s-1.2-.4-3.9 1.5a13.4 13.4 0 0 0-7 0C5.3 1.1 4.1 1.5 4.1 1.5A5 5 0 0 0 4 5a5.3 5.3 0 0 0-1.3 3.7c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.7V22"/>',
+        "orcid": '<circle cx="12" cy="12" r="10"/><path d="M7 10v7m0-10h.01M11 8h3a4.5 4.5 0 0 1 0 9h-3V8Z"/>',
+    }
+    return f'<svg class="icon icon-{esc(name)}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">{shapes[name]}</svg>'
+
+
 def author_list(authors, name):
     result = []
     for author in authors:
@@ -64,13 +83,13 @@ def publication(p, name, index):
         meta += f'<span class="venue-note"> · {esc(p["venue_note"])}</span>'
     actions = []
     for key in ("paper", "code"):
-        label = f'[{key}]'
+        label = icon(key) + f'<span>[{key}]</span>'
         if p.get(key):
             actions.append(link(p[key], label, f' aria-label="{esc(key.capitalize() + ": " + p["title"])}"'))
         else:
             actions.append(f'<span class="unavailable-link" aria-disabled="true" title="{key.capitalize()} link not yet available">{label}</span>')
     if published:
-        actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>[bibtex]</a>')
+        actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>{icon("citation")}<span>[bibtex]</span></a>')
     summary = f'<p class="paper-summary">{esc(p["summary"])}</p>' if p.get("summary") else ""
     action_html = '<div class="paper-actions">' + ''.join(actions) + '</div>'
     return f'''<li class="publication" id="paper-{esc(p['id'])}">
@@ -107,10 +126,10 @@ def build():
         citations[paper["id"]] = {"title": paper["title"], "bibtex": text}
     citation_json = json.dumps(citations, ensure_ascii=False).replace("<", "\\u003c")
     advisors = " and ".join(esc(a["title"]) + " " + link(a["url"], esc(a["name"])) for a in data["advisors"])
-    contact_links = [link("mailto:" + data["email"], 'Email <span aria-hidden="true">↗</span>'), link(data["links"]["cv"], 'Curriculum Vitae <span aria-hidden="true">↗</span>', ' target="_blank"')]
+    contact_links = [link("mailto:" + data["email"], icon("email") + '<span>Email</span>'), link(data["links"]["cv"], icon("cv") + '<span>CV</span>', ' target="_blank"')]
     for key, label in [("scholar", "Google Scholar"), ("github", "GitHub"), ("orcid", "ORCID")]:
         if data["links"].get(key):
-            contact_links.append(link(data["links"][key], esc(label) + ' <span aria-hidden="true">↗</span>'))
+            contact_links.append(link(data["links"][key], icon(key) + f'<span>{esc(label)}</span>'))
     interests = '<span class="interest-divider" aria-hidden="true">/</span>'.join(f'<span>{esc(i)}</span>' for i in data["research_interests"])
     publication_html = "\n".join(publication(p, data["name"], i + 1) for i, p in enumerate(papers))
     disclosure_groups = []
@@ -162,7 +181,8 @@ def build():
       <p class="slogan">{esc(data['slogan'])}</p>
       <div class="biography">
         <p>I am a {esc(data['study_year'])} master’s student in the {esc(data['school'])} at the <a href="https://en.ustc.edu.cn/" target="_blank" rel="noopener noreferrer">{esc(data['institution'])}</a> ({esc(data['institution_short'])}), advised by {advisors}.</p>
-        <p>{esc(data['research_statement'])}</p>
+        <p>{inline_text(data['research_statement'])}</p>
+        <p>{inline_text(data['engineering_statement'])}</p>
         <p><strong>{esc(data['phd_statement'])}</strong> Please feel free to {link('mailto:' + data['email'], 'contact me')}.</p>
       </div>
       <div class="interest-line" aria-label="Research interests">{interests}</div>
@@ -199,7 +219,7 @@ def build():
 
     <section class="contact-footer" aria-label="Contact">
       <p>Let’s talk research.</p>
-      {link('mailto:' + data['email'], esc(data['email']) + ' <span aria-hidden="true">↗</span>')}
+      {link('mailto:' + data['email'], icon('email') + f'<span>{esc(data["email"])}</span>')}
     </section>
   </main>
   <footer class="site-footer"><span>© 2026 {esc(data['name'])}<span class="footer-location"> · {esc(data['location'])}</span></span><span>Updated {esc(data['updated'])}</span></footer>

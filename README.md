@@ -33,7 +33,8 @@ python3 serve.py
 | `name` / `email` / `slogan` | 姓名、邮箱、主页标语 |
 | `photo` / `photo_alt` | 个人照片路径和替代文本；路径留空可隐藏照片 |
 | `study_year` / `phd_statement` | 硕士年级与博士求学意向 |
-| `research_statement` / `research_interests` | 研究简介与方向 |
+| `research_statement` / `engineering_statement` | 从 CTF pwn 学习经历引出的逆向工程与软件工程研究问题；支持 `**加粗**` |
+| `research_interests` | 简介下方的研究方向标签 |
 | `advisors` | 导师及其主页 |
 | `links` | CV、Google Scholar、GitHub、ORCID；留空的链接不会显示 |
 | `publications` | 所有论文及其作者、年份、状态、链接 |
@@ -58,6 +59,8 @@ python3 serve.py
 替换照片时，覆盖 `assets/profile.jpg`，并将 `photo_alt` 改为 `Portrait of Li Hu`。目前照片使用账号 `f000x0` 的 GitHub 头像作为临时图片（来源：GitHub 账号 API 返回的 avatar_url）。也可以把新照片放进 `assets/` 后修改 `photo` 字段。建议使用方形照片，页面会自动裁剪。
 
 修改视觉样式：编辑 `assets/styles.css`。文件顶部提供纸张色、文字色和强调色变量。
+
+联系方式与论文链接使用内嵌 SVG 图标，无需图标字体或外部 CDN。图标与文字标签一起显示，辅助技术忽略装饰性图标；`build.py` 中的 `icon()` 可调整图形。
 
 如果不使用预览服务，修改 JSON 后运行：
 
