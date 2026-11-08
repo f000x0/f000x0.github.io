@@ -13,131 +13,307 @@
   "research_statement": "Learning pwn through CTF challenges sparked my interest in understanding low-level program behavior. It also led me to a question: **How can we make reverse engineering easier and binary code more readable?** I explore **AI-assisted binary analysis and reverse engineering**, using large language models and program analysis to recover program structure and intent and reduce manual effort.",
   "engineering_statement": "A related question drives my work on **AI agents for software engineering**: **How can we automate practical engineering tasks reliably?** I am interested in agents that reason about code, use tools, and automate tasks such as repository-level compilation and program repair.",
   "phd_statement": "I am currently seeking Ph.D. opportunities in AI for software engineering and binary analysis.",
-  "research_interests": ["Binary Analysis", "Reverse Engineering", "LLM Agents"],
   "advisors": [
-    {"name": "Nenghai Yu", "title": "Prof.", "url": "https://faculty.ustc.edu.cn/yunenghai/zh_CN/index.htm"},
-    {"name": "Weiming Zhang", "title": "Prof.", "url": "http://staff.ustc.edu.cn/~zhangwm/index.html"},
-    {"name": "Shaoyin Cheng", "title": "Assoc. Prof.", "url": "http://staff.ustc.edu.cn/~sycheng/"}
+    {
+      "name": "Nenghai Yu",
+      "title": "Prof.",
+      "url": "https://faculty.ustc.edu.cn/yunenghai/zh_CN/index.htm"
+    },
+    {
+      "name": "Weiming Zhang",
+      "title": "Prof.",
+      "url": "http://staff.ustc.edu.cn/~zhangwm/index.html"
+    },
+    {
+      "name": "Shaoyin Cheng",
+      "title": "Assoc. Prof.",
+      "url": "http://staff.ustc.edu.cn/~sycheng/"
+    }
   ],
   "links": {
-    "cv": "assets/Li_Hu_CV.pdf",
     "scholar": "https://scholar.google.com.hk/citations?user=Xjn-2V8AAAAJ&hl=zh-CN",
     "github": "https://github.com/f000x0",
     "orcid": ""
   },
   "publications": [
     {
-      "id": "regomender", "year": 2026, "venue": "ASE", "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
+      "id": "regomender",
+      "year": 2026,
+      "venue": "ASE",
+      "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
       "title": "RegoMender: A Multi-Agent Framework for Automated Rego Policy Repair",
-      "authors": ["Ruijie Zhang*", "Huaxiao Yin*", "Li Hu*†", "Fanqi Kong", "Haozhe Liang", "Shaoyin Cheng", "Kun Zhang", "Bibo Tu"],
-      "status": "published", "type": "inproceedings",
-      "doi": "10.1145/3832783.3837490", "paper": "https://doi.org/10.1145/3832783.3837490", "code": "https://zenodo.org/records/19230997",
-      "summary": "Multi-agent collaboration for automated Rego policy repair."
+      "authors": [
+        "Ruijie Zhang*",
+        "Huaxiao Yin*",
+        "Li Hu*†",
+        "Fanqi Kong",
+        "Haozhe Liang",
+        "Shaoyin Cheng",
+        "Kun Zhang",
+        "Bibo Tu"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.1145/3832783.3837490",
+      "code": "https://zenodo.org/records/19230997"
     },
     {
-      "id": "deobfuscators", "year": 2026, "venue": "TSE", "venue_full": "IEEE Transactions on Software Engineering",
+      "id": "deobfuscators",
+      "year": 2026,
+      "venue": "TSE",
+      "venue_full": "IEEE Transactions on Software Engineering",
       "title": "What Makes LLMs Good Binary Deobfuscators?",
-      "authors": ["Li Hu", "Xiuwei Shang", "Jieke Shi", "Shaoyin Cheng", "Junqi Zhang", "Gangyang Li", "Zhou Yang", "Weiming Zhang", "David Lo"],
-      "status": "major_revision", "paper": "https://arxiv.org/pdf/2604.08083", "code": "https://github.com/f000x0/BinDeObfBench"
+      "authors": [
+        "Li Hu",
+        "Xiuwei Shang",
+        "Jieke Shi",
+        "Shaoyin Cheng",
+        "Junqi Zhang",
+        "Gangyang Li",
+        "Zhou Yang",
+        "Weiming Zhang",
+        "David Lo"
+      ],
+      "status": "major_revision",
+      "paper": "https://arxiv.org/pdf/2604.08083",
+      "code": "https://github.com/f000x0/BinDeObfBench"
     },
     {
-      "id": "compileagent", "year": 2025, "venue": "ACL", "venue_note": "Main Track", "venue_full": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics",
+      "id": "compileagent",
+      "year": 2025,
+      "venue": "ACL",
+      "venue_note": "Main Track",
+      "venue_full": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics",
       "title": "CompileAgent: Automated Real-World Repo-Level Compilation with Tool-Integrated LLM-based Agent System",
-      "authors": ["Li Hu*", "Guoqiang Chen*", "Xiuwei Shang", "Shaoyin Cheng", "Benlong Wu", "Gangyang Li", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "type": "inproceedings", "doi": "10.18653/v1/2025.acl-long.103", "paper": "https://aclanthology.org/2025.acl-long.103/", "code": "https://github.com/Ch3nYe/AutoCompiler",
-      "summary": "Tool-integrated LLM agents for real-world, repository-level compilation."
+      "authors": [
+        "Li Hu*",
+        "Guoqiang Chen*",
+        "Xiuwei Shang",
+        "Shaoyin Cheng",
+        "Benlong Wu",
+        "Gangyang Li",
+        "Xu Zhu",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "published",
+      "paper": "https://aclanthology.org/2025.acl-long.103/",
+      "code": "https://github.com/Ch3nYe/AutoCompiler"
     },
     {
-      "id": "ekf", "year": 2027, "venue": "TIFS", "venue_full": "IEEE Transactions on Information Forensics and Security",
-      "title": "Danger Around the Corner: Unveiling Cross-Coupling Vulnerabilities in EKF Localization During Turns",
-      "authors": ["Xu Zhu", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Gangyang Li", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "paper": "", "code": ""
-    },
-    {
-      "id": "beyond-text", "year": 2026, "venue": "ASE", "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
+      "id": "beyond-text",
+      "year": 2026,
+      "venue": "ASE",
+      "venue_full": "Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering",
       "title": "Beyond Text Matching: Towards Reference-Free Evaluation for Human-Oriented Binary Reverse Engineering",
-      "authors": ["Xiuwei Shang", "Li Hu", "Xiao Jiang", "Jieke Shi", "Junda He", "Zhou Yang", "Shaoyin Cheng", "Guoqiang Chen", "Weiming Zhang", "David Lo"],
-      "status": "published", "type": "inproceedings", "doi": "10.1145/3832783.3834339", "paper": "https://doi.org/10.1145/3832783.3834339", "code": ""
+      "authors": [
+        "Xiuwei Shang",
+        "Li Hu",
+        "Xiao Jiang",
+        "Jieke Shi",
+        "Junda He",
+        "Zhou Yang",
+        "Shaoyin Cheng",
+        "Guoqiang Chen",
+        "Weiming Zhang",
+        "David Lo"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.1145/3832783.3834339",
+      "code": ""
     },
     {
-      "id": "type-recovery", "year": 2026, "venue": "TOSEM", "venue_full": "ACM Transactions on Software Engineering and Methodology",
+      "id": "type-recovery",
+      "year": 2026,
+      "venue": "TOSEM",
+      "venue_full": "ACM Transactions on Software Engineering and Methodology",
       "title": "Beyond the Edge of Function: Unraveling the Patterns of Type Recovery in Binary Code",
-      "authors": ["Gangyang Li", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "type": "article", "doi": "10.1145/3787853", "paper": "https://doi.org/10.1145/3787853", "code": ""
+      "authors": [
+        "Gangyang Li",
+        "Xiuwei Shang",
+        "Shaoyin Cheng",
+        "Junqi Zhang",
+        "Li Hu",
+        "Xu Zhu",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.1145/3787853",
+      "code": ""
     },
     {
-      "id": "binary-similarity", "year": 2026, "venue": "EMSE", "venue_full": "Empirical Software Engineering",
+      "id": "binary-similarity",
+      "year": 2026,
+      "venue": "EMSE",
+      "venue_full": "Empirical Software Engineering",
       "title": "Binary Code Similarity Detection via Graph Contrastive Learning on Intermediate Representations",
-      "authors": ["Xiuwei Shang", "Li Hu", "Shaoyin Cheng", "Shikai Guo", "Guoqiang Chen", "Benlong Wu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "major_revision", "paper": "https://arxiv.org/pdf/2410.18561", "code": ""
+      "authors": [
+        "Xiuwei Shang",
+        "Li Hu",
+        "Shaoyin Cheng",
+        "Shikai Guo",
+        "Guoqiang Chen",
+        "Benlong Wu",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "major_revision",
+      "paper": "https://arxiv.org/pdf/2410.18561",
+      "code": ""
     },
     {
-      "id": "kv-eviction", "year": 2026, "venue": "NeurIPS", "venue_full": "Conference on Neural Information Processing Systems",
-      "title": "When Does Value-Aware KV Eviction Help? A Fixed-Contract Diagnostic for Non-Monotone Cache Compression",
-      "authors": ["Ruijie Zhang", "Haozhe Liang", "Da Chang", "Li Hu", "Fanqi Kong", "Huaxiao Yin", "Yu Li"],
-      "status": "under_review", "paper": "", "code": ""
-    },
-    {
-      "id": "restruct", "year": 2026, "venue": "CCS", "venue_full": "ACM SIGSAC Conference on Computer and Communications Security",
-      "title": "ReStruct: Three-Stage Binary Data Structure Recovery via Inter-procedural Analysis and RL-Enhanced LLMs",
-      "authors": ["Gangyang Li", "Xiuwei Shang", "Xu Zhu", "Li Hu", "Shaoyin Cheng", "Junqi Zhang", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "paper": "", "code": ""
-    },
-    {
-      "id": "cross-modal", "year": 2026, "venue": "NeurIPS", "venue_full": "Conference on Neural Information Processing Systems",
-      "title": "Cross-modal Retrieval Models for Stripped Binary Analysis",
-      "authors": ["Guoqiang Chen", "Lingyun Ying", "Ziyang Song", "Daguang Liu", "Qiang Wang", "Li Hu", "Shaoyin Cheng", "Weiming Zhang", "Nenghai Yu"],
-      "status": "under_review", "paper": "", "code": ""
-    },
-    {
-      "id": "binmetric", "year": 2025, "venue": "IJCAI", "venue_full": "Proceedings of the 34th International Joint Conference on Artificial Intelligence",
+      "id": "binmetric",
+      "year": 2025,
+      "venue": "IJCAI",
+      "venue_full": "Proceedings of the 34th International Joint Conference on Artificial Intelligence",
       "title": "BinMetric: A Comprehensive Binary Code Analysis Benchmark for Large Language Models",
-      "authors": ["Xiuwei Shang", "Guoqiang Chen", "Shaoyin Cheng", "Benlong Wu", "Li Hu", "Gangyang Li", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "type": "inproceedings", "doi": "10.24963/ijcai.2025/858", "paper": "https://doi.org/10.24963/ijcai.2025/858", "code": "",
-      "summary": "A comprehensive benchmark for evaluating LLMs on binary code analysis."
+      "authors": [
+        "Xiuwei Shang",
+        "Guoqiang Chen",
+        "Shaoyin Cheng",
+        "Benlong Wu",
+        "Li Hu",
+        "Gangyang Li",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.24963/ijcai.2025/858",
+      "code": ""
     },
     {
-      "id": "pseudofix", "year": 2025, "venue": "ASE", "venue_full": "Proceedings of the 40th IEEE/ACM International Conference on Automated Software Engineering",
+      "id": "pseudofix",
+      "year": 2025,
+      "venue": "ASE",
+      "venue_full": "Proceedings of the 40th IEEE/ACM International Conference on Automated Software Engineering",
       "title": "PseudoFix: Refactoring Distorted Structures in Decompiled C Pseudocode",
-      "authors": ["Gangyang Li", "Xiuwei Shang", "Shaoyin Cheng", "Junqi Zhang", "Li Hu", "Xu Zhu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "type": "inproceedings", "doi": "10.1109/ase63991.2025.00075", "paper": "https://doi.org/10.1109/ase63991.2025.00075", "code": ""
+      "authors": [
+        "Gangyang Li",
+        "Xiuwei Shang",
+        "Shaoyin Cheng",
+        "Junqi Zhang",
+        "Li Hu",
+        "Xu Zhu",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.1109/ase63991.2025.00075",
+      "code": ""
     },
     {
-      "id": "empirical-study", "year": 2025, "venue": "EMSE", "venue_full": "Empirical Software Engineering",
+      "id": "empirical-study",
+      "year": 2025,
+      "venue": "EMSE",
+      "venue_full": "Empirical Software Engineering",
       "title": "An Empirical Study on the Effectiveness of Large Language Models for Binary Code Understanding",
-      "authors": ["Xiuwei Shang", "Zhankan Fu", "Shaoyin Cheng", "Guoqiang Chen", "Gangyang Li", "Li Hu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "type": "article", "doi": "10.1007/s10664-025-10748-5", "paper": "https://doi.org/10.1007/s10664-025-10748-5", "code": "",
-      "summary": "An empirical investigation of LLM capabilities in binary code understanding."
+      "authors": [
+        "Xiuwei Shang",
+        "Zhankan Fu",
+        "Shaoyin Cheng",
+        "Guoqiang Chen",
+        "Gangyang Li",
+        "Li Hu",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.1007/s10664-025-10748-5",
+      "code": ""
     },
     {
-      "id": "how-far", "year": 2024, "venue": "ICSME", "venue_full": "Proceedings of the 40th IEEE International Conference on Software Maintenance and Evolution",
+      "id": "how-far",
+      "year": 2024,
+      "venue": "ICSME",
+      "venue_full": "Proceedings of the 40th IEEE International Conference on Software Maintenance and Evolution",
       "title": "How Far Have We Gone in Binary Code Understanding Using Large Language Models",
-      "authors": ["Xiuwei Shang", "Shaoyin Cheng", "Guoqiang Chen", "Yanming Zhang", "Li Hu", "Xiao Yu", "Weiming Zhang", "Nenghai Yu"],
-      "status": "published", "type": "inproceedings", "doi": "10.1109/icsme58944.2024.00012", "paper": "https://doi.org/10.1109/icsme58944.2024.00012", "code": ""
+      "authors": [
+        "Xiuwei Shang",
+        "Shaoyin Cheng",
+        "Guoqiang Chen",
+        "Yanming Zhang",
+        "Li Hu",
+        "Xiao Yu",
+        "Weiming Zhang",
+        "Nenghai Yu"
+      ],
+      "status": "published",
+      "paper": "https://doi.org/10.1109/icsme58944.2024.00012",
+      "code": ""
     }
   ],
   "security_statement": "I have discovered 10+ confirmed vulnerabilities, including the following CVE and CNVD records.",
   "vulnerabilities": [
-    {"id": "CVE-2025-13400", "url": "https://vuldb.com/cve/CVE-2025-13400"},
-    {"id": "CVE-2025-11423", "url": "https://vuldb.com/cve/CVE-2025-11423"},
-    {"id": "CVE-2025-11505"},
-    {"id": "CVE-2025-11507"},
-    {"id": "CVE-2025-10079"},
-    {"id": "CNVD-2025-27358"},
-    {"id": "CNVD-2026-13451"},
-    {"id": "CNVD-2026-14713"}
+    {
+      "id": "CVE-2025-13400",
+      "url": "https://vuldb.com/cve/CVE-2025-13400"
+    },
+    {
+      "id": "CVE-2025-11423",
+      "url": "https://vuldb.com/cve/CVE-2025-11423"
+    },
+    {
+      "id": "CVE-2025-11505"
+    },
+    {
+      "id": "CVE-2025-11507"
+    },
+    {
+      "id": "CVE-2025-10079"
+    },
+    {
+      "id": "CNVD-2025-27358"
+    },
+    {
+      "id": "CNVD-2026-13451"
+    },
+    {
+      "id": "CNVD-2026-14713"
+    }
   ],
   "services": [
-    {"name": "Engineering Applications of Artificial Intelligence", "short": "EAAI", "year": "2026"},
-    {"name": "ACM Transactions on Software Engineering and Methodology", "short": "TOSEM", "year": "2025"},
-    {"name": "ACL Rolling Review", "short": "ARR", "year": "2025"}
+    {
+      "name": "Engineering Applications of Artificial Intelligence",
+      "short": "EAAI",
+      "year": "2026"
+    },
+    {
+      "name": "ACM Transactions on Software Engineering and Methodology",
+      "short": "TOSEM",
+      "year": "2025"
+    },
+    {
+      "name": "ACL Rolling Review",
+      "short": "ARR",
+      "year": "2025"
+    }
   ],
   "awards": [
-    {"name": "China National Scholarship", "detail": "University of Science and Technology of China", "year": "2026"},
-    {"name": "First-class Academic Scholarship", "detail": "University of Science and Technology of China", "year": "2024–2026"},
-    {"name": "Information Security and Countermeasures Contest", "detail": "National Second Prize", "year": "2025"},
-    {"name": "DataCon · Vulnerability Analysis Track", "detail": "Third Prize", "year": "2024"},
-    {"name": "Outstanding Graduate & Excellent Undergraduate Thesis", "detail": "Hainan University · Thesis: Top 2%", "year": "2024"}
+    {
+      "name": "China National Scholarship",
+      "detail": "University of Science and Technology of China",
+      "year": "2026"
+    },
+    {
+      "name": "First-class Academic Scholarship",
+      "detail": "University of Science and Technology of China",
+      "year": "2024–2026"
+    },
+    {
+      "name": "Information Security and Countermeasures Contest",
+      "detail": "National Second Prize",
+      "year": "2025"
+    },
+    {
+      "name": "DataCon · Vulnerability Analysis Track",
+      "detail": "Third Prize",
+      "year": "2024"
+    },
+    {
+      "name": "Outstanding Graduate & Excellent Undergraduate Thesis",
+      "detail": "Hainan University · Thesis: Top 2%",
+      "year": "2024"
+    }
   ],
   "updated": "November 2026"
 }

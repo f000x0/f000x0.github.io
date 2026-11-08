@@ -1,4 +1,4 @@
-name: Publish homepage when public
+name: Deploy homepage
 
 on:
   push:
@@ -14,8 +14,7 @@ concurrency:
 
 jobs:
   build:
-    # A private source repository does not guarantee a private Pages website.
-    # Keep publishing disabled until the owner makes the repository public.
+    # Publish only while the source repository is public.
     if: github.event.repository.private == false
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +38,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # Enable Pages with GitHub Actions in repository settings before publishing.
       - uses: actions/configure-pages@v5
       - uses: actions/deploy-pages@v4
         id: deployment
