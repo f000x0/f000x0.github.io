@@ -69,13 +69,14 @@ def bibtex(paper):
     return f"@{kind}{{{key},\n" + ",\n".join(f"  {field} = {{{value}}}" for field, value in fields) + "\n}\n"
 
 
-def publication(p, name, index):
+def publication(p, name):
     published = p["status"] == "published"
     title = link(p["paper"], esc(p["title"])) if p.get("paper") else esc(p["title"])
     venue_name = p["venue_full"].removeprefix("Proceedings of the ")
-    abbreviation = f'{p["venue"]} {p["year"]}' if published else p["venue"]
     meta = ("" if published else '<span class="venue-note">Submitted to </span>')
-    meta += f'<span class="venue">{esc(venue_name)}</span> <span class="venue-abbreviation">({esc(abbreviation)})</span>'
+    meta += f'<em class="venue">{esc(venue_name)} <span class="venue-abbreviation">({esc(p["venue"])})</span></em>'
+    if published:
+        meta += f', {esc(p["year"])}'
     if not published:
         status = "Major revision" if p["status"] == "major_revision" else "Under review"
         meta += f'<span class="manuscript-status"> · {status}</span>'
@@ -83,22 +84,22 @@ def publication(p, name, index):
         meta += f'<span class="venue-note"> · {esc(p["venue_note"])}</span>'
     actions = []
     for key in ("paper", "code"):
-        label = icon(key) + f'<span>[{key}]</span>'
+        label = f'[{key}]'
         if p.get(key):
             actions.append(link(p[key], label, f' aria-label="{esc(key.capitalize() + ": " + p["title"])}"'))
         else:
             actions.append(f'<span class="unavailable-link" aria-disabled="true" title="{key.capitalize()} link not yet available">{label}</span>')
     if published:
-        actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>{icon("citation")}<span>[bibtex]</span></a>')
+        actions.append(f'<a class="citation-link" href="assets/bibtex/{esc(p["id"])}.bib" data-citation="{esc(p["id"])}" download>[bibtex]</a>')
     summary = f'<p class="paper-summary">{esc(p["summary"])}</p>' if p.get("summary") else ""
-    action_html = '<div class="paper-actions">' + ''.join(actions) + '</div>'
+    separator = '<span class="action-divider" aria-hidden="true"> / </span>'
+    action_html = '<div class="paper-actions">' + separator.join(actions) + '</div>'
     return f'''<li class="publication" id="paper-{esc(p['id'])}">
-      <span class="paper-index" aria-hidden="true">{index:02d}</span>
       <div class="paper-content">
         <h3 class="paper-title">{title}</h3>
         <p class="authors">{author_list(p['authors'], name)}</p>
         <p class="paper-meta">{meta}</p>
-{summary}{action_html}
+        {action_html}{summary}
       </div>
     </li>'''
 
@@ -131,7 +132,7 @@ def build():
         if data["links"].get(key):
             contact_links.append(link(data["links"][key], icon(key) + f'<span>{esc(label)}</span>'))
     interests = '<span class="interest-divider" aria-hidden="true">/</span>'.join(f'<span>{esc(i)}</span>' for i in data["research_interests"])
-    publication_html = "\n".join(publication(p, data["name"], i + 1) for i, p in enumerate(papers))
+    publication_html = "\n".join(publication(p, data["name"]) for p in papers)
     disclosure_groups = []
     for category in ("CVE", "CNVD"):
         records = [v for v in data["vulnerabilities"] if v["id"].startswith(category + "-")]
