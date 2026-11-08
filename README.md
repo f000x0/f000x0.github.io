@@ -30,7 +30,7 @@ python3 serve.py
 
 | 字段 | 内容 |
 | --- | --- |
-| `name` / `email` / `slogan` | 姓名、邮箱、主页标语 |
+| `name` / `email` / `slogan` | 姓名、邮箱、主页标语（斜体显示） |
 | `photo` / `photo_alt` | 个人照片路径和替代文本；路径留空可隐藏照片 |
 | `study_year` / `phd_statement` | 硕士年级与博士求学意向 |
 | `research_statement` / `engineering_statement` | 从 CTF pwn 学习经历引出的逆向工程与软件工程研究问题；支持 `**加粗**` |
@@ -60,6 +60,8 @@ python3 serve.py
 修改视觉样式：编辑 `assets/styles.css`。文件顶部提供纸张色、文字色和强调色变量。
 
 页面统一使用本地托管的 Lato 字体（常规、粗体和斜体），保存在 `assets/fonts/`，附带 SIL Open Font License。无需访问 Google Fonts，也可离线显示。页面宽度上限为 800px；论文部分参考 Jon Barron 的 14px 文字排版：黑色加粗标题、作者（本人加粗）、斜体会议全称与缩写、年份、链接。论文没有图片、编号、summary 和 BibTeX，顺序由资料文件控制。照片置于简介右上方，后续文字使用整行宽度。
+
+Publications、漏洞编号、Academic Service 与 Selected Honors 使用圆点无序列表。标语使用 Lato 斜体，与正文区分。
 
 联系方式使用内嵌 SVG 图标，无需图标字体或外部 CDN。图标与文字标签一起显示，辅助技术忽略装饰性图标；`build.py` 中的 `icon()` 可调整图形。论文链接使用 `[paper] / [code]` 纯文字形式。
 

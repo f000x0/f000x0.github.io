@@ -48,7 +48,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .portrait { float: right; width: 160px; margin: 3px 0 20px 34px; }
 .portrait img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; background: var(--accent-soft); }
 h1 { margin: 0 0 14px; font: 400 32px/1.2 var(--sans); }
-.slogan { margin: 0 0 18px; color: var(--ink); font-size: 14px; line-height: 1.45; text-wrap: pretty; }
+.slogan { margin: 0 0 18px; color: var(--ink); font-size: 14px; font-style: italic; line-height: 1.45; text-wrap: pretty; }
 .biography p { margin: 0 0 15px; }
 .biography strong { font-weight: 700; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 23px; clear: both; margin-top: 15px; font-size: 14px; }
@@ -61,7 +61,7 @@ h2 { margin: 0; font: 400 22px/1.3 var(--sans); }
 .section-aside { color: var(--muted); font-size: 13px; white-space: nowrap; }
 .section-note { color: var(--muted); font-size: 12px; margin: 7px 0 0; }
 .section-note > span { margin: 0 6px; }
-.publication-list { list-style: none; margin: 24px 0 0; padding: 0; }
+.publication-list { list-style: disc; margin: 24px 0 0; padding: 0 0 0 20px; }
 .publication { margin-bottom: 30px; color: var(--ink); font-size: 14px; line-height: 1.35; }
 .publication:last-child { margin-bottom: 0; }
 .paper-title { margin: 0; color: #000; font-size: inherit; line-height: inherit; font-weight: 700; }
@@ -85,10 +85,12 @@ h2 { margin: 0; font: 400 22px/1.3 var(--sans); }
 .disclosure-group:last-child { margin-bottom: 0; }
 .disclosure-group dt { color: var(--muted); font-size: 13px; font-weight: 700; }
 .disclosure-group dd { margin: 0; }
-.vulnerability-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 7px 22px; color: #5c6570; font-size: 14px; }
-.vulnerability-list li { white-space: nowrap; }
-.service-list, .awards-list { list-style: none; padding: 0; margin: 20px 0 0; }
-.service-list li, .awards-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 22px; font-size: 14px; }
+.vulnerability-list { list-style: disc; padding: 0 0 0 20px; margin: 0; color: #5c6570; font-size: 14px; }
+.vulnerability-list li { white-space: nowrap; margin-bottom: 6px; }
+.vulnerability-list li:last-child { margin-bottom: 0; }
+.service-list, .awards-list { list-style: disc; padding: 0 0 0 20px; margin: 20px 0 0; }
+.service-list li, .awards-list li { font-size: 14px; }
+.list-entry { display: flex; justify-content: space-between; align-items: baseline; gap: 22px; }
 .service-list li { margin-bottom: 10px; }
 .awards-list li { margin-bottom: 15px; }
 .service-list li:last-child, .awards-list li:last-child { margin-bottom: 0; }
@@ -118,7 +120,8 @@ h2 { margin: 0; font: 400 22px/1.3 var(--sans); }
   .publication { margin-bottom: 28px; line-height: 1.4; }
   .disclosure-group { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; }
   .vulnerability-list { font-size: 13px; }
-  .service-list li, .awards-list li { font-size: 13px; gap: 15px; }
+  .service-list li, .awards-list li { font-size: 13px; }
+  .list-entry { gap: 15px; }
   .awards-list p, .timeline-date, .service-list time { font-size: 12px; }
   .site-footer { font-size: 11px; }
   .contact-footer, .site-footer { padding-inline: 0; }

@@ -106,8 +106,8 @@ def build():
         )
         disclosure_groups.append(f'<div class="disclosure-group"><dt>{category}</dt><dd><ul class="vulnerability-list">{identifiers}</ul></dd></div>')
     vulnerabilities = "\n".join(disclosure_groups)
-    services = "\n".join(f'<li><span>{esc(s["name"])} <span class="muted">({esc(s["short"])})</span></span><time>{esc(s["year"])}</time></li>' for s in data["services"])
-    awards = "\n".join(f'<li><div><strong>{esc(a["name"])}</strong><p class="muted">{esc(a["detail"])}</p></div><span class="timeline-date">{esc(a["year"])}</span></li>' for a in data["awards"])
+    services = "\n".join(f'<li><div class="list-entry"><span>{esc(s["name"])} <span class="muted">({esc(s["short"])})</span></span><time>{esc(s["year"])}</time></div></li>' for s in data["services"])
+    awards = "\n".join(f'<li><div class="list-entry"><div><strong>{esc(a["name"])}</strong><p class="muted">{esc(a["detail"])}</p></div><span class="timeline-date">{esc(a["year"])}</span></div></li>' for a in data["awards"])
     description = f"{data['name']} — {data['role']} at {data['institution_short']}. Binary analysis, reverse engineering, and LLM agents for software engineering."
     portrait = ""
     if data.get("photo"):
@@ -158,9 +158,9 @@ def build():
         <h2 id="publications-title">Publications</h2>
       </div>
       <p class="section-note">* Equal contribution <span aria-hidden="true">·</span> † Corresponding author</p>
-      <ol class="publication-list" id="publication-list">
+      <ul class="publication-list" id="publication-list">
         {publication_html}
-      </ol>
+      </ul>
     </section>
 
     <section class="section" id="security" aria-labelledby="security-title">
