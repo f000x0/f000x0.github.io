@@ -131,7 +131,6 @@ def build():
     for key, label in [("scholar", "Google Scholar"), ("github", "GitHub"), ("orcid", "ORCID")]:
         if data["links"].get(key):
             contact_links.append(link(data["links"][key], icon(key) + f'<span>{esc(label)}</span>'))
-    interests = '<span class="interest-divider" aria-hidden="true">/</span>'.join(f'<span>{esc(i)}</span>' for i in data["research_interests"])
     publication_html = "\n".join(publication(p, data["name"]) for p in papers)
     disclosure_groups = []
     for category in ("CVE", "CNVD"):
@@ -170,7 +169,6 @@ def build():
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
-    <a class="wordmark" href="#about" aria-label="{esc(data['name'])}, back to introduction">{esc(data['name'])}<span class="wordmark-dot">.</span></a>
     <nav aria-label="Main navigation">
       <a href="#about">About</a><a href="#publications">Publications</a><a href="#security">Disclosures</a><a href="#service">Service</a>
     </nav>
@@ -180,7 +178,6 @@ def build():
       {portrait}
       <div class="hero-copy">
       <h1 id="name">{esc(data['name'])}</h1>
-      <p class="eyebrow">{esc(data['role'])}<span aria-hidden="true"> · </span>{esc(data['institution_short'])}</p>
       <p class="slogan">{esc(data['slogan'])}</p>
       <div class="biography">
         <p>I am a {esc(data['study_year'])} master’s student in the {esc(data['school'])} at the <a href="https://en.ustc.edu.cn/" target="_blank" rel="noopener noreferrer">{esc(data['institution'])}</a> ({esc(data['institution_short'])}), advised by {advisors}.</p>
@@ -188,7 +185,6 @@ def build():
         <p>{inline_text(data['engineering_statement'])}</p>
         <p><strong>{esc(data['phd_statement'])}</strong> Please feel free to {link('mailto:' + data['email'], 'contact me')}.</p>
       </div>
-      <div class="interest-line" aria-label="Research interests">{interests}</div>
       <div class="contact-links">{''.join(contact_links)}</div>
       </div>
     </section>

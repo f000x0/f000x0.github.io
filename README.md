@@ -34,7 +34,7 @@ python3 serve.py
 | `photo` / `photo_alt` | 个人照片路径和替代文本；路径留空可隐藏照片 |
 | `study_year` / `phd_statement` | 硕士年级与博士求学意向 |
 | `research_statement` / `engineering_statement` | 从 CTF pwn 学习经历引出的逆向工程与软件工程研究问题；支持 `**加粗**` |
-| `research_interests` | 简介下方的研究方向标签 |
+| `research_interests` | 研究方向资料字段，目前不在页面中单独展示 |
 | `advisors` | 导师及其主页 |
 | `links` | CV、Google Scholar、GitHub、ORCID；留空的链接不会显示 |
 | `publications` | 所有论文及其作者、年份、状态、链接 |

@@ -41,10 +41,7 @@ button:disabled { cursor: default; }
 [hidden] { display: none !important; }
 ::selection { background: #dceaf7; }
 .site-header, main, .site-footer { width: min(800px, calc(100% - 40px)); margin-inline: auto; }
-.site-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 16px 12px; gap: 20px; }
-.wordmark { color: var(--ink); font-size: 17px; font-weight: 700; line-height: 1.2; }
-.wordmark:hover { text-decoration: none; }
-.wordmark-dot { color: var(--accent); }
+.site-header { display: flex; justify-content: flex-end; align-items: center; padding: 24px 16px 12px; }
 .site-header nav { display: flex; gap: 24px; font-size: 13px; }
 .site-header nav a { color: var(--muted); }
 .site-header nav a:hover { color: var(--accent); }
@@ -52,15 +49,11 @@ button:disabled { cursor: default; }
 .hero-copy { min-width: 0; }
 .portrait { float: right; width: 160px; margin: 3px 0 20px 34px; }
 .portrait img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; background: var(--accent-soft); }
-h1 { margin: 0 0 7px; font: 400 32px/1.2 var(--sans); }
-.eyebrow { margin: 0 0 13px; color: var(--muted); font-size: 13px; }
-.eyebrow span { margin-inline: 4px; }
+h1 { margin: 0 0 14px; font: 400 32px/1.2 var(--sans); }
 .slogan { margin: 0 0 18px; color: var(--ink); font-size: 14px; line-height: 1.45; text-wrap: pretty; }
 .biography p { margin: 0 0 15px; }
 .biography strong { font-weight: 700; }
-.interest-line { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; clear: both; color: var(--muted); font-size: 13px; margin-top: 20px; }
-.interest-divider { color: #bec6ce; }
-.contact-links { display: flex; flex-wrap: wrap; gap: 23px; margin-top: 15px; font-size: 14px; }
+.contact-links { display: flex; flex-wrap: wrap; gap: 23px; clear: both; margin-top: 15px; font-size: 14px; }
 .icon { display: inline-block; width: 1em; height: 1em; flex: 0 0 auto; vertical-align: -.15em; }
 .contact-links a, .contact-footer > a { display: inline-flex; align-items: center; gap: 6px; }
 .contact-links .icon { width: 16px; height: 16px; }
@@ -130,10 +123,8 @@ dialog pre { background: var(--accent-soft); padding: 17px; border-radius: 4px; 
   .hero { padding: 22px 0 24px; }
   .portrait { width: 104px; margin: 0 0 18px 21px; }
   h1 { font-size: 32px; }
-  .eyebrow { font-size: 12px; line-height: 1.55; margin-bottom: 15px; }
   .slogan { clear: both; font-size: 14px; margin-bottom: 19px; }
   .biography { font-size: 14px; line-height: 1.5; }
-  .interest-line { gap: 8px; font-size: 12px; }
   .contact-links { gap: 22px; }
   .section { padding: 18px 0 26px; }
   h2 { font-size: 22px; }
@@ -148,7 +139,6 @@ dialog pre { background: var(--accent-soft); padding: 17px; border-radius: 4px; 
 }
 @media (max-width: 400px) {
   .site-header nav { gap: 11px; font-size: 11px; }
-  .wordmark { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
