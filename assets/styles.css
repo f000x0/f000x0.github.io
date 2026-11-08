@@ -67,7 +67,8 @@ h2 { margin: 0; font: 700 23px/1.35 var(--sans); letter-spacing: -.35px; }
 .publication { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 13px; margin-bottom: 28px; }
 .publication:last-child { margin-bottom: 0; }
 .paper-index { padding-top: 3px; color: #8d98a4; font-size: 12px; font-variant-numeric: tabular-nums; }
-.paper-title { margin: 0 0 4px; font-size: 16px; line-height: 1.5; font-weight: 700; }
+.paper-title { margin: 0 0 4px; color: #000; font-size: 16px; line-height: 1.5; font-weight: 700; }
+.paper-title a { color: inherit; }
 .paper-title a:hover { text-decoration: underline; }
 .authors { margin: 0 0 3px; color: #5c6570; font-size: 14px; line-height: 1.65; }
 .authors strong { color: var(--ink); font-weight: 700; }
