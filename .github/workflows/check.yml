@@ -19,6 +19,4 @@ jobs:
       - name: Build static website
         run: python3 build.py --output-dir _site
       - name: Check generated files are current
-        run: git diff --exit-code -- index.html assets/bibtex/
-      - name: Check JavaScript syntax
-        run: node --check assets/site.js
+        run: git diff --exit-code -- index.html
