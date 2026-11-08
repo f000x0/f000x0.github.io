@@ -75,9 +75,8 @@ h2 { margin: 0; font: 400 22px/1.3 var(--sans); }
 .venue-abbreviation { font-weight: 400; white-space: nowrap; }
 .venue-note { color: inherit; }
 .paper-actions { margin: 0; font-size: inherit; line-height: inherit; }
-.paper-actions > a, .paper-actions > .unavailable-link { white-space: nowrap; }
+.paper-actions > a { white-space: nowrap; }
 .action-divider { margin-inline: 3px; }
-.unavailable-link { color: #939ba5; cursor: default; }
 .manuscript-status { color: inherit; font-size: inherit; }
 .section-intro { margin: 13px 0 0; color: #5c6570; font-size: 14px; }
 .disclosure-groups { margin: 18px 0 0; }

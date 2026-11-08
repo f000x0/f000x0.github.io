@@ -65,16 +65,13 @@ def publication(p, name):
         label = f'[{key}]'
         if p.get(key):
             actions.append(link(p[key], label, f' aria-label="{esc(key.capitalize() + ": " + p["title"])}"'))
-        else:
-            actions.append(f'<span class="unavailable-link" aria-disabled="true" title="{key.capitalize()} link not yet available">{label}</span>')
     separator = '<span class="action-divider" aria-hidden="true"> / </span>'
-    action_html = '<div class="paper-actions">' + separator.join(actions) + '</div>'
+    action_html = '\n        <div class="paper-actions">' + separator.join(actions) + '</div>' if actions else ''
     return f'''<li class="publication" id="paper-{esc(p['id'])}">
       <div class="paper-content">
         <h3 class="paper-title">{title}</h3>
         <p class="authors">{author_list(p['authors'], name)}</p>
-        <p class="paper-meta">{meta}</p>
-        {action_html}
+        <p class="paper-meta">{meta}</p>{action_html}
       </div>
     </li>'''
 
@@ -91,7 +88,12 @@ def build():
     papers = [p for p in papers if p["status"] in {"published", "major_revision"}]
     published = [p for p in papers if p["status"] == "published"]
     revisions = [p for p in papers if p["status"] == "major_revision"]
-    advisors = " and ".join(esc(a["title"]) + " " + link(a["url"], esc(a["name"])) for a in data["advisors"])
+    advisor_links = [esc(a["title"]) + " " + link(a["url"], esc(a["name"])) for a in data["advisors"]]
+    if len(advisor_links) > 1:
+        conjunction = ", and " if len(advisor_links) > 2 else " and "
+        advisors = ", ".join(advisor_links[:-1]) + conjunction + advisor_links[-1]
+    else:
+        advisors = "".join(advisor_links)
     contact_links = [link("mailto:" + data["email"], icon("email") + '<span>Email</span>')]
     for key, label in [("scholar", "Google Scholar"), ("github", "GitHub"), ("orcid", "ORCID")]:
         if data["links"].get(key):

@@ -16,7 +16,8 @@
   "research_interests": ["Binary Analysis", "Reverse Engineering", "LLM Agents"],
   "advisors": [
     {"name": "Weiming Zhang", "title": "Prof.", "url": "http://staff.ustc.edu.cn/~zhangwm/index.html"},
-    {"name": "Shaoyin Cheng", "title": "Assoc. Prof.", "url": "http://staff.ustc.edu.cn/~sycheng/"}
+    {"name": "Shaoyin Cheng", "title": "Assoc. Prof.", "url": "http://staff.ustc.edu.cn/~sycheng/"},
+    {"name": "Nenghai Yu", "title": "Prof.", "url": "https://faculty.ustc.edu.cn/yunenghai/zh_CN/index.htm"}
   ],
   "links": {
     "cv": "assets/Li_Hu_CV.pdf",
