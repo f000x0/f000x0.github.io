@@ -143,7 +143,7 @@ def build():
     <section class="hero{' hero-with-photo' if portrait else ''}" id="about" aria-labelledby="name">
       {portrait}
       <div class="hero-copy">
-      <h1 id="name">{esc(data['name'])}</h1>
+      <h1 id="name">{esc(data['name'])} <span class="chinese-name" lang="zh-CN">({esc(data['chinese_name'])})</span></h1>
       <p class="slogan">{esc(data['slogan'])}</p>
       <div class="biography">
         <p>I am a {esc(data['study_year'])} master’s student in the {esc(data['school'])} at the <a href="https://en.ustc.edu.cn/" target="_blank" rel="noopener noreferrer">{esc(data['institution'])}</a> ({esc(data['institution_short'])}), advised by {advisors}.</p>

@@ -48,6 +48,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .portrait { float: right; width: 160px; margin: 3px 0 20px 34px; }
 .portrait img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; background: var(--accent-soft); }
 h1 { margin: 0 0 14px; font: 400 32px/1.2 var(--sans); }
+.chinese-name { font-size: .75em; white-space: nowrap; }
 .slogan { margin: 0 0 18px; color: var(--ink); font-size: 14px; font-style: italic; line-height: 1.45; text-wrap: pretty; }
 .biography p { margin: 0 0 15px; }
 .biography strong { font-weight: 700; }
